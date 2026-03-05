@@ -106,3 +106,15 @@ CREATE TABLE IF NOT EXISTS menu_permissions (
 
 CREATE INDEX IF NOT EXISTS idx_menu_permissions_menu_id ON menu_permissions(menu_id);
 CREATE INDEX IF NOT EXISTS idx_menu_permissions_permission_id ON menu_permissions(permission_id);
+
+-- 插入默认管理员用户
+INSERT INTO users (id, username, email, password, status, created_at, updated_at)
+VALUES (
+    uuid_generate_v4(),
+    'admin',
+    'admin@example.com',
+    '$2a$10$CMVknVCPRcLRgThQHBOcKu055LTRGN2S61z43d/1O57GzJVA4knK6', -- 密码: admin123
+    'active',
+    CURRENT_TIMESTAMP,
+    CURRENT_TIMESTAMP
+);
