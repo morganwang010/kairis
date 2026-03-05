@@ -15,7 +15,7 @@
 - i18n 国际化
 
 ### 后端
-- Go
+- Go  1.23.4
 - Gin 框架
 - PostgreSQL
 - GORM

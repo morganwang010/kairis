@@ -11,7 +11,7 @@
   -v ./postgres-data:/var/lib/postgresql/data \  # 挂载到主机指定目录（而非数据卷）
   -v ./postgres-conf:/etc/postgresql/postgresql.conf.d \  # 挂载自定义配置文件
   --memory=2g \  # 限制内存使用（2GB）
-  --cpus=1 \  # 限制CPU核心数（1核）
+  --cpus=2 \  # 限制CPU核心数（1核）
   --restart always \  # 总是重启（容器/主机重启都自动启动）
   --log-opt max-size=100m \  # 日志文件最大100MB
   --log-opt max-file=3 \  # 最多保留3个日志文件

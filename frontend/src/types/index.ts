@@ -34,33 +34,21 @@ export interface Role {
   name: string;
   code: string;
   description?: string;
-  permissions: Permission[];
+  permissions?: Permission[];
 }
 
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   code: number;
   message: string;
   data: T;
 }
 
-export interface LoginParams {
-  username: string;
-  password: string;
-}
-
-export interface LoginResponse {
-  token: string;
-  user: User;
-}
-
 export interface RouteConfig {
   path: string;
-  element: React.LazyExoticComponent<React.ComponentType>;
-  meta?: {
-    title?: string;
-    icon?: string;
-    hidden?: boolean;
-    permissions?: string[];
-  };
+  element?: React.ReactNode;
+  component?: string;
+  redirect?: string;
+  hidden?: boolean;
   children?: RouteConfig[];
+  permissions?: string[];
 }

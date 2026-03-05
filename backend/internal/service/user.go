@@ -3,6 +3,7 @@ package service
 import (
 	"kairis/backend/internal/model"
 	"kairis/backend/internal/repository"
+	"log/slog"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -49,6 +50,7 @@ func (s *UserService) DeleteUser(id string) error {
 }
 
 func (s *UserService) ValidatePassword(user *model.User, password string) bool {
+	slog.Info("ValidatePassword", "user.Password", user.Password, "password", password)
 	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	return err == nil
 }

@@ -13,6 +13,7 @@ class Request {
   }
 
   private setupInterceptors() {
+    // 请求拦截器 - 添加JWT Token
     this.instance.interceptors.request.use(
       (config: InternalAxiosRequestConfig) => {
         const token = localStorage.getItem('token');
@@ -26,6 +27,7 @@ class Request {
       }
     );
 
+    // 响应拦截器
     this.instance.interceptors.response.use(
       (response: AxiosResponse) => {
         const { code, data, message: msg } = response.data;
@@ -66,19 +68,19 @@ class Request {
     );
   }
 
-  public get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
+  public get<T = unknown>(url: string, config?: AxiosRequestConfig): Promise<T> {
     return this.instance.get(url, config);
   }
 
-  public post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+  public post<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
     return this.instance.post(url, data, config);
   }
 
-  public put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+  public put<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
     return this.instance.put(url, data, config);
   }
 
-  public delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
+  public delete<T = unknown>(url: string, config?: AxiosRequestConfig): Promise<T> {
     return this.instance.delete(url, config);
   }
 }

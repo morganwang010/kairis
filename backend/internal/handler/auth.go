@@ -1,8 +1,9 @@
 package handler
 
 import (
-	"net/http"
 	"kairis/backend/internal/service"
+	"log/slog"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
@@ -27,6 +28,8 @@ type LoginResponse struct {
 }
 
 func (h *AuthHandler) Login(c *gin.Context) {
+	// println("goes here!")
+	slog.Info("goes here22!")
 	var req LoginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": err.Error()})
@@ -38,11 +41,16 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"code": 401, "message": "Invalid username or password"})
 		return
 	}
+	slog.Info("goes here23!")
+	slog.Info("password", "password", req.Password)
 
 	if !h.userService.ValidatePassword(user, req.Password) {
 		c.JSON(http.StatusUnauthorized, gin.H{"code": 401, "message": "Invalid username or password"})
 		return
 	}
+	// println("goes here!")
+	// logs.Println(user)
+	slog.Info("goes here24!")
 
 	token, err := h.generateToken(user.ID)
 	if err != nil {
@@ -52,12 +60,18 @@ func (h *AuthHandler) Login(c *gin.Context) {
 
 	permissions, _ := h.userService.GetUserPermissions(user.ID)
 
+	// 简化roles数据结构，只返回角色名称列表
+	roleNames := make([]string, 0, len(user.Roles))
+	for _, role := range user.Roles {
+		roleNames = append(roleNames, role.Name)
+	}
+
 	userData := gin.H{
-		"id":         user.ID,
-		"username":   user.Username,
-		"email":      user.Email,
-		"avatar":     user.Avatar,
-		"roles":      user.Roles,
+		"id":          user.ID,
+		"username":    user.Username,
+		"email":       user.Email,
+		"avatar":      user.Avatar,
+		"roles":       roleNames,
 		"permissions": permissions,
 	}
 
@@ -77,6 +91,6 @@ func (h *AuthHandler) generateToken(userID string) (string, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	
+
 	return token.SignedString([]byte("your-secret-key"))
 }
