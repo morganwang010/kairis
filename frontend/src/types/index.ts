@@ -29,18 +29,15 @@ export interface Permission {
   resourceId: string;
 }
 
-export interface Role {
-  id: string;
-  name: string;
-  code: string;
-  description?: string;
-  permissions?: Permission[];
-}
-
 export interface ApiResponse<T = unknown> {
   code: number;
   message: string;
   data: T;
+}
+
+export interface LoginResponse {
+  token: string;
+  user: User;
 }
 
 export interface RouteConfig {
@@ -51,4 +48,8 @@ export interface RouteConfig {
   hidden?: boolean;
   children?: RouteConfig[];
   permissions?: string[];
+  meta?: {
+    title: string;
+    icon: string;
+  };
 }

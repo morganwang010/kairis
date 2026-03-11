@@ -1,0 +1,1378 @@
+// import { invoke } from '@tauri-apps/api/core'
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+
+// Extend jsPDF interface to include autoTable methods
+declare module 'jspdf' {
+  interface jsPDF {
+    lastAutoTable: {
+      finalY: number;
+    };
+  }
+}
+
+// 获取员工总数（在职员工）
+export const getEmployeeCount = async () => {
+  try {
+    // 使用getEmployees API获取总数，page=1, page_size=1即可获取总数而不需要获取大量数据
+    const result = await invoke('get_totalEmployees', {
+      query: { page: '1', page_size: '1' }
+    });
+    const response = result as { total: number };
+    return response.total;
+  } catch (error) {
+    console.error('获取员工总数失败:', error);
+    throw error;
+  }
+};
+
+// 员工相关API
+export const getEmployees = async (params?: {
+  department?: string;
+  position?: string;
+  name?: string;
+  employee_id?: string;
+  project_name?: string;
+  location?: string;
+  page?: number;
+  page_size?: number;
+}) => {
+  try {
+    // 转换为HashMap格式
+    const queryParams: Record<string, string> = {};
+    if (params) {
+      if (params.department) queryParams.department = params.department;
+      if (params.position) queryParams.position = params.position;
+      if (params.name) queryParams.name = params.name;
+      if (params.employee_id) queryParams.employee_id = params.employee_id;
+      if (params.project_name) queryParams.project_name = params.project_name;
+      if (params.location) queryParams.location = params.location;
+      if (params.page !== undefined) queryParams.page = params.page.toString();
+      if (params.page_size !== undefined) queryParams.page_size = params.page_size.toString();
+    }
+    
+    const result = await invoke('get_employees', { query: queryParams });
+    // 后端返回的是包含data和total的对象，我们需要返回data数组
+    const response = result as { data: any[]; total: number };
+    return response.data;
+  } catch (error) {
+    console.error('获取员工列表失败:', error);
+    throw error;
+  }
+};
+
+export const deleteEmployee = async (id: string) => {
+  try {
+    const result = await invoke('delete_employee', { id });
+    console.log('删除员工成功:', result);
+    return result;
+  } catch (error) {
+    console.error('删除员工失败:', error);
+    throw error;
+  }
+};
+
+export const updateEmployee = async (id: string, projectId: string, data: any) => {
+  try {
+    console.log('开始更新员工数据:', id, projectId, data);
+    const result = await invoke('update_employee', { id, projectId, employeeData: data });
+    console.log('更新员工成功:', result);
+    return result;
+  } catch (error) {
+    console.error('更新员工失败:', error);
+    throw error;
+  }
+};
+
+// 薪资相关API
+export const getSalaries = async (params?: {
+  month?: string;
+  project_id?: string;
+  page?: string;
+  page_size?: string;
+  employee_id?: string;
+  name?: string;
+}) => {
+  try {
+    // 转换为HashMap格式
+    const queryParams: Record<string, string> = {};
+    if (params) {
+      if (params.month) queryParams.month = params.month;
+      if (params.project_id) queryParams.project_id = params.project_id;
+      if (params.page !== undefined) queryParams.page = params.page.toString();
+      if (params.page_size !== undefined) queryParams.page_size = params.page_size.toString();
+      if (params.employee_id) queryParams.employee_id = params.employee_id.toString();
+      if (params.name) queryParams.name = params.name.toString();
+    }
+    
+    console.log('构建的查询参数:', queryParams);
+    const result = await invoke('get_salaries', { query: queryParams });
+    return result;
+  } catch (error) {
+    console.error('获取薪资列表失败:', error);
+    throw error;
+  }
+};
+
+// 更新薪资
+export const updateSalary = async (_id: number, data: any) => {
+  try {
+    // 由于后端目前只有calculate_monthly_salary接口，我们将使用它来处理更新操作
+    const response = await invoke('calculate_monthly_salary', {
+      month: data.month,
+      project_id: data.project_id,
+      employee_id: data.employee_id
+    });
+    return response;
+  } catch (error) {
+    console.error('更新薪资失败:', error);
+    throw error;
+  }
+};
+
+// 更新薪资计算状态
+export const updateSalaryCalculateStatus = async (id: number, checked: number) => {
+  try {
+    console.log('更新薪资计算状态:', id, checked);
+    const response = await invoke('update_calculate_status', {
+      id: id.toString(),
+      is_calculate: checked.toString(),
+      isCalculate: checked.toString(),
+    });
+    return response;
+  } catch (error) {
+    console.error('更新薪资计算状态失败:', error);
+    throw error;
+  }
+};
+
+// 逻辑删除薪资记录
+export const deleteSalaryRecord = async (id: number) => {
+  try {
+    console.log('删除薪资记录:', id);
+    const response = await invoke('delete_salary_record', {
+      id: id.toString(),
+    });
+    return response;
+  } catch (error) {
+    console.error('删除薪资记录失败:', error);
+    throw error;
+  }
+};
+
+// 添加薪资
+export const addSalary = async (data: any) => {
+  try {
+    const response = await invoke('calculate_monthly_salary', {
+      month: data.month,
+      project_id: data.project_id,
+      employee_id: data.employee_id
+    });
+    return response;
+  } catch (error) {
+    console.error('添加薪资失败:', error);
+    throw error;
+  }
+};
+
+// 工资条相关API
+export const getSalarySlips = async (params: {
+  month: string;
+  employee_id?: string | number;
+  project_id?: string;
+  employee_name?: string;
+  page?: number;
+  page_size?: number;
+}) => {
+  try {
+    // 转换为HashMap格式
+    const queryParams: Record<string, string> = {};
+    queryParams.month = params.month;
+    if (params.employee_id !== undefined && params.employee_id !== null && params.employee_id !== '') {
+      queryParams.employee_id = params.employee_id.toString();
+    }
+    if (params.project_id) queryParams.project_id = params.project_id;
+    if (params.employee_name) queryParams.employee_name = params.employee_name;
+    if (params.page !== undefined) queryParams.page = params.page.toString();
+    if (params.page_size !== undefined) queryParams.page_size = params.page_size.toString();
+    // console.log('工资条查询参数:', queryParams);
+    const result = await invoke('get_salary_slips', { query: queryParams });
+    return result as { data: any[]; total: number };
+  } catch (error) {
+    console.error('获取工资条列表失败:', error);
+    throw error;
+  }
+};
+
+export const getSalarySlipDetail = async (id: number) => {
+  try {
+    const result = await invoke('get_salary_slip_detail', { id });
+    return result as any;
+  } catch (error) {
+    console.error('获取工资条详情失败:', error);
+    throw error;
+  }
+};
+
+// 健康检查
+export const healthCheck = async () => {
+  try {
+    const result = await invoke('health_check');
+    return result;
+  } catch (error) {
+    console.error('健康检查失败:', error);
+    throw error;
+  }
+};
+
+// 部门相关API
+export const getDepartments = async () => {
+  try {
+    const result = await invoke('get_departments');
+    return result as { id: number; name: string }[];
+  } catch (error) {
+    console.error('获取部门列表失败:', error);
+    throw error;
+  }
+};
+
+// 职级相关API
+export const getRanks = async () => {
+  try {
+    const result = await invoke('get_ranks');
+    return result as { id: number; name: string }[];
+  } catch (error) {
+    console.error('获取职级列表失败:', error);
+    throw error;
+  }
+};
+
+// 项目相关API
+export const getProjects = async (params?: {
+  project_name?: string;
+  manager?: string;
+  is_active?: boolean;
+  page?: number;
+  page_size?: number;
+}) => {
+  try {
+    // 转换为HashMap格式
+    const queryParams: Record<string, string> = {};
+    if (params) {
+      if (params.project_name) queryParams.project_name = params.project_name;
+      if (params.manager) queryParams.manager = params.manager;
+      if (params.is_active !== undefined) queryParams.is_active = params.is_active.toString();
+      if (params.page !== undefined) queryParams.page = params.page.toString();
+      if (params.page_size !== undefined) queryParams.page_size = params.page_size.toString();
+    }
+    
+    const result = await invoke('get_projects', { query: queryParams });
+    // console.log('获取项目列表成功:', result);
+    return result as any[];
+  } catch (error) {
+    console.error('获取项目列表失败:', error);
+    throw error;
+  }
+};
+// 创建项目
+export const createProject = async (data: any) => {
+  try {
+    // 构建查询参数
+    const queryParams: Record<string, string> = {
+      project_name: data.projectName,
+      project_abbr: data.projectShortName,
+      start_time: data.startTime || '',
+      end_time: data.endTime || '',
+      manager: data.responsiblePerson || '',
+      project_desc: data.description || '',
+      status: data.status || 'active'
+    };
+    
+    const response = await invoke('create_project', { query: queryParams });
+    return response;
+  } catch (error) {
+    console.error('创建项目失败:', error);
+    throw error;
+  }
+};
+// 更新项目
+export const updateProject = async (data: any) => {
+  try {
+    // 转换为HashMap格式，只传递存在的参数
+    const queryParams: Record<string, string> = {
+      project_id: data.id,
+      project_name: data.projectName,
+      project_abbr: data.projectShortName
+    };
+    
+    // 只传递存在的可选参数
+    if (data.startTime) queryParams.start_time = data.startTime;
+    if (data.endTime) queryParams.end_time = data.endTime;
+    if (data.responsiblePerson) queryParams.manager = data.responsiblePerson;
+    if (data.clientProjectManager) queryParams.party_a_manager = data.clientProjectManager;
+    if (data.clientCompanyName) queryParams.party_a_company = data.clientCompanyName;
+    if (data.contactPhone) queryParams.contact_phone = data.contactPhone;
+    if (data.description) queryParams.project_desc = data.description;
+    
+    console.log("project_id {}",data.id)
+    const response = await invoke('update_project', { query: queryParams });
+    return response;
+  } catch (error) {
+    console.error('更新项目失败:', error);
+    throw error;
+  }
+};
+// 薪资导入相关API
+export const importSingleSalaryRecord = async (record: any) => {
+  try {
+    const response = await invoke('import_single_salary_record', { record });
+    return response;
+  } catch (error) {
+    console.error('导入单条薪资记录失败:', error);
+    throw error;
+  }
+};
+
+export const importSalaryRecords = async (project_id: number, month: string, records: any[]) => {
+  console.log('project_id', project_id);
+  // 把record里的内容都打印出来
+
+  records.forEach((record, index) => {
+    console.log(`记录${index + 1}:`, record);
+  });
+  // 转换为HashMap格式
+  // const queryParams: Record<string, string> = {};
+  // queryParams.project_id = project_id.toString();
+  // queryParams.month = month;
+  // let projectId = project_id;
+  
+  try {
+    const response = await invoke('import_salary_records', { projectId: project_id, month, records });
+    return response;
+  } catch (error) {
+    console.error('批量导入薪资记录失败:', error);
+    throw error;
+  }
+};
+// 删除项目
+export const deleteProjects = async (params?: {
+  project_id?: number;
+}) => {
+  try {
+    // 转换为HashMap格式
+    const queryParams: Record<string, string> = {};
+    if (params) {
+      if (params.project_id !== undefined) queryParams.project_id = params.project_id.toString();
+    }
+    
+    const result = await invoke('delete_projects', { query: queryParams });
+    console.log('删除项目成功:', result);
+    return result as any[];
+  } catch (error) {
+    console.error('删除项目失败:', error);
+    throw error;
+  }
+};
+
+// 考勤相关API
+export const getAttendanceRecords = async (params?: {
+  project_id?: string;
+  month?: string;
+  page?: number;
+  page_size?: number;
+  employee_id?: string;
+  employee_name?: string;
+}) => {
+  try {
+    // 转换为HashMap格式
+    const queryParams: Record<string, string> = {};
+    console.log('params333', params)
+    if (params) {
+      if (params.project_id) queryParams.project_id = params.project_id;
+      if (params.month) queryParams.month = params.month;
+      if (params.page !== undefined) queryParams.page = params.page.toString();
+      if (params.page_size !== undefined) queryParams.page_size = params.page_size.toString();
+      if (params.employee_id) queryParams.employee_id = params.employee_id.toString();
+      if (params.employee_name) queryParams.employee_name = params.employee_name.toString();
+    }
+    console.log('queryParams', queryParams)
+    const result = await invoke('get_attendance', { query: queryParams });
+    console.log('获取考勤记录成功:', result);
+    return result;
+  } catch (error) {
+    console.error('获取考勤记录失败:', error);
+    throw error;
+  }
+};
+
+// 添加考勤记录
+export const addAttendanceRecord = async (record: any) => {
+  try {
+    const result = await invoke('add_attendance_record', { record });
+    console.log('添加考勤记录成功:', result);
+    return result;
+  } catch (error) {
+    console.error('添加考勤记录失败:', error);
+    throw error;
+  }
+};
+
+// 批量导入考勤记录
+export const importAttendanceRecords = async (records: any[]) => {
+  try {
+    // 把records里的内容都打印出来
+    records.forEach((record, index) => {
+      console.log(`记录${index + 1}:`, record);
+    });
+    const result = await invoke('import_attendance_records', { records });
+    console.log('批量导入考勤记录成功:', result);
+    return result;
+  } catch (error) {
+    console.error('批量导入考勤记录失败:', error);
+    throw error;
+  }
+};
+
+// 单条导入考勤记录
+export const importSingleAttendanceRecord = async (record: any) => {
+  try {
+    const result = await invoke('import_single_attendance_record', { record });
+    console.log('单条导入考勤记录成功:', result);
+    return result;
+  } catch (error) {
+    console.error('单条导入考勤记录失败:', error);
+    throw error;
+  }
+};
+
+// 更新考勤记录
+export const updateAttendanceRecord = async (record: any) => {
+  try {
+    const result = await invoke('update_attendance_record', { record });
+    console.log('更新考勤记录成功:', result);
+    return result;
+  } catch (error) {
+    console.error('更新考勤记录失败:', error);
+    throw error;
+  }
+};
+
+// 删除考勤记录
+export const deleteAttendanceRecord = async (id: number) => {
+  try {
+    console.log('删除考勤记录请求:', id);
+    //判断id是否为数字
+    if (isNaN(id)) {
+      throw new Error('考勤记录ID必须为数字');
+    }
+    const result = await invoke('delete_attendance_record', { id });
+    console.log('删除考勤记录成功:', result);
+    return result;
+  } catch (error) {
+    console.error('删除考勤记录失败:', error);
+    throw error;
+  }
+};
+
+// 删除所有考勤记录
+export const deleteAllAttendanceRecord = async (projectId: string, month: string) => {
+  try {
+    console.log('删除所有考勤记录请求:', projectId, month);
+    const result = await invoke('delete_all_attendance_records', { projectId, month });
+    console.log('删除所有考勤记录成功:', result);
+    return result;
+  } catch (error) {
+    console.error('删除所有考勤记录失败:', error);
+    throw error;
+  }
+};
+
+// 偶发事件相关API
+// 获取偶发事件记录
+export const getIncidentRecords = async (params: {
+  project_id: string;
+  month: string;
+  page?: number;
+  page_size?: number;
+  employee_id?: string;
+  name?: string;
+}) => {
+  try {
+    if (!params || !params.project_id || !params.month) {
+      throw new Error('缺少必填参数: project_id 和 month');
+    }
+    
+    console.log('here is params:', params);
+    
+    // 构建查询参数，转换为HashMap格式
+    const queryParams: Record<string, string> = {
+      project_id: params.project_id,
+      month: params.month
+    };
+    
+    if (params.page !== undefined) {
+      queryParams.page = params.page.toString();
+    }
+    if (params.page_size !== undefined) {
+      queryParams.page_size = params.page_size.toString();
+    }
+    if (params.employee_id) {
+      queryParams.employee_id = params.employee_id.toString();
+    }
+    if (params.name) {
+      queryParams.name = params.name.toString();
+    }
+    
+    console.log('构建的查询参数:', queryParams);
+    const result = await invoke('get_incident_records', {
+      query: queryParams
+    });
+    console.log('获取偶发事件记录成功:', result);
+    return result as any;
+  } catch (error) {
+    console.error('获取偶发事件记录失败:', error);
+    throw error;
+  }
+};
+
+// 添加偶发事件记录
+export const addIncident = async (record: any) => {
+  try {
+    const result = await invoke('add_incident', { record });
+    console.log('添加偶发事件记录成功:', result);
+    return result;
+  } catch (error) {
+    console.error('添加偶发事件记录失败:', error);
+    throw error;
+  }
+};
+
+// 更新偶发事件记录
+export const updateIncident = async (record: any) => {
+  try {
+    const result = await invoke('update_incident', { record });
+    console.log('更新偶发事件记录成功:', result);
+    return result;
+  } catch (error) {
+    console.error('更新偶发事件记录失败:', error);
+    throw error;
+  }
+};
+
+// 删除偶发事件记录
+export const deleteIncident = async (id: number) => {
+  try {
+    const result = await invoke('delete_incident_record', { recordId: id });
+    console.log('删除偶发事件记录成功:', result);
+    return result;
+  } catch (error) {
+    console.error('删除偶发事件记录失败:', error);
+    throw error;
+  }
+};
+
+// 删除所有偶发事件记录
+export const deleteAllIncidentRecords = async (projectId: string, month: string) => {
+  try {
+    console.log('删除所有偶发事件记录请求:', projectId, month);
+    const result = await invoke('delete_all_incident_records', { projectId, month });
+    console.log('删除所有偶发事件记录成功:', result);
+    return result;
+  } catch (error) {
+    console.error('删除所有偶发事件记录失败:', error);
+    throw error;
+  }
+};
+
+// 税率相关API
+// 获取税率列表
+export const getTaxRates = async (grade: string) => {
+  try {
+    const result = await invoke('get_tax_rates', { grade });
+    console.log('获取税率列表成功:', result);
+    return result as any[];
+  } catch (error) {
+    console.error('获取税率列表失败:', error);
+    throw error;
+  }
+};
+
+// 添加税率记录
+export const addTaxRate = async (record: any) => {
+  try {
+    const result = await invoke('add_tax_rate', { record });
+    console.log('添加税率记录成功:', result);
+    return result;
+  } catch (error) {
+    console.error('添加税率记录失败:', error);
+    throw error;
+  }
+};
+
+// 更新税率记录
+export const updateTaxRate = async (record: any) => {
+  try {
+    const result = await invoke('update_tax_rate', { record });
+    console.log('更新税率记录成功:', result);
+    return result;
+  } catch (error) {
+    console.error('更新税率记录失败:', error);
+    throw error;
+  }
+};
+
+// 删除税率记录
+export const deleteTaxRate = async (id: string) => {
+  try {
+    const result = await invoke('delete_tax_rate', { id });
+    console.log('删除税率记录成功:', result);
+    return result;
+  } catch (error) {
+    console.error('删除税率记录失败:', error);
+    throw error;
+  }
+};
+
+// 获取免税收入基数列表
+export const getTaxFreeBases = async () => {
+  try {
+    const result = await invoke('get_tax_free_bases');
+    console.log('获取免税收入基数列表成功:', result);
+    return result as any[];
+  } catch (error) {
+    console.error('获取免税收入基数列表失败:', error);
+    throw error;
+  }
+};
+
+// 添加免税收入基数记录
+export const addTaxFreeBase = async (record: any) => {
+  try {
+    const result = await invoke('add_tax_free_base', { record });
+    console.log('添加免税收入基数记录成功:', result);
+    return result;
+  } catch (error) {
+    console.error('添加免税收入基数记录失败:', error);
+    throw error;
+  }
+};
+
+// 更新免税收入基数记录
+export const updateTaxFreeBase = async (record: any) => {
+  try {
+    const result = await invoke('update_tax_free_base', { record });
+    console.log('更新免税收入基数记录成功:', result);
+    return result;
+  } catch (error) {
+    console.error('更新免税收入基数记录失败:', error);
+    throw error;
+  }
+};
+
+// 删除免税收入基数记录
+export const deleteTaxFreeBase = async (id: string) => {
+  try {
+    const result = await invoke('delete_tax_free_base', { id });
+    console.log('删除免税收入基数记录成功:', result);
+    return result;
+  } catch (error) {
+    console.error('删除免税收入基数记录失败:', error);
+    throw error;
+  }
+};
+
+// 员工信息导入API
+export const importEmployeeRecords = async (records: any[]) => {
+  try {
+    const result = await invoke('import_employee_records', { records });
+    console.log('批量导入员工信息成功:', result);
+    return result;
+  } catch (error) {
+    console.error('批量导入员工信息失败:', error);
+    throw error;
+  }
+};
+
+// 单条导入员工信息
+export const importSingleEmployeeRecord = async (record: any) => {
+  try {
+    const result = await invoke('import_single_employee_record', { record });
+    console.log('单条导入员工信息成功:', result);
+    return result;
+  } catch (error) {
+    console.error('单条导入员工信息失败:', error);
+    throw error;
+  }
+};
+
+// 偶发事件导入API
+export const importIncidentRecords = async (records: any[]) => {
+  try {
+    // console.log('批量导入偶发事件请求:', records.map(r => r.ot2_wages));
+    // console.log('批量导入偶发事件请求:', records.map(r => r.ot3_wages));
+    const result = await invoke('import_incident_records', { records });
+    console.log('批量导入偶发事件成功:', result);
+    return result;
+  } catch (error) {
+    console.error('批量导入偶发事件失败:', error);
+    throw error;
+  }
+};
+
+// 单条导入偶发事件
+export const importSingleIncidentRecord = async (record: any) => {
+  try {
+    const result = await invoke('import_single_incident_record', { record });
+    console.log('单条导入偶发事件成功:', result);
+    return result;
+  } catch (error) {
+    console.error('单条导入偶发事件失败:', error);
+    throw error;
+  }
+};
+
+// 获取薪资汇总
+export const getSalarySummary = async () => {
+  try {
+    const result = await invoke('get_salary_summary');
+    console.log('获取薪资汇总成功:', result);
+    return result;
+  } catch (error) {
+    console.error('获取薪资汇总失败:', error);
+    throw error;
+  }
+};
+
+// 薪资计算API
+export const calculateMonthlySalary = async (params: {
+  month: string;
+  project_id?: string;
+}) => {
+  try {
+    // 转换为HashMap格式
+    const queryParams: Record<string, string> = {};
+    queryParams.month = params.month;
+    if (params.project_id) {
+      queryParams.project_id = params.project_id;
+    }
+    
+    const result = await invoke('calculate_monthly_salary', { query: queryParams });
+    // messageApi.success('薪资计算成功');
+    console.log('计算薪资成功:', result);
+    return result as any[];
+  } catch (error) {
+    console.error('计算薪资失败:', error);
+    throw error;
+  }
+};
+
+ // 生成薪资详情PDF
+    const generateSalaryPDF = (record: any): string => {
+      const doc = new jsPDF('p', 'mm', 'a4');
+      
+      // 添加标题
+      doc.setFontSize(16);
+      doc.setFont('helvetica', 'bold');
+      doc.text('SLIP GAJI', 105, 20, { align: 'center' });
+      
+      // 添加员工信息
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      
+      const startY = 30;
+      
+      // 格式化金额为数字格式
+      const formatAmount = (amount: number): string => {
+        return new Intl.NumberFormat('id-ID', {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0
+        }).format(amount || 0);
+      };
+      
+      // 定义员工信息数据（四列格式）
+      const employeeInfo: any[] = [
+        ['DATE', record.month || '', 'Employee_ID', record.employee_id || ''],
+        ['Employee_Name', record.employee_name || '', 'NPWP',  record.npwp || ''],
+        ['IDCard_Number', record.id_card || '', 'Location_Name', record.location || ''],
+        ['Position',record.position || record.department || '', 'Join_Date', record.joinDate || record.join_date || ''],
+      ];
+      
+      autoTable(doc, {
+        startY: startY,
+        body: employeeInfo,
+        theme: 'plain',
+        styles: {
+          fontSize: 9,
+          cellPadding: 2
+        },
+        columnStyles: {
+          0: {
+            halign: 'left',
+            fontStyle: 'bold'
+          },
+          1: {
+            halign: 'left'
+          },
+          2: {
+            halign: 'left',
+            fontStyle: 'bold'
+          },
+          3: {
+            halign: 'left'
+          }
+        }
+      });
+      
+      // 定义薪资详情数据（四列格式）
+      const salaryDetails: any[] = [
+        ['Basic_Salary', formatAmount(record.basic_salary), 'Field_Alw', formatAmount(record.field_alw)  ],
+        ['Housing_Alw', formatAmount(record.housing_alw), 'Position_Alw', formatAmount(record.position_alw)],
+        ['TOTAL_NET_WAGES', formatAmount(record.total_net_wages), 'BPJS ALLOWANCE', formatAmount(record.bpjs_alw)],
+        ['Housing_ALW/TJ_Tidak_Tetap', formatAmount(record.housing_alw_tidak_tetap), 'Meal_Alw', formatAmount(record.meal_alw)],
+        ['Pulsa_Alw_Month', formatAmount(record.pulsa_alw_month), 'Transp_Alw', formatAmount(record.transp_alw)],
+        ['Jmstk_Alw', formatAmount(record.jmstk_alw), 'Tax_Alw_Salary', formatAmount(record.tax_alw_salary)],
+        ['Pension_Alw', formatAmount(record.pension_alw), 'Askes_Bpjs_Alw', formatAmount(record.askes_bpjs_alw)],
+        [ 'OT1_Wages', formatAmount(record.ot1),'EW1_Wages', formatAmount(record.ew1)],
+        [ 'OT2_Wages', formatAmount(record.ot2), 'EW2_Wages', formatAmount(record.ew2)],
+        [ 'OT3_Wages', formatAmount(record.ot3),'EW3_Wages', formatAmount(record.ew3)],
+        ['Pulsa_Alw', formatAmount( record.pulsa_alw), 'Med_Alw', formatAmount(record.med_alw)],
+        ['Att_Alw', formatAmount(record.att_alw), 'Leave_Comp', formatAmount(record.leave_comp), ],
+        ['Mandah_Alw', formatAmount(record.mandah_alw),  'Religious_Alw', formatAmount(record.religious_alw)],
+        ['Incentive_Alw', formatAmount(record.incentive_alw), 'Rapel_Basic_Salary', formatAmount(record.rapel_basic_salary)],
+        ['Performance_Alw', formatAmount(record.performance_alw), 'Rapel_Jmstk_Alw', formatAmount(record.rapel_jmstk_alw)],
+        ['Comp_PHK', formatAmount(record.comp_phk),'Trip_Alw', formatAmount(record.trip_alw) ],
+        [ 'Tax_Alw_PHK', formatAmount(record.tax_alw_phk),'Acting', formatAmount(record.acting)],
+        ['Others', formatAmount(record.others), 'Correct_Add', formatAmount(record.correct_add)],        
+        ['Tax_Ded_PHK', formatAmount(record.tax_ded_phk), 'Incentive_Ded', formatAmount(record.incentive_ded)],     
+        ['Absent_Ded', formatAmount(record.absent_ded),  'Load_Ded', formatAmount(record.load_ded)],
+        ['Absent_Ded2', formatAmount(record.absent_ded2), 'Correct_Sub', formatAmount(record.correct_sub)],
+        ['Total_Accept',  { content: formatAmount(record.total_accept ), colSpan: 3, styles: { halign: 'center', valign: 'middle' } }],
+        ['JMSTK_Fee', formatAmount(record.jmstk_fee), 'Tax_Ded_Salary', formatAmount(record.tax_ded_salary )],
+        ['Pension_Ded', formatAmount(record.pension_ded || record.astekDeduction), 'Askes_Bpjs_Ded', formatAmount(record.askes_bpjs_ded || record.bpjsDeduction)],
+        ['Round_Off_Salary', { content: formatAmount(record.round_off_salary), colSpan: 3, styles: { halign: 'center', valign: 'middle' } }],
+        ['TOT TRANSFER', { content: formatAmount(record.round_off_salary), colSpan: 3, styles: { halign: 'center', valign: 'middle' } }],
+
+      ];
+      
+      autoTable(doc, {
+        startY: doc.lastAutoTable.finalY + 10,
+        body: salaryDetails,
+        theme: 'grid',
+        styles: {
+          fontSize: 7,
+          cellPadding: 2
+        },
+        columnStyles: {
+          0: {
+            halign: 'left',
+            fontStyle: 'bold'
+          },
+          1: {
+            halign: 'right'
+          },
+          2: {
+            halign: 'left',
+            fontStyle: 'bold'
+          },
+          3: {
+            halign: 'right'
+          }
+        }
+      });
+      
+      // 转换为base64并移除data URI前缀
+      const dataUri = doc.output('datauristring');
+      console.log('Full data URI:', dataUri.substring(0, 100) + '...');
+      
+      // 提取纯base64数据
+      const commaIndex = dataUri.indexOf(',');
+      const base64Data = commaIndex > -1 ? dataUri.substring(commaIndex + 1) : dataUri;
+      
+      // 清理数据
+      const cleanBase64Data = base64Data.trim();
+      
+      console.log('PDF base64 data length:', cleanBase64Data.length);
+      console.log('PDF base64 data prefix:', cleanBase64Data.substring(0, 50));
+      console.log('PDF base64 data first 10 characters:', JSON.stringify(cleanBase64Data.substring(0, 10)));
+      
+      return cleanBase64Data;
+    };
+    
+
+// 邮件发送API
+export const sendEmail = async (record: any,currentMonth: string,projectId: string) => {
+  try {
+    // 确保员工邮箱存在，避免"missing field `to`"错误
+    if (!record || !record.email) {
+      throw new Error('员工邮箱地址不存在，无法发送邮件');
+    }
+    
+
+    
+   
+    // 生成薪资详情PDF并下载
+    // export const generateAndDownloadPDF = (record: any, fileName: string): void => {
+      // const doc = new jsPDF('p', 'mm', 'a4');
+      
+      // // 添加标题
+      // doc.setFontSize(16);
+      // doc.setFont('helvetica', 'bold');
+      // doc.text('SLIP GAJI', 105, 20, { align: 'center' });
+      
+      // // 添加员工信息
+      // doc.setFontSize(10);
+      // doc.setFont('helvetica', 'normal');
+      
+      // const startY = 30;
+      
+      // // 格式化金额为数字格式
+      // const formatAmount = (amount: number): string => {
+      //   return new Intl.NumberFormat('id-ID', {
+      //     minimumFractionDigits: 0,
+      //     maximumFractionDigits: 0
+      //   }).format(amount || 0);
+      // };
+      
+      // // 定义员工信息数据（四列格式）
+      // const employeeInfo: any[] = [
+      //   ['DATE', record.month || '', 'Employee_ID', record.employee_id || ''],
+      //   ['Employee_Name', record.employee_name || '', 'NPWP',  record.npwp || ''],
+      //   ['IDCard_Number', record.id_card || '', 'Location_Name', record.location || ''],
+      //   ['Position',record.position || record.department || '', 'Join_Date', record.joinDate || record.join_date || ''],
+      // ];
+      
+      // autoTable(doc, {
+      //   startY: startY,
+      //   body: employeeInfo,
+      //   theme: 'plain',
+      //   styles: {
+      //     fontSize: 9,
+      //     cellPadding: 2
+      //   },
+      //   columnStyles: {
+      //     0: {
+      //       halign: 'left',
+      //       fontStyle: 'bold'
+      //     },
+      //     1: {
+      //       halign: 'left'
+      //     },
+      //     2: {
+      //       halign: 'left',
+      //       fontStyle: 'bold'
+      //     },
+      //     3: {
+      //       halign: 'left'
+      //     }
+      //   }
+      // });
+      
+      // // 定义薪资详情数据（四列格式）
+      // const salaryDetails: any[] = [
+      //   ['Basic_Salary', formatAmount(record.basic_salary), 'Field_Alw', formatAmount(record.field_alw)  ],
+      //   ['Housing_Alw', formatAmount(record.housing_alw), 'Position_Alw', formatAmount(record.position_alw)],
+      //   ['TOTAL_NET_WAGES', formatAmount(record.total_net_wages), 'BPJS ALLOWANCE', formatAmount(record.bpjs_alw)],
+      //   ['Housing_ALW/TJ_Tidak_Tetap', formatAmount(record.housing_alw_tidak_tetap), 'Meal_Alw', formatAmount(record.meal_alw)],
+      //   ['Pulsa_Alw_Month', formatAmount(record.pulsa_alw_month), 'Transp_Alw', formatAmount(record.transp_alw)],
+      //   ['Jmstk_Alw', formatAmount(record.jmstk_alw), 'Tax_Alw_Salary', formatAmount(record.tax_alw_salary)],
+      //   ['Pension_Alw', formatAmount(record.pension_alw), 'Askes_Bpjs_Alw', formatAmount(record.askes_bpjs_alw)],
+      //   [ 'OT1_Wages', formatAmount(record.ot1),'EW1_Wages', formatAmount(record.ew1)],
+      //   [ 'OT2_Wages', formatAmount(record.ot2), 'EW2_Wages', formatAmount(record.ew2)],
+      //   [ 'OT3_Wages', formatAmount(record.ot3),'EW3_Wages', formatAmount(record.ew3)],
+      //   ['Pulsa_Alw', formatAmount( record.pulsa_alw), 'Med_Alw', formatAmount(record.med_alw)],
+      //   ['Att_Alw', formatAmount(record.att_alw), 'Leave_Comp', formatAmount(record.leave_comp), ],
+      //   ['Mandah_Alw', formatAmount(record.mandah_alw),  'Religious_Alw', formatAmount(record.religious_alw)],
+      //   ['Incentive_Alw', formatAmount(record.incentive_alw), 'Rapel_Basic_Salary', formatAmount(record.rapel_basic_salary)],
+      //   ['Performance_Alw', formatAmount(record.performance_alw), 'Rapel_Jmstk_Alw', formatAmount(record.rapel_jmstk_alw)],
+      //   ['Comp_PHK', formatAmount(record.comp_phk),'Trip_Alw', formatAmount(record.trip_alw) ],
+      //   [ 'Tax_Alw_PHK', formatAmount(record.tax_alw_phk),'Acting', formatAmount(record.acting)],
+      //   ['Others', formatAmount(record.others), 'Correct_Add', formatAmount(record.correct_add)],        
+      //   ['Tax_Ded_PHK', formatAmount(record.tax_ded_phk), 'Incentive_Ded', formatAmount(record.incentive_ded)],     
+      //   ['Absent_Ded', formatAmount(record.absent_ded),  'Load_Ded', formatAmount(record.load_ded)],
+      //   ['Absent_Ded2', formatAmount(record.absent_ded2), 'Correct_Sub', formatAmount(record.correct_sub)],
+      //   ['Total_Accept',  { content: formatAmount(record.total_accept ), colSpan: 3, styles: { halign: 'center', valign: 'middle' } }],
+      //   ['JMSTK_Fee', formatAmount(record.jmstk_fee), 'Tax_Ded_Salary', formatAmount(record.tax_ded_salary )],
+      //   ['Pension_Ded', formatAmount(record.pension_ded || record.astekDeduction), 'Askes_Bpjs_Ded', formatAmount(record.askes_bpjs_ded || record.bpjsDeduction)],
+      //   ['Round_Off_Salary', { content: formatAmount(record.round_off_salary), colSpan: 3, styles: { halign: 'center', valign: 'middle' } }],
+      //   ['TOT TRANSFER', { content: formatAmount(record.round_off_salary), colSpan: 3, styles: { halign: 'center', valign: 'middle' } }],
+
+      // ];
+      
+      // autoTable(doc, {
+      //   startY: doc.lastAutoTable.finalY + 10,
+      //   body: salaryDetails,
+      //   theme: 'grid',
+      //   styles: {
+      //     fontSize: 7,
+      //     cellPadding: 2
+      //   },
+      //   columnStyles: {
+      //     0: {
+      //       halign: 'left',
+      //       fontStyle: 'bold'
+      //     },
+      //     1: {
+      //       halign: 'right'
+      //     },
+      //     2: {
+      //       halign: 'left',
+      //       fontStyle: 'bold'
+      //     },
+      //     3: {
+      //       halign: 'right'
+      //     }
+      //   }
+      // });
+      
+      // 下载PDF
+      // doc.save(fileName);
+    // };
+    
+    let emailData: {
+      from: string;
+      to: string;
+      subject: string;
+      body: string;
+      attachment?: string;
+      employee_id: string;
+      month: string;
+      project_id: string;
+    } = {
+      from: 'hrms@example.com',
+      to: record.email,
+      subject: `${record.period || ''} salary slip`,
+      body: 'Please find your salary slip attached.',
+      attachment: generateSalaryPDF(record),
+      employee_id: record.employee_id,
+      month: currentMonth,
+      project_id: projectId,
+    };
+    
+    // 准备邮件数据参数 - 将emailData包装在request键中
+    const params = { request: emailData };
+    
+    // 调用后端的send_email命令
+    const result = await invoke('send_email', params);
+    console.log('发送邮件结果:', result);
+    
+    // 检查后端返回的结果
+    if (result && typeof result === 'object' && 'success' in result && !result.success) {
+      const resultObj = result as { message?: string };
+      throw new Error(resultObj.message || '邮件发送失败');
+    }
+    
+    // messageApi.success('邮件发送成功');
+    return result;
+  } catch (error) {
+    console.error('发送邮件失败:', error);
+    throw error;
+  }
+};
+
+
+export const generateAndDownloadPDF = (records: any | any[], projectName?: string) => {
+  // 确保records是一个数组
+  const recordList = Array.isArray(records) ? records : [records];
+  
+  // 为每条记录生成PDF
+  recordList.forEach((record, index) => {
+    const doc = new jsPDF('p', 'mm', 'a4');
+    
+    // 添加标题
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text('SLIP GAJI', 105, 20, { align: 'center' });
+    
+    // 添加员工信息
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    
+    const startY = 30;
+    
+    // 格式化金额为数字格式
+    const formatAmount = (amount: number): string => {
+      return new Intl.NumberFormat('id-ID', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      }).format(amount || 0);
+    };
+    
+    // 定义员工信息数据（四列格式）
+    const employeeInfo: any[] = [
+      ['DATE', record.month || '', 'Employee_ID', record.employee_id || ''],
+      ['Employee_Name', record.employee_name || '', 'NPWP',  record.npwp || ''],
+      ['IDCard_Number', record.id_card || '', 'Location_Name', record.location || ''],
+      ['Position',record.position || record.department || '', 'Join_Date', record.joinDate || record.join_date || ''],
+    ];
+    
+    autoTable(doc, {
+      startY: startY,
+      body: employeeInfo,
+      theme: 'plain',
+      styles: {
+        fontSize: 9,
+        cellPadding: 2
+      },
+      columnStyles: {
+        0: {
+          halign: 'left',
+          fontStyle: 'bold'
+        },
+        1: {
+          halign: 'left'
+        },
+        2: {
+          halign: 'left',
+          fontStyle: 'bold'
+        },
+        3: {
+          halign: 'left'
+        }
+      }
+    });
+    
+    // 定义薪资详情数据（四列格式）
+    const salaryDetails: any[] = [
+      ['Basic_Salary', formatAmount(record.basic_salary), 'Field_Alw', formatAmount(record.field_alw)  ],
+      ['Housing_Alw', formatAmount(record.housing_alw), 'Position_Alw', formatAmount(record.position_alw)],
+      ['TOTAL_NET_WAGES', formatAmount(record.total_net_wages), 'BPJS ALLOWANCE', formatAmount(record.bpjs_alw)],
+      ['Housing_ALW/TJ_Tidak_Tetap', formatAmount(record.housing_alw_tidak_tetap), 'Meal_Alw', formatAmount(record.meal_alw)],
+      ['Pulsa_Alw_Month', formatAmount(record.pulsa_alw_month), 'Transp_Alw', formatAmount(record.transp_alw)],
+      ['Jmstk_Alw', formatAmount(record.jmstk_alw), 'Tax_Alw_Salary', formatAmount(record.tax_alw_salary)],
+      ['Pension_Alw', formatAmount(record.pension_alw), 'Askes_Bpjs_Alw', formatAmount(record.askes_bpjs_alw)],
+      [ 'OT1_Wages', formatAmount(record.ot1),'EW1_Wages', formatAmount(record.ew1)],
+      [ 'OT2_Wages', formatAmount(record.ot2), 'EW2_Wages', formatAmount(record.ew2)],
+      [ 'OT3_Wages', formatAmount(record.ot3),'EW3_Wages', formatAmount(record.ew3)],
+      ['Pulsa_Alw', formatAmount( record.pulsa_alw), 'Med_Alw', formatAmount(record.med_alw)],
+      ['Att_Alw', formatAmount(record.att_alw), 'Leave_Comp', formatAmount(record.leave_comp), ],
+      ['Mandah_Alw', formatAmount(record.mandah_alw),  'Religious_Alw', formatAmount(record.religious_alw)],
+      ['Incentive_Alw', formatAmount(record.incentive_alw), 'Rapel_Basic_Salary', formatAmount(record.rapel_basic_salary)],
+      ['Performance_Alw', formatAmount(record.performance_alw), 'Rapel_Jmstk_Alw', formatAmount(record.rapel_jmstk_alw)],
+      ['Comp_PHK', formatAmount(record.comp_phk),'Trip_Alw', formatAmount(record.trip_alw) ],
+      [ 'Tax_Alw_PHK', formatAmount(record.tax_alw_phk),'Acting', formatAmount(record.acting)],
+      ['Others', formatAmount(record.others), 'Correct_Add', formatAmount(record.correct_add)],        
+      ['Tax_Ded_PHK', formatAmount(record.tax_ded_phk), 'Incentive_Ded', formatAmount(record.incentive_ded)],     
+      ['Absent_Ded', formatAmount(record.absent_ded),  'Load_Ded', formatAmount(record.load_ded)],
+      ['Absent_Ded2', formatAmount(record.absent_ded2), 'Correct_Sub', formatAmount(record.correct_sub)],
+      ['Total_Accept',  { content: formatAmount(record.total_accept ), colSpan: 3, styles: { halign: 'center', valign: 'middle' } }],
+      ['JMSTK_Fee', formatAmount(record.jmstk_fee), 'Tax_Ded_Salary', formatAmount(record.tax_ded_salary )],
+      ['Pension_Ded', formatAmount(record.pension_ded || record.astekDeduction), 'Askes_Bpjs_Ded', formatAmount(record.askes_bpjs_ded || record.bpjsDeduction)],
+      ['Round_Off_Salary', { content: formatAmount(record.round_off_salary), colSpan: 3, styles: { halign: 'center', valign: 'middle' } }],
+      ['TOT TRANSFER', { content: formatAmount(record.round_off_salary), colSpan: 3, styles: { halign: 'center', valign: 'middle' } }],
+
+    ];
+    
+    autoTable(doc, {
+      startY: doc.lastAutoTable.finalY + 10,
+      body: salaryDetails,
+      theme: 'grid',
+      styles: {
+        fontSize: 7,
+        cellPadding: 2
+      },
+      columnStyles: {
+        0: {
+          halign: 'left',
+          fontStyle: 'bold'
+        },
+        1: {
+          halign: 'right'
+        },
+        2: {
+          halign: 'left',
+          fontStyle: 'bold'
+        },
+        3: {
+          halign: 'right'
+        }
+      }
+    });
+    
+    // 生成文件名
+    let pdfFileName =  `${record.employee_name || 'unknown'}_${record.month || 'unknown'}_${index + 1}.pdf`;
+    
+    // 如果有项目名称，添加到文件名前缀
+    if (projectName) {
+      pdfFileName = `${projectName}_${pdfFileName}`;
+    }
+    
+    // 下载PDF
+    doc.save(pdfFileName);
+  });
+};
+// System Config API
+
+export const getSystemConfigs = async () => {
+  const result = await invoke('get_system_configs');
+  return result;
+};
+
+export const getSystemConfigByName = async (name: string) => {
+  const result = await invoke('get_system_config_by_name', { name });
+  return result;
+};
+
+export const updateSystemConfig = async (id: number, name: string, config: any) => {
+  const result = await invoke('update_system_config', { id, name, config });
+  return result;
+};
+
+export const insertSystemConfig = async (config: any) => {
+  const result = await invoke('insert_system_config', { config });
+  return result;
+};
+
+export const deleteSystemConfig = async (id: number) => {
+  const result = await invoke('delete_system_config', { id });
+  return result;
+};
+
+// Salary Coefficient API
+
+export const getSalaryCoefficient = async () => {
+  const result = await invoke('get_salary_coefficient');
+  return result;
+};
+
+export const updateSalaryCoefficient = async (coefficient: any) => {
+  const result = await invoke('update_salary_coefficient', { coefficient });
+  return result;
+};
+
+// License API
+export const checkLicenseStatus = async () => {
+  console.log("checkLicenseStatus")
+  const result = await invoke('check_license_status');
+  return result;
+};
+
+export const activateLicense = async (request: {
+  license_key: string;
+  company_name?: string;
+}) => {
+console.log("activateLicense request:",request)
+  const result = await invoke('activate_license', { 
+request:request,
+  });
+  return result;
+};
+
+export const deactivateLicense = async (license_key: string) => {
+  const result = await invoke('deactivate_license', { license_key });
+  return result;
+};
+
+export const getAllLicenses = async () => {
+  const result = await invoke('get_all_licenses');
+  return result;
+};
+
+// Project API
+export const getProjectName = async (projectId: string) => {
+  try {
+    const result = await invoke('get_project_by_id', { id: projectId });
+    return (result as any)?.project_name || '';
+  } catch (error) {
+    console.error('获取项目名称失败:', error);
+    return '';
+  }
+};
+
+// 认证相关API
+export const login = async (username: string, password: string) => {
+  try {
+    // const request = { username, password };
+    let loginRequest : {username:string,password:string} = { username:username, password:password };
+    console.log("request:",loginRequest);
+    // 使用Promise包装invoke，确保操作完成后再返回
+    return new Promise<{
+      success: boolean
+      message: string
+      data?: {
+        user_id: number
+        username: string
+        role: string
+        full_name?: string
+        email?: string
+        token: string
+      }
+    }>((resolve, reject) => {
+      // 直接返回invoke的结果，不使用额外的Promise包装
+      invoke('login', {request:loginRequest}).then(result => {
+        resolve(result as any);
+      }).catch(error => {
+        console.error('登录失败:', error);
+        reject(error);
+      });
+    });
+  } catch (error) {
+    console.error('登录失败:', error);
+    throw error;
+  }
+};
+
+export const register = async (data: {
+  username: string
+  password: string
+  email?: string
+  full_name?: string
+  role?: string
+}) => {
+  try {
+    const result = await invoke('register', data);
+    return result as { success: boolean; message: string };
+  } catch (error) {
+    console.error('注册失败:', error);
+    throw error;
+  }
+};
+
+export const verifyToken = async (token: string) => {
+  try {
+    const result = await invoke('verify_token', { request: { token } });
+    return result as {
+      success: boolean
+      message: string
+      data?: {
+        user_id: number
+        username: string
+        role: string
+        full_name?: string
+        email?: string
+      }
+    };
+  } catch (error) {
+    console.error('验证Token失败:', error);
+    throw error;
+  }
+};
+
+export const logout = async (token: string) => {
+  try {
+    const result = await invoke('logout', { token });
+    return result as { success: boolean; message: string };
+  } catch (error) {
+    console.error('登出失败:', error);
+    throw error;
+  }
+};
+
+export const getCurrentUser = async (token: string) => {
+  try {
+    const result = await invoke('get_current_user', { token });
+    return result as {
+      success: boolean
+      message: string
+      data?: {
+        user_id: number
+        username: string
+        role: string
+        full_name?: string
+        email?: string
+      }
+    };
+  } catch (error) {
+    console.error('获取当前用户失败:', error);
+    throw error;
+  }
+};

@@ -1,0 +1,156 @@
+import { lazy, Suspense, type ComponentType } from 'react';
+import type { RouteConfig } from '../types';
+
+const Dashboard = lazy(() => import('../pages/Dashboard'));
+const Login = lazy(() => import('../pages/Login'));
+const UserManagement = lazy(() => import('../pages/system/UserManagement'));
+const RoleManagement = lazy(() => import('../pages/system/RoleManagement'));
+const PermissionManagement = lazy(() => import('../pages/system/PermissionManagement'));
+const MenuManagement = lazy(() => import('../pages/system/MenuManagement'));
+import { createBrowserRouter, Navigate } from 'react-router-dom'
+import Layout from '../components/Layout'
+import HomePage from '../pages/HomePage'
+import SettingsPage from '../pages/SettingsPage'
+import ProjectPage from '../pages/ProjectPage'
+import SalaryMainPage from '../pages/SalaryMainPage'
+import TaxRatePage from '../pages/TaxRatePage'
+import NewAttendancePage from '../pages/NewAttendancePage'
+import SalarySlipPage from '../pages/SalarySlipPage'
+import ImportManagementPage from '../pages/ImportManagementPage'
+import AboutPage from '../pages/AboutPage'
+import LicensePage from '../pages/LicensePage'
+// import Login from '../pages/Login'
+
+import AuthProvider from '../components/AuthProvider'
+import LicenseProvider from '../components/LicenseProvider'
+
+const RootRedirect = () => {
+  const token = localStorage.getItem('savedUser')
+  console.log('first check token:', token)
+  return <Navigate to={token ? '/app' : '/login'} replace />
+}
+
+// 包装lazy组件，返回一个组件
+const WithSuspense = (Component: React.LazyExoticComponent<ComponentType<any>>) => {
+  return () => (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Component />
+    </Suspense>
+  );
+};
+
+// 导入布局组件
+const MainLayout = WithSuspense(lazy(() => import('../layouts/MainLayout')));
+const SystemLayout = WithSuspense(lazy(() => import('../layouts/SystemLayout')));
+
+export const routes: RouteConfig[] = [
+  {
+    path: '/login',
+    element: <Login />,
+  },
+  {
+    path: '/',
+    element: <MainLayout />,
+    children: [
+      {
+        path: 'dashboard',
+        element: <Dashboard />,
+        meta: { title: 'Dashboard', icon: 'DashboardOutlined' },
+      },
+      {
+        path: 'system',
+        element: <SystemLayout />,
+        children: [
+          {
+            path: 'user',
+            element: <UserManagement />,
+            meta: { title: 'User Management', icon: 'UserOutlined' },
+          },
+          {
+            path: 'role',
+            element: <RoleManagement />,
+            meta: { title: 'Role Management', icon: 'TeamOutlined' },
+          },
+          {
+            path: 'permission',
+            element: <PermissionManagement />,
+            meta: { title: 'Permission Management', icon: 'SafetyOutlined' },
+          },
+          {
+            path: 'menu',
+            element: <MenuManagement />,
+            meta: { title: 'Menu Management', icon: 'MenuOutlined' },
+          },
+        ],
+      },
+    ],
+  },
+];
+
+// 其他路由配置保持不变...
+export const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <RootRedirect />,
+  },
+  {
+    path: '/login',
+    element: <Login />,
+  },
+  {
+    path: '/app',
+    element: (
+      <LicenseProvider>
+        <AuthProvider>
+          <Layout />
+        </AuthProvider>
+      </LicenseProvider>
+    ),
+    children: [
+      {
+        index: true,
+        element: <HomePage />,
+      },
+      {
+        path: 'home',
+        element: <HomePage />,
+      },
+      {
+        path: 'settings',
+        element: <SettingsPage />,
+      },
+      {
+        path: 'projects',
+        element: <ProjectPage />,
+      },
+      {
+        path: 'salary',
+        element: <SalaryMainPage />,
+      },
+      {
+        path: 'tax-rate',
+        element: <TaxRatePage />,
+      },
+      {
+        path: 'attendance',
+        element: <NewAttendancePage />,
+      },
+      {
+        path: 'salary-slip',
+        element: <SalarySlipPage />,
+      },
+      {
+        path: 'import',
+        element: <ImportManagementPage />,
+      },
+      {
+        path: 'about',
+        element: <AboutPage />,
+      },
+      {
+        path: 'license',
+        element: <LicensePage />,
+      },
+    ],
+  },
+]);
