@@ -1,12 +1,12 @@
 package main
 
 import (
-	"log"
 	"kairis/backend/internal/config"
 	"kairis/backend/internal/handler"
 	"kairis/backend/internal/middleware"
 	"kairis/backend/internal/repository"
 	"kairis/backend/internal/service"
+	"log"
 
 	"github.com/gin-gonic/gin"
 )
@@ -31,17 +31,23 @@ func main() {
 	roleRepo := repository.NewRoleRepository(db)
 	permissionRepo := repository.NewPermissionRepository(db)
 	menuRepo := repository.NewMenuRepository(db)
+	projectRepo := repository.NewProjectRepository(db)
+	licenseRepo := repository.NewLicenseRepository(db)
 
 	userService := service.NewUserService(userRepo, roleRepo)
 	roleService := service.NewRoleService(roleRepo, permissionRepo)
 	permissionService := service.NewPermissionService(permissionRepo)
 	menuService := service.NewMenuService(menuRepo)
+	projectService := service.NewProjectService(projectRepo)
+	licenseService := service.NewLicenseService(licenseRepo)
 
 	userHandler := handler.NewUserHandler(userService)
 	roleHandler := handler.NewRoleHandler(roleService)
 	permissionHandler := handler.NewPermissionHandler(permissionService)
 	menuHandler := handler.NewMenuHandler(menuService)
 	authHandler := handler.NewAuthHandler(userService)
+	projectHandler := handler.NewProjectHandler(projectService)
+	licenseHandler := handler.NewLicenseHandler(licenseService)
 
 	api := r.Group("/api")
 	{
@@ -90,6 +96,35 @@ func main() {
 			menus.DELETE("/:id", menuHandler.Delete)
 			menus.GET("/tree", menuHandler.Tree)
 		}
+		projects := api.Group("/projects")
+		projects.Use(middleware.Auth())
+		{
+			projects.GET("", projectHandler.List)
+			projects.GET("/:id", projectHandler.Get)
+			projects.POST("", projectHandler.Create)
+			projects.PUT("/:id", projectHandler.Update)
+			projects.DELETE("/:id", projectHandler.Delete)
+		}
+		licenses := api.Group("/licenses")
+		licenses.Use(middleware.Auth())
+		{
+			licenses.GET("", licenseHandler.List)
+			licenses.GET("/:id", licenseHandler.Get)
+			licenses.POST("", licenseHandler.Create)
+			licenses.PUT("/:id", licenseHandler.Update)
+			licenses.DELETE("/:id", licenseHandler.Delete)
+			licenses.GET("/check", licenseHandler.Check)
+			licenses.POST("/activate", licenseHandler.Activate)
+			licenses.POST("/deactivate", licenseHandler.Deactivate)
+		}
+
+		// 公开的许可证接口
+		// licensePublic := api.Group("/license")
+		// {
+		// 	licensePublic.POST("/activate", licenseHandler.Activate)
+		// 	licensePublic.POST("/deactivate", licenseHandler.Deactivate)
+		// 	licensePublic.GET("/all", licenseHandler.List)
+		// }
 	}
 
 	log.Printf("Server starting on port %s", cfg.Port)

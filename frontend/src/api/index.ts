@@ -12,7 +12,7 @@ declare module 'jspdf' {
   }
 }
 // 配置API基础URL，使用Vite环境变量
-const API_BASE_URL = `${import.meta.env.VITE_API_BASE_URL}/api`;
+const API_BASE_URL = `${import.meta.env.VITE_API_BASE_URL}`;
 
 
 // 创建axios实例
@@ -20,6 +20,7 @@ const apiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
   }
 });
 
@@ -650,7 +651,7 @@ export const updateSalaryCoefficient = async (coefficient: any) => {
 // License API
 export const checkLicenseStatus = async () => {
   console.log("checkLicenseStatus")
-  const result = await apiClient.get('check_license_status');
+  const result = await apiClient.get('license/check');
   return result;
 };
 
@@ -885,14 +886,14 @@ export const activateLicense = async (request: {
   company_name?: string;
 }) => {
 console.log("activateLicense request:",request)
-  const result = await apiClient.post('/activate_license', { 
+  const result = await apiClient.post('/licenses/activate', { 
 request:request,
   });
   return result;
 };
 
 export const deactivateLicense = async (license_key: string) => {
-  const result = await apiClient.post('/deactivate_license', { license_key });
+  const result = await apiClient.post('/licenses/deactivate', { license_key });
   return result;
 };
 

@@ -64,7 +64,7 @@ const LicensePage = () => {
   }, [])
 
   return (
-    <div style={{ padding: '20px', width: '100vw', margin: '0 auto' }}>
+    <div style={{ padding: '20px', width: '100%', margin: '0 auto' }}>
       <Card className="mb-4">
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '24px' }}>
           <LockOutlined style={{ fontSize: '24px', color: '#1890ff', marginRight: '12px' }} />

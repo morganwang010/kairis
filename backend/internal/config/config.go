@@ -10,12 +10,12 @@ import (
 )
 
 type Config struct {
-	Port     string
-	DBHost   string
-	DBPort   string
-	DBUser   string
-	DBPass   string
-	DBName   string
+	Port      string
+	DBHost    string
+	DBPort    string
+	DBUser    string
+	DBPass    string
+	DBName    string
 	JWTSecret string
 }
 
@@ -50,6 +50,18 @@ func InitDB(cfg *Config) (*gorm.DB, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to database: %w", err)
 	}
+
+	// 自动迁移数据库模型
+	// if err := db.AutoMigrate(
+	// 	&model.User{},
+	// 	&model.Role{},
+	// 	&model.Permission{},
+	// 	&model.Menu{},
+	// 	&model.Project{},
+	// 	&model.License{},
+	// ); err != nil {
+	// 	return nil, fmt.Errorf("failed to migrate database: %w", err)
+	// }
 
 	return db, nil
 }

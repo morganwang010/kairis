@@ -21,40 +21,65 @@ type User struct {
 }
 
 type Role struct {
-	ID          string       `gorm:"primaryKey;type:uuid;default:gen_random_uuid()" json:"id"`
-	Name        string       `gorm:"uniqueIndex;not null" json:"name"`
-	Code        string       `gorm:"uniqueIndex;not null" json:"code"`
-	Description string       `json:"description"`
-	CreatedAt   time.Time    `json:"created_at"`
-	UpdatedAt   time.Time    `json:"updated_at"`
+	ID          string         `gorm:"primaryKey;type:uuid;default:gen_random_uuid()" json:"id"`
+	Name        string         `gorm:"uniqueIndex;not null" json:"name"`
+	Code        string         `gorm:"uniqueIndex;not null" json:"code"`
+	Description string         `json:"description"`
+	CreatedAt   time.Time      `json:"created_at"`
+	UpdatedAt   time.Time      `json:"updated_at"`
 	DeletedAt   gorm.DeletedAt `gorm:"index" json:"-"`
-	Permissions []Permission `gorm:"many2many:role_permissions;" json:"permissions"`
+	Permissions []Permission   `gorm:"many2many:role_permissions;" json:"permissions"`
 }
 
 type Permission struct {
-	ID          string       `gorm:"primaryKey;type:uuid;default:gen_random_uuid()" json:"id"`
-	Name        string       `gorm:"uniqueIndex;not null" json:"name"`
-	Code        string       `gorm:"uniqueIndex;not null" json:"code"`
-	Type        string       `gorm:"not null" json:"type"`
-	ResourceID  string       `json:"resource_id"`
-	CreatedAt   time.Time    `json:"created_at"`
-	UpdatedAt   time.Time    `json:"updated_at"`
-	DeletedAt   gorm.DeletedAt `gorm:"index" json:"-"`
+	ID         string         `gorm:"primaryKey;type:uuid;default:gen_random_uuid()" json:"id"`
+	Name       string         `gorm:"uniqueIndex;not null" json:"name"`
+	Code       string         `gorm:"uniqueIndex;not null" json:"code"`
+	Type       string         `gorm:"not null" json:"type"`
+	ResourceID string         `json:"resource_id"`
+	CreatedAt  time.Time      `json:"created_at"`
+	UpdatedAt  time.Time      `json:"updated_at"`
+	DeletedAt  gorm.DeletedAt `gorm:"index" json:"-"`
 }
 
 type Menu struct {
-	ID        string         `gorm:"primaryKey;type:uuid;default:gen_random_uuid()" json:"id"`
-	Title     string         `gorm:"not null" json:"title"`
-	Path      string         `gorm:"uniqueIndex;not null" json:"path"`
-	Icon      string         `json:"icon"`
-	Component string         `json:"component"`
-	Redirect  string         `json:"redirect"`
-	ParentID  *string        `json:"parent_id"`
-	Sort      int            `gorm:"default:0" json:"sort"`
-	Hidden    bool           `gorm:"default:false" json:"hidden"`
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
-	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
-	Children  []Menu         `json:"children,omitempty"`
-	Permissions []Permission `gorm:"many2many:menu_permissions;" json:"permissions,omitempty"`
+	ID          string         `gorm:"primaryKey;type:uuid;default:gen_random_uuid()" json:"id"`
+	Title       string         `gorm:"not null" json:"title"`
+	Path        string         `gorm:"uniqueIndex;not null" json:"path"`
+	Icon        string         `json:"icon"`
+	Component   string         `json:"component"`
+	Redirect    string         `json:"redirect"`
+	ParentID    *string        `json:"parent_id"`
+	Sort        int            `gorm:"default:0" json:"sort"`
+	Hidden      bool           `gorm:"default:false" json:"hidden"`
+	CreatedAt   time.Time      `json:"created_at"`
+	UpdatedAt   time.Time      `json:"updated_at"`
+	DeletedAt   gorm.DeletedAt `gorm:"index" json:"-"`
+	Children    []Menu         `gorm:"foreignKey:ParentID" json:"children,omitempty"`
+	Permissions []Permission   `gorm:"many2many:menu_permissions;" json:"permissions,omitempty"`
+}
+
+type Project struct {
+	ID          int            `gorm:"primaryKey;type:integer;default:nextval('project_id_seq')" json:"id"`
+	ProjectName string         `gorm:"not null" json:"project_name"`
+	ProjectAbbr string         `gorm:"not null" json:"project_abbr"`
+	Description string         `json:"description"`
+	CreatedAt   time.Time      `json:"created_at"`
+	UpdatedAt   time.Time      `json:"updated_at"`
+	DeletedAt   gorm.DeletedAt `gorm:"index" json:"-"`
+	AskesAlw    int            `json:"askes_alw"`
+}
+
+type License struct {
+	ID             int            `gorm:"primaryKey;type:integer;default:nextval('license_id_seq')" json:"id"`
+	LicenseKey     string         `gorm:"not null;uniqueIndex" json:"license_key"`
+	Status         string         `gorm:"default:inactive" json:"status"`
+	ActivationDate string         `json:"activation_date"`
+	ExpirationDate string         `json:"expiration_date"`
+	ValidUntil     string         `json:"valid_until"`
+	CompanyName    string         `json:"company_name"`
+	EmployeeCount  int            `gorm:"default:0" json:"employee_count"`
+	CreatedAt      time.Time      `json:"created_at"`
+	UpdatedAt      time.Time      `json:"updated_at"`
+	DeletedAt      gorm.DeletedAt `gorm:"index" json:"-"`
 }

@@ -1,7 +1,7 @@
 import { Layout, Menu, Select, Button, Dropdown, Avatar, Space } from 'antd'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useState, useEffect, useCallback } from 'react'
-import { HomeOutlined, SettingOutlined, AppstoreOutlined, PieChartOutlined, AccountBookOutlined, InfoCircleOutlined, LockOutlined, MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
+import { HomeOutlined, SettingOutlined, AppstoreOutlined, PieChartOutlined, AccountBookOutlined, InfoCircleOutlined, LockOutlined, MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, LogoutOutlined, DashboardOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next'
 import i18n from '../i18n'
 import { getProjects } from '../api'
@@ -108,8 +108,75 @@ const LayoutComponent = () => {
   ]
 
   return (
-      <Layout style={{ height: '100vh', minHeight: '100vh', width: '100%', margin: 0, padding: 0 }}>
-      <Header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#eff0f1ff', color: '#080808ff', padding: '0 16px', flexShrink: 0, position: 'relative', zIndex: 1 }}>
+      <Layout style={{ height: '100vh', minHeight: '100vh', width: '100vw', margin: 0, padding: 0 }}>
+              <Sider 
+                trigger={null} 
+                collapsible 
+                collapsed={collapsed}
+                style={{
+                  height: '100vh',
+                  position: 'fixed',
+                  left: 0,
+                  top: 0,
+                  zIndex: 100,
+                }}
+              >
+                <div style={{ height: 64, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: collapsed ? 16 : 20, fontWeight: 'bold' }}>
+                  {collapsed ? 'K' : 'Kairis'}
+                </div>
+                <Menu 
+                  theme="dark" 
+                  mode="inline" 
+                  defaultSelectedKeys={['dashboard']}
+                  defaultOpenKeys={['system']}
+                  style={{ height: '100%', borderRight: 0 }}
+                  items={[
+                    {
+                      key: 'dashboard',
+                      label: t('menu.dashboard'),
+                      onClick: () => navigate('/dashboard'),
+                      icon: <DashboardOutlined />,
+                    },
+                    {
+                      key: 'system',
+                      label: t('menu.system'),
+                      icon: <SettingOutlined />,
+                      children: [
+                        {
+                          key: 'user',
+                          label: t('menu.user'),
+                          onClick: () => navigate('/system/user'),
+                        },
+                        {
+                          key: 'role',
+                          label: t('menu.role'),
+                          onClick: () => navigate('/system/role'),
+                        },
+                        {
+                          key: 'permission',
+                          label: t('menu.permission'),
+                          onClick: () => navigate('/system/permission'),
+                        },
+                        {
+                          key: 'menu',
+                          label: t('menu.menu'),
+                          onClick: () => navigate('/system/menu'),
+                        },
+                      ],
+                    },
+                  ]}
+                />
+              </Sider>
+    
+      <Layout         
+      style={{
+          marginLeft: collapsed ? 80 : 200,
+          transition: 'all 0.3s',
+          minHeight: '100vh',
+          width: 'calc(100% )',
+          // flex: 1,
+        }}>
+  <Header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#eff0f1ff', color: '#080808ff', padding: '0 16px', flexShrink: 0, position: 'relative', zIndex: 1 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <span style={{ fontSize: '18px', fontWeight: 'bold' }}>{t('common.systemName')}</span>
         </div>
@@ -134,8 +201,6 @@ const LayoutComponent = () => {
           />
         </div>
       </Header>
-      <Layout style={{ flex: 1, display: 'flex', minHeight: 0, position: 'relative' }}>
-
         <Content style={{ 
           background: '#fff', 
           padding: 4, 
