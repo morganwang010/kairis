@@ -9,6 +9,7 @@ import (
 	"errors"
 	"kairis/backend/internal/model"
 	"kairis/backend/internal/repository"
+	"log/slog"
 	"strings"
 	"time"
 )
@@ -48,22 +49,22 @@ func (s *LicenseService) DeleteLicense(id int) error {
 }
 
 func (s *LicenseService) ActivateLicense(licenseKey, companyName string) (*model.License, error) {
-	license, err := s.licenseRepo.GetByLicenseKey(licenseKey)
+	license, err := VerifyLicense(licenseKey)
 	if err != nil {
 		return nil, err
 	}
-
+	slog.Info("777Activating license %s for company %s", licenseKey, companyName)
 	now := time.Now().Format("2006-01-02")
 	license.Status = "active"
 	license.ActivationDate = now
-	license.CompanyName = companyName
+	// license.CompanyName = companyName
 
-	// 假设许可证有效期为1年
-	expiration := time.Now().AddDate(1, 0, 0).Format("2006-01-02")
-	license.ExpirationDate = expiration
-	license.ValidUntil = expiration
+	// // 假设许可证有效期为1年
+	// expiration := time.Now().AddDate(1, 0, 0).Format("2006-01-02")
+	// license.ExpirationDate = expiration
+	// license.ValidUntil = expiration
 
-	if err := s.licenseRepo.Update(license); err != nil {
+	if err := s.licenseRepo.Create(license); err != nil {
 		return nil, err
 	}
 
@@ -134,6 +135,7 @@ func VerifyLicense(licenseKey string) (*model.License, error) {
 
 	// 3. 转换为字符串
 	decodedStr := string(decoded)
+	slog.Info("11111Activating license for company %s", decodedStr)
 
 	// 4. 分离数据和签名（按 | 分割）
 	parts := strings.Split(decodedStr, "|")
@@ -159,13 +161,27 @@ func VerifyLicense(licenseKey string) (*model.License, error) {
 	if expectedSignatureHex != signature {
 		return nil, errors.New("License签名无效")
 	}
+	slog.Info("222Activating license for company ")
 
 	// 6. 解析 JSON 数据为 License 结构体
-	var license model.License
-	err = json.Unmarshal([]byte(dataString), &license)
+	// 将dataString转换为json格式，以更方便获取其中的值
+	var data map[string]interface{}
+	err = json.Unmarshal([]byte(dataString), &data)
 	if err != nil {
 		return nil, errors.New("License数据解析失败")
 	}
+	slog.Info("license77777 ")
+	var license model.License
+	license.LicenseKey = licenseKey
+	license.CompanyName = data["companyName"].(string)
+	// license.EmployeeCount = int(data["employee_count"].(float64))
+	license.ValidUntil = data["expirationDate"].(string)
+	license.ExpirationDate = data["expirationDate"].(string)
+
+	// err = json.Unmarshal([]byte(dataString), &license)
+	// if err != nil {
+	// 	return nil, errors.New("License数据解析失败")
+	// }
 
 	return &license, nil
 }

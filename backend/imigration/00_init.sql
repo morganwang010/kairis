@@ -408,12 +408,12 @@ CREATE TABLE system_config (
 
 
 CREATE TABLE IF NOT EXISTS licenses (
-    id SERIAL PRIMARY KEY,
+    id SERIAL PRIMARY KEY,  -- SERIAL 本身包含 int 类型，无需重复写 int
     license_key TEXT NOT NULL UNIQUE,
     status TEXT DEFAULT 'inactive',
-    activation_date TEXT,
-    expiration_date TEXT,
-    valid_until TEXT,
+    activation_date TIMESTAMP,  -- 改为 TIMESTAMP，适配日期时间存储
+    expiration_date TIMESTAMP,
+    valid_until TIMESTAMP,
     company_name TEXT,
     employee_count INTEGER DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

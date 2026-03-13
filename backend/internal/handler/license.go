@@ -3,6 +3,7 @@ package handler
 import (
 	"kairis/backend/internal/model"
 	"kairis/backend/internal/service"
+	"log/slog"
 	"net/http"
 	"strconv"
 
@@ -166,10 +167,14 @@ func (h *LicenseHandler) Delete(c *gin.Context) {
 
 func (h *LicenseHandler) Activate(c *gin.Context) {
 	var req ActivateLicenseRequest
+	slog.Info("55555Activating license  for company  ")
+
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": err.Error()})
 		return
 	}
+
+	slog.Info("3333Activating license %s for company %s", req.LicenseKey, req.CompanyName)
 
 	license, err := h.licenseService.ActivateLicense(req.LicenseKey, req.CompanyName)
 	if err != nil {
