@@ -62,11 +62,26 @@ const LicenseProviderContent = ({ children }: LicenseProviderProps) => {
         const parsedLicense = JSON.parse(storedLicense)
         setLicenseStatus(parsedLicense)
         
-        // 类型断言
-        const typedResult = parsedLicense as { success: boolean }
-        setLicenseValid(typedResult.success)
+        console.log('License过期日期:', parsedLicense)
+             // 获取result中data.data.data.expirationDate
+        const expirationDate = parsedLicense.data.data.expiration_date
+        // console.log('License过期日期:', expirationDate)
         
-        if (!typedResult.success) {
+        // 如果expirationDate大于当前时间，则license有效
+        if (expirationDate > new Date().toISOString().split('T')[0]) {
+          console.log('License过期日期大于当前时间，假设有效')
+          setLicenseValid(true)
+        } else {
+          console.log('License过期日期小于等于当前时间，假设无效')
+          setLicenseValid(false)
+          setModalVisible(true)
+          return
+        }
+        // 类型断言
+        // const typedResult = parsedLicense as { success: boolean }
+        // setLicenseValid(typedResult.success)
+        
+        if (!licenseValid) {
           console.log('License无效，当前路径:', location.pathname)
           
           // 如果在应用页面中且license无效，直接跳转到license页面
@@ -86,20 +101,20 @@ const LicenseProviderContent = ({ children }: LicenseProviderProps) => {
         setLicenseStatus(result)
         localStorage.setItem('license', JSON.stringify(result))
         
-        // 类型断言
-        const typedResult = result as { success: boolean }
-        setLicenseValid(typedResult.success)
+        console.log('License过期日期:', JSON.parse(JSON.stringify(result)))
+        // 获取result中data.data.data.expirationDate
+        const expirationDate = JSON.parse(JSON.stringify(result)).data.data.expiration_date
+
         
-        if (!typedResult.success) {
-          console.log('License无效，当前路径:', location.pathname)
-          
-          // 如果在应用页面中且license无效，直接跳转到license页面
-          if (location.pathname.startsWith('/app') && !location.pathname.includes('/license')) {
-            console.log('License无效，直接跳转到license页面')
-            window.location.href = '/app/license'
-          } else if (!location.pathname.startsWith('/license') && !location.pathname.startsWith('/app/license')) {
-            setModalVisible(true)
-          }
+        // 如果expirationDate大于当前时间，则license有效
+        if (expirationDate > new Date().toISOString().split('T')[0]) {
+          console.log('License过期日期大于当前时间，假设有效')
+          setLicenseValid(true)
+        } else {
+          console.log('License过期日期小于等于当前时间，假设无效')
+          setLicenseValid(false)
+          setModalVisible(true)
+          return
         }
       }
     } catch (error) {
@@ -156,7 +171,7 @@ const LicenseProviderContent = ({ children }: LicenseProviderProps) => {
   // 当登录状态变化时检查状态
   useEffect(() => {
     if (isAuthenticated) {
-      console.log('用户已登录，开始检查License状态')
+      // console.log('用户已登录，开始检查License状态')
       checkStatus()
     }
   }, [isAuthenticated, location.pathname])

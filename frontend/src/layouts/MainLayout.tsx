@@ -115,6 +115,19 @@ const MainLayout = () => {
                 },
               ],
             },
+            {
+              key: 'app',
+              label: t('common.project'),
+              onClick: handleLogout,
+              icon: <LogoutOutlined />,
+              children: [
+              {
+                key: 'user',
+                label: t('menu.user'),
+                onClick: () => navigate('/system/user'),
+              },
+            ]
+            },
           ]}
         />
       </Sider>
@@ -124,7 +137,6 @@ const MainLayout = () => {
           transition: 'all 0.3s',
           minHeight: '100vh',
           width: 'calc(100% )',
-          // flex: 1,
         }}
       >
         <Header 
@@ -165,16 +177,13 @@ const MainLayout = () => {
             background: token.colorBgContainer,
             borderRadius: 8,
             width: 'calc(100% - 48px)',
-            // flex: 1,
-
           }}
         >
           <Outlet />
-          
         </Content>
       </Layout>
     </Layout>
   );
 };
 
-export default  ;
+export default MainLayout;

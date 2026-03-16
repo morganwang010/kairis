@@ -1,7 +1,7 @@
 import { Layout, Menu, Select, Button, Dropdown, Avatar, Space } from 'antd'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useState, useEffect, useCallback } from 'react'
-import { HomeOutlined, SettingOutlined, AppstoreOutlined, PieChartOutlined, AccountBookOutlined, InfoCircleOutlined, LockOutlined, MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, LogoutOutlined, DashboardOutlined } from '@ant-design/icons';
+import { HomeOutlined, SettingOutlined, AppstoreOutlined, PieChartOutlined, AccountBookOutlined, InfoCircleOutlined, LockOutlined, MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, LogoutOutlined, DashboardOutlined, FolderOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next'
 import i18n from '../i18n'
 import { getProjects } from '../api'
@@ -29,14 +29,27 @@ const LayoutComponent = () => {
   const loadActiveProjects = useCallback(async () => {
     try {
       // 获取所有项目，筛选出在建项目（is_active=true）
-      const projects = await getProjects({ is_active: true });
-      // console.log('获取到的项目数据:', projects);
+      const response = await getProjects({ is_active: true });
+      console.log('获取到的项目数据:', response);
+      
+      // 处理不同的API响应结构
+      let projectList: any[] = [];
+      if (Array.isArray(response)) {
+        projectList = response;
+      } else if (response && Array.isArray(response.data)) {
+        projectList = response.data;
+      } else if (response && Array.isArray(response.list)) {
+        projectList = response.list;
+      } else if (response && response.data && Array.isArray(response.data.list)) {
+        projectList = response.data.list;
+      }
+      
       // 转换数据格式，只保留需要的字段
-      const formattedProjects = projects.map((project: any) => ({
+      const formattedProjects = projectList.map((project: any) => ({
         id: project.id.toString(),
         name: project.project_abbr // 使用项目简称作为菜单名称
       }));
-      
+      console.log('格式化后的项目数据:', formattedProjects);
       setActiveProjects(formattedProjects);
     } catch (error) {
       console.error('加载项目数据失败:', error);
@@ -107,6 +120,20 @@ const LayoutComponent = () => {
     }
   ]
 
+  // 生成项目子菜单
+  const projectMenuItems = activeProjects.map(project => ({
+    key: `/app/salary/${project.id}`,
+    label: project.name,
+    icon: <FolderOutlined />,
+  }));
+
+  // 添加项目管理主菜单
+  // projectMenuItems.push({
+  //   key: '/app/projects',
+  //   label: t('menu.project'),
+  //   icon: <AppstoreOutlined />,
+  // });
+
   return (
       <Layout style={{ height: '100vh', minHeight: '100vh', width: '100vw', margin: 0, padding: 0 }}>
               <Sider 
@@ -134,8 +161,30 @@ const LayoutComponent = () => {
                     {
                       key: 'dashboard',
                       label: t('menu.dashboard'),
-                      onClick: () => navigate('/dashboard'),
+                      onClick: () => navigate('/system/dashboard'),
                       icon: <DashboardOutlined />,
+                    },
+
+                    {
+                      key: 'projects',
+                      label: t('common.projects'),
+                      icon: <AppstoreOutlined />,
+                      onClick: () => navigate('/app/projects'),
+                    },
+                    {
+                      key: 'salary',
+                      label: t('common.salary'),
+                      icon: <AppstoreOutlined />,
+                      children: projectMenuItems,
+                      onClick: handleMenuClick,
+                      // onClick: () => navigate('/app/salary'),
+
+                    },
+                    {
+                      key: 'tax',
+                      label: t('common.taxRates'),
+                      icon: <AppstoreOutlined />,
+                      onClick: () => navigate('/app/tax-rates'),
                     },
                     {
                       key: 'system',
@@ -173,7 +222,7 @@ const LayoutComponent = () => {
           marginLeft: collapsed ? 80 : 200,
           transition: 'all 0.3s',
           minHeight: '100vh',
-          width: 'calc(100% )',
+          // width: 'calc(100% )',
           // flex: 1,
         }}>
   <Header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#eff0f1ff', color: '#080808ff', padding: '0 16px', flexShrink: 0, position: 'relative', zIndex: 1 }}>

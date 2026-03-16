@@ -650,8 +650,8 @@ export const updateSalaryCoefficient = async (coefficient: any) => {
 
 // License API
 export const checkLicenseStatus = async () => {
-  console.log("checkLicenseStatus")
-  const result = await apiClient.get('license/check');
+  // console.log("checkLicenseStatus")
+  const result = await apiClient.get('licenses/check');
   return result;
 };
 

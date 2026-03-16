@@ -170,7 +170,7 @@ func VerifyLicense(licenseKey string) (*model.License, error) {
 	if err != nil {
 		return nil, errors.New("License数据解析失败")
 	}
-	slog.Info("license77777 ")
+	// slog.Info("license77777 ")
 	var license model.License
 	license.LicenseKey = licenseKey
 	license.CompanyName = data["companyName"].(string)

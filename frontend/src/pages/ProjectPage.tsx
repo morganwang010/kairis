@@ -50,10 +50,23 @@ const ProjectPage: React.FC = () => {
   
   const loadProjects = async () => {
     try {
-      const data = await getProjects();
-      console.log(t('common.loadProjectData'), ':', data);
+      const response = await getProjects();
+      console.log(t('common.loadProjectData'), ':', response);
+      
+      // 处理不同的API响应结构
+      let projectList: any[] = [];
+      if (Array.isArray(response)) {
+        projectList = response;
+      } else if (response && Array.isArray(response.data)) {
+        projectList = response.data;
+      } else if (response && Array.isArray(response.list)) {
+        projectList = response.list;
+      } else if (response && response.data && Array.isArray(response.data.list)) {
+        projectList = response.data.list;
+      }
+      
       // 转换后端数据格式为前端需要的格式
-      const formattedProjects = data.map((item: any) => ({
+      const formattedProjects = projectList.map((item: any) => ({
         id: item.id.toString(),
         projectName: item.project_name,
         projectShortName: item.project_abbr,
@@ -65,7 +78,7 @@ const ProjectPage: React.FC = () => {
         contactPhone: item.contact_phone,
         status: item.status,
         description: item.project_desc || '',
-        askesAlwByNation: item.askes_alw_by_nation,
+        askesAlwByNation: item.askes_alw,
       }));
       setProjects(formattedProjects);
     } catch (error) {

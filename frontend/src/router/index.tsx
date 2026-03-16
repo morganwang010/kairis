@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { lazy, Suspense, type ComponentType } from 'react'
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import Layout from '../components/Layout'
 import HomePage from '../pages/HomePage'
@@ -14,6 +14,25 @@ import LicensePage from '../pages/LicensePage'
 import LoginPage from '../pages/LoginPage'
 import AuthProvider from '../components/AuthProvider'
 import LicenseProvider from '../components/LicenseProvider'
+
+// 包装lazy组件，返回一个组件
+const WithSuspense = (Component: React.LazyExoticComponent<ComponentType<any>>) => {
+  return () => (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Component />
+    </Suspense>
+  );
+};
+
+// 导入布局组件
+const MainLayout = WithSuspense(lazy(() => import('../layouts/MainLayout')));
+const SystemLayout = WithSuspense(lazy(() => import('../layouts/SystemLayout')));
+
+const Dashboard = lazy(() => import('../pages/Dashboard'));
+const UserManagement = lazy(() => import('../pages/system/UserManagement'));
+const RoleManagement = lazy(() => import('../pages/system/RoleManagement'));
+const PermissionManagement = lazy(() => import('../pages/system/PermissionManagement'));
+const MenuManagement = lazy(() => import('../pages/system/MenuManagement'));
 
 // 根路径重定向组件
 const RootRedirect = () => {
@@ -35,6 +54,10 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
 const router = createBrowserRouter([
   {
+    path: '/',
+    element: <RootRedirect />,
+  },
+  {
     path: '/login',
     element: (
       <AuthProvider>
@@ -44,14 +67,7 @@ const router = createBrowserRouter([
       </AuthProvider>
     ),
   },
-  {
-    path: '/',
-    element: (
-      <ProtectedRoute>
-        <RootRedirect />
-      </ProtectedRoute>
-    ),
-  },
+
   {
     path: '/app',
     element: (
@@ -61,7 +77,6 @@ const router = createBrowserRouter([
     ),
     children: [
       { path: '', element: <HomePage /> },
-      // { path: 'employees', element: <EmployeePage /> },
       { path: 'salary', element: <SalaryMainPage /> },
       { path: 'salary/:projectId', element: <SalaryMainPage /> },
       { path: 'tax-rates', element: <TaxRatePage /> },
