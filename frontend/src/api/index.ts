@@ -281,7 +281,7 @@ export const getAttendanceRecords = async (params?: {
 }) => {
   try {
     console.log('考勤查询参数:', params)
-    const response = await apiClient.get('/attendance', { params });
+    const response = await apiClient.get('/attendances', { params });
     console.log('获取考勤记录成功:', response.data);
     return response.data;
   } catch (error) {
@@ -293,7 +293,7 @@ export const getAttendanceRecords = async (params?: {
 // 添加考勤记录
 export const addAttendanceRecord = async (record: any) => {
   try {
-    const response = await apiClient.post('/attendance', record);
+    const response = await apiClient.post('/attendances', record);
     console.log('添加考勤记录成功:', response.data);
     return response.data;
   } catch (error) {
@@ -305,7 +305,7 @@ export const addAttendanceRecord = async (record: any) => {
 // 批量导入考勤记录
 export const importAttendanceRecords = async (records: any[]) => {
   try {
-    const response = await apiClient.post('/attendance/import', { records });
+    const response = await apiClient.post('/attendances/import', { records });
     console.log('批量导入考勤记录成功:', response.data);
     return response.data;
   } catch (error) {
@@ -317,7 +317,7 @@ export const importAttendanceRecords = async (records: any[]) => {
 // 单条导入考勤记录
 export const importSingleAttendanceRecord = async (record: any) => {
   try {
-    const response = await apiClient.post('/attendance/import', record);
+    const response = await apiClient.post('/attendances/import', record);
     console.log('单条导入考勤记录成功:', response.data);
     return response.data;
   } catch (error) {
@@ -329,7 +329,7 @@ export const importSingleAttendanceRecord = async (record: any) => {
 // 更新考勤记录
 export const updateAttendanceRecord = async (record: any) => {
   try {
-    const response = await apiClient.put('/attendance', record);
+    const response = await apiClient.put('/attendances', record);
     console.log('更新考勤记录成功:', response.data);
     return response.data;
   } catch (error) {
@@ -341,7 +341,7 @@ export const updateAttendanceRecord = async (record: any) => {
 // 删除考勤记录
 export const deleteAttendanceRecord = async (id: string) => {
   try {
-    const response = await apiClient.delete(`/attendance/${id}`);
+    const response = await apiClient.delete(`/attendances/${id}`);
     console.log('删除考勤记录成功:', response.data);
     return response.data;
   } catch (error) {
@@ -355,7 +355,7 @@ export const deleteAttendanceRecord = async (id: string) => {
 export const deleteAllAttendanceRecord = async (projectId: string, month: string) => {
   try {
     console.log('删除所有考勤记录请求:', projectId, month);
-    const result = await apiClient.delete('/attendance', { params: { projectId, month } });
+    const result = await apiClient.delete('/attendances', { params: { projectId, month } });
     console.log('删除所有考勤记录成功:', result);
     return result;
   } catch (error) {
@@ -365,7 +365,7 @@ export const deleteAllAttendanceRecord = async (projectId: string, month: string
 };
 // 偶发事件相关API
 // 获取偶发事件记录
-export const getIncidentRecords = async (projectId: number, month: string) => {
+export const getIncidentRecords = async (projectId: string, month: string) => {
   try {
     const response = await apiClient.get('/incidents', { params: { projectId, month } });
     console.log('获取偶发事件记录成功:', response.data);

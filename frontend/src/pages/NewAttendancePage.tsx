@@ -25,7 +25,6 @@ interface AttendanceRecord {
   permission: number
   sick: number
   standby: number
-  quarantime: number
   ew: number
   annualleave: number
   absent: number
@@ -209,20 +208,19 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
         project_id: projectId,
         project_name: trimmedRecord['Project_Name'] || projectName,
         month: trimmedRecord['Month'] || new Date().toISOString().slice(0, 7),
-        work: trimmedRecord['In'] || 0,
-        off: trimmedRecord['Off'] || 0,
-        permission: trimmedRecord['Permission'] || 0,
-        unpresent: trimmedRecord['Unpresent'] || 0,
-        sick: trimmedRecord['Sick'] || 0,
-        standby: trimmedRecord['SB'] || trimmedRecord['Standby'] || 0,
-        annualleave: trimmedRecord['Leave_Replc'] || trimmedRecord['AnnualLeave'] || 0,
-        quarantime: trimmedRecord['Q'] || trimmedRecord['Quarantime'] || 0,
-        absent: trimmedRecord['A'] || trimmedRecord['Absent'] || 0,
-        ew: trimmedRecord['EW'] || trimmedRecord['ExtraWork'] || 0,
-        ot1: trimmedRecord['OT1'] || trimmedRecord['OT1'] || 0,
-        ew1: trimmedRecord['EW1'] || trimmedRecord['ExtraWork1'] || 0,
-        ew2: trimmedRecord['EW2'] || trimmedRecord['ExtraWork2'] || 0,
-        ew3: trimmedRecord['EW3'] || trimmedRecord['ExtraWork3'] || 0,
+        work: trimmedRecord['In'] || "0",
+        off: trimmedRecord['Off'] || "0",
+        permission: trimmedRecord['Permission'] || "0",
+        unpresent: trimmedRecord['Unpresent'] || "0",
+        sick: trimmedRecord['Sick'] || "0",
+        standby: trimmedRecord['SB'] || trimmedRecord['Standby'] || "0",
+        leave_replc: trimmedRecord['Leave_Replc'] || trimmedRecord['AnnualLeave'] || "0",
+        absent: trimmedRecord['A'] || trimmedRecord['Absent'] || "0",
+        ew: trimmedRecord['EW'] || trimmedRecord['ExtraWork'] || "0",
+        ot1: trimmedRecord['OT1'] || trimmedRecord['OT1'] || "0",
+        ew1: trimmedRecord['EW1'] || trimmedRecord['ExtraWork1'] || "0",
+        ew2: trimmedRecord['EW2'] || trimmedRecord['ExtraWork2'] || "0",
+        ew3: trimmedRecord['EW3'] || trimmedRecord['ExtraWork3'] || "0",
         days: {}
       }
       
@@ -260,25 +258,26 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
         const trimmedRecord = trimRecord(record)
         
         return {
-          employee_id: trimmedRecord['Employee_Id'] || trimmedRecord['mployee_id'],
-          project_id: projectId,
-          project_name: trimmedRecord['Project_Name'] || projectName,
-          month: trimmedRecord['Month'] || new Date().toISOString().slice(0, 7),
-          work: trimmedRecord['In'] || 0,
-          off: trimmedRecord['Off'] || 0,
-          permission: trimmedRecord['Permission'] || 0,
-          unpresent: trimmedRecord['Unpresent'] || trimmedRecord['unpresent'] || 0,
-          sick: trimmedRecord['Sick'] || 0,
-          standby: trimmedRecord['SB'] || trimmedRecord['Standby'] || 0,
-          annualleave: trimmedRecord['Leave_Replc'] || trimmedRecord['AnnualLeave'] || 0,
-          quarantime: trimmedRecord['Q'] || trimmedRecord['Quarantime'] || 0,
-          absent: trimmedRecord['A'] || trimmedRecord['Absent'] || 0,
-          ew: trimmedRecord['EW'] || 0,
-          ot1: trimmedRecord['OT1']  || 0,
-          ew1: trimmedRecord['EW1'] || trimmedRecord['ExtraWork1'] || 0,
-          ew2: trimmedRecord['EW2'] || trimmedRecord['ExtraWork2'] || 0,
-          ew3: trimmedRecord['EW3'] || trimmedRecord['ExtraWork3'] || 0,
-          days: {}
+          employee_id: trimmedRecord['Employee_Id'],
+        project_id: projectId,
+        project_name: trimmedRecord['Project_Name'] || projectName,
+        month: trimmedRecord['Month'] || new Date().toISOString().slice(0, 7),
+        work: trimmedRecord['In'] || "0",
+        off: trimmedRecord['Off'] || "0",
+        permission: trimmedRecord['Permission'] || "0",
+        unpresent: trimmedRecord['Unpresent'] || "0",
+        sick: trimmedRecord['Sick'] || "0",
+        standby: trimmedRecord['SB'] || trimmedRecord['Standby'] || "0",
+        leave_replc: trimmedRecord['Leave_Replc'] || trimmedRecord['AnnualLeave'] || "0",
+        absent: trimmedRecord['A'] || trimmedRecord['Absent'] || "0",
+        ew: trimmedRecord['EW'] || trimmedRecord['ExtraWork'] || "0",
+        ot1: trimmedRecord['OT1'] || trimmedRecord['OT1'] || "0",
+        ot2: trimmedRecord['OT2'] || trimmedRecord['OT2'] || "0",
+        ot3: trimmedRecord['OT3'] || trimmedRecord['OT3'] || "0",
+        ew1: trimmedRecord['EW1'] || trimmedRecord['ExtraWork1'] || "0",
+        ew2: trimmedRecord['EW2'] || trimmedRecord['ExtraWork2'] || "0",
+        ew3: trimmedRecord['EW3'] || trimmedRecord['ExtraWork3'] || "0",
+        days: {}
         }
       }).filter(record => record.employee_id)
       
@@ -287,8 +286,9 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
         messageApi.error(t('attendanceUploadPage.noValidRecords'))
         return
       }
-      
+      console.log('批量导入o数据:', records)
       const result = await importAttendanceRecords(records)
+
       messageApi.success(String(result) || '批量导入成功')
       // 导入成功后刷新数据
       handleImportSuccess()
@@ -566,6 +566,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
         const response = (records as unknown) as { data: any[]; total: number };
         setTotal(response.total)
         // 转换后端数据格式以匹配前端需求
+        console.log('raw records', response.total)
         if (response.total > 0) {
           const formattedRecords = response.data.map((record: any) => ({
           id: record.id || `${record.employee_id}-${record.month}`,
@@ -582,7 +583,6 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
           annualleave: record.annualleave,
           ew: record.ew,
           standby: record.standby,
-          quarantime: record.quarantime,
           extrawork: record.extrawork || 0,
           ot1: record.ot1 || 0,
           ew1: record.ew1 || 0,
@@ -747,7 +747,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
       render: (record: AttendanceRecord) => {
         // 计算所有状态的天数总和
         let total = 0;
-        total = record.annualleave + record.work + record.off + record.sick + record.standby + record.quarantime + record.absent;
+        total = record.annualleave + record.work + record.off + record.sick + record.standby  + record.absent;
         // for (let i = 1; i <= 31; i++) {
         //   if (record.days[i]) {
         //     total++;
@@ -818,7 +818,6 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
       annualleave: record.annualleave,
       ew: record.ew,
       standby: record.standby,
-      quarantime: record.quarantime,
       extrawork: record.extrawork,
       ot1: record.ot1 || 0,
       ew1: record.ew1 || 0,
@@ -866,10 +865,8 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
             unpresent: values.unpresent || 0,
             sick: values.sick || 0,
             standby: values.standby || 0,
-            quarantime: values.quarantime || 0,
             ew: values.ew || 0,
             extrawork: values.extrawork || 0,
-            annualleave: values.annualleave || 0,
             absent: values.absent || 0,
             ot1: values.ot1 || 0,
             ew1: values.ew1 || 0,
@@ -977,6 +974,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
             const response = (records as unknown) as { data: any[]; total: number };
             setTotal(response.total)
             // 转换后端数据格式以匹配前端需求
+            console.log('raw records', response.total)
             if (response.total > 0) {
               const formattedRecords = response.data.map((record: any) => ({
               id: record.id || `${record.employee_id}-${record.month}`,
@@ -993,7 +991,6 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
               annualleave: record.annualleave,
               ew: record.ew,
               standby: record.standby,
-              quarantime: record.quarantime,
               extrawork: record.extrawork || 0,
               ot1: record.ot1 || 0,
               ew1: record.ew1 || 0,

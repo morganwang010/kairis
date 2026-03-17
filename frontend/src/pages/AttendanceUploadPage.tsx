@@ -89,7 +89,6 @@ const AttendanceUploadPage: React.FC = () => {
         sick: record['S'] || 0,
         standby: record['SB'] || record['Standby'] || 0,
         annualleave: record['I&C'] || record['AnnualLeave'] || 0,
-        quarantime: record['Q'] || record['Quarantime'] || 0,
         absent: record['A'] || record['Absent'] || 0,
         ew1: record['EW1'] || record['ew1'] || 0,
         ew2: record['EW2'] || record['ew2'] || 0,

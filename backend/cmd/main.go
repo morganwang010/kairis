@@ -33,6 +33,10 @@ func main() {
 	menuRepo := repository.NewMenuRepository(db)
 	projectRepo := repository.NewProjectRepository(db)
 	licenseRepo := repository.NewLicenseRepository(db)
+	attendanceRepo := repository.NewAttendanceRepository(db)
+	incidentRepo := repository.NewIncidentRepository(db)
+	employeeRepo := repository.NewEmployeeRepository(db)
+	salaryRepo := repository.NewSalaryRepository(db)
 
 	userService := service.NewUserService(userRepo, roleRepo)
 	roleService := service.NewRoleService(roleRepo, permissionRepo)
@@ -40,6 +44,10 @@ func main() {
 	menuService := service.NewMenuService(menuRepo)
 	projectService := service.NewProjectService(projectRepo)
 	licenseService := service.NewLicenseService(licenseRepo)
+	attendanceService := service.NewAttendanceService(attendanceRepo)
+	incidentService := service.NewIncidentService(incidentRepo)
+	employeeService := service.NewEmployeeService(employeeRepo)
+	salaryService := service.NewSalaryService(salaryRepo)
 
 	userHandler := handler.NewUserHandler(userService)
 	roleHandler := handler.NewRoleHandler(roleService)
@@ -48,6 +56,10 @@ func main() {
 	authHandler := handler.NewAuthHandler(userService)
 	projectHandler := handler.NewProjectHandler(projectService)
 	licenseHandler := handler.NewLicenseHandler(licenseService)
+	attendanceHandler := handler.NewAttendanceHandler(attendanceService)
+	incidentHandler := handler.NewIncidentHandler(incidentService)
+	employeeHandler := handler.NewEmployeeHandler(employeeService)
+	salaryHandler := handler.NewSalaryHandler(salaryService)
 
 	api := r.Group("/api")
 	{
@@ -116,6 +128,50 @@ func main() {
 			licenses.GET("/check", licenseHandler.Check)
 			licenses.POST("/activate", licenseHandler.Activate)
 			licenses.POST("/deactivate", licenseHandler.Deactivate)
+		}
+
+		attendances := api.Group("/attendances")
+		attendances.Use(middleware.Auth())
+		{
+			attendances.GET("", attendanceHandler.List)
+			attendances.GET("/:id", attendanceHandler.Get)
+			attendances.POST("", attendanceHandler.Create)
+			attendances.PUT("/:id", attendanceHandler.Update)
+			attendances.DELETE("/:id", attendanceHandler.Delete)
+			attendances.POST("/import", attendanceHandler.Import)
+		}
+
+		incidents := api.Group("/incidents")
+		incidents.Use(middleware.Auth())
+		{
+			incidents.GET("", incidentHandler.List)
+			incidents.GET("/:id", incidentHandler.Get)
+			incidents.POST("", incidentHandler.Create)
+			incidents.PUT("/:id", incidentHandler.Update)
+			incidents.DELETE("/:id", incidentHandler.Delete)
+			incidents.POST("/import", incidentHandler.Import)
+		}
+
+		employees := api.Group("/employees")
+		employees.Use(middleware.Auth())
+		{
+			employees.GET("", employeeHandler.List)
+			employees.GET("/:id", employeeHandler.Get)
+			employees.POST("", employeeHandler.Create)
+			employees.PUT("/:id", employeeHandler.Update)
+			employees.DELETE("/:id", employeeHandler.Delete)
+			employees.POST("/import", employeeHandler.Import)
+		}
+
+		salaries := api.Group("/salaries")
+		salaries.Use(middleware.Auth())
+		{
+			salaries.GET("", salaryHandler.List)
+			salaries.GET("/:id", salaryHandler.Get)
+			salaries.POST("", salaryHandler.Create)
+			salaries.PUT("/:id", salaryHandler.Update)
+			salaries.DELETE("/:id", salaryHandler.Delete)
+			salaries.POST("/import", salaryHandler.Import)
 		}
 
 		// 公开的许可证接口

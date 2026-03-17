@@ -199,13 +199,26 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
   const loadEmployees = async () => {
     try {
       const empData = await getEmployees();
-      setEmployees(empData.map((emp: any) => ({ id: emp.employee_id || emp.id, name: emp.name })));
+      // 确保empData是一个数组
+      if (Array.isArray(empData)) {
+        setEmployees(empData.map((emp: any) => ({ id: emp.employee_id || emp.id, name: emp.name })));
+      } else if (empData && Array.isArray(empData.data)) {
+        // 如果empData是一个对象，且包含data数组
+        setEmployees(empData.data.map((emp: any) => ({ id: emp.employee_id || emp.id, name: emp.name })));
+      } else if (empData && Array.isArray(empData.list)) {
+        // 如果empData是一个对象，且包含list数组
+        setEmployees(empData.list.map((emp: any) => ({ id: emp.employee_id || emp.id, name: emp.name })));
+      } else {
+        console.error('Invalid employee data format:', empData);
+        setEmployees([]);
+      }
       employees.forEach(emp => {
         form.setFieldValue(`employee_name_${emp.id}`, emp.name)
       })
     } catch (error) {
       console.error(t('incidentPage.loadEmployeesError'), error);
       messageApi.error(t('incidentPage.loadEmployeesError'));
+      setEmployees([]);
     }
   }
 
@@ -222,10 +235,40 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
         }
  
         console.log('加载偶发事件数据参数:', params)
-        const response = await getIncidentRecords(params)
+        const response = await getIncidentRecords(projectId, currentMonth)
         console.log('加载偶发事件数据响应:', response)
-        setIncidentsData((response as any).data)
-        setTotalRecords((response as any).total)
+        
+        // 确保response是一个对象
+        if (response) {
+          // 检查response.data是否存在且是一个对象
+          if (response.data) {
+            // 检查response.data.list是否存在且是一个数组
+            if (Array.isArray(response.data.list)) {
+              setIncidentsData(response.data.list)
+              setTotalRecords(response.data.total || 0)
+            } else if (Array.isArray(response.data)) {
+              // 如果response.data直接是一个数组
+              setIncidentsData(response.data)
+              setTotalRecords(response.data.length)
+            } else {
+              console.error('Invalid incident data format:', response.data)
+              setIncidentsData([])
+              setTotalRecords(0)
+            }
+          } else if (Array.isArray(response)) {
+            // 如果response直接是一个数组
+            setIncidentsData(response)
+            setTotalRecords(response.length)
+          } else {
+            console.error('Invalid response format:', response)
+            setIncidentsData([])
+            setTotalRecords(0)
+          }
+        } else {
+          console.error('Empty response:', response)
+          setIncidentsData([])
+          setTotalRecords(0)
+        }
       
     } catch (error) {
       console.error(t('incidentPage.loadIncidentsError'), error)
@@ -402,30 +445,30 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
         
         return {
           employee_id: trimmedRecord['employee_id'] || trimmedRecord['Employee_Id'],
-          project_id: projectId === 'all' ? 0 : parseInt(projectId),
+          project_id: projectId === 'all' ? 0 : (projectId),
           month: trimmedRecord['month'] || trimmedRecord['Month'] || new Date().toISOString().slice(0, 7),
-          leave_comp: trimmedRecord['Leave_Comp'] || trimmedRecord['leave_comp'] || 0,
-          med_alw: trimmedRecord['Med_Alw'] || trimmedRecord['med_alw'] || 0,
-          others: trimmedRecord['Others'] || trimmedRecord['others'] || 0,
-          religious_alw: trimmedRecord['Religious_Alw'] || trimmedRecord['religious_alw'] || 0,
-          rapel_basic_salary: trimmedRecord['Rapel_Basic_Salary'] || trimmedRecord['rapel_basic_salary'] || 0,
-          rapel_jmstk_alw: trimmedRecord['Rapel_Jmstk_Alw'] || trimmedRecord['rapel_jmstk_alw'] || 0,
-          incentive_alw: trimmedRecord['Incentive_Alw'] || trimmedRecord['incentive_alw'] || 0,
-          acting: trimmedRecord['Acting'] || trimmedRecord['acting'] || 0,
-          performance_alw: trimmedRecord['Performance_Alw'] || trimmedRecord['performance_alw'] || 0,
-          trip_alw: trimmedRecord['Trip_Alw'] || trimmedRecord['trip_alw'] || 0,
-          ot2_wages: trimmedRecord['OT2_Wages'] || trimmedRecord['ot2_wages'] || 0,
-          ot3_wages: trimmedRecord['OT3_Wages'] || trimmedRecord['ot3_wages'] || 0,
-          comp_phk: trimmedRecord['Comp_Phk'] || trimmedRecord['comp_phk'] || 0,
-          tax_alw_phk: trimmedRecord['Tax_Alw_Phk'] || trimmedRecord['tax_alw_phk'] || 0,
-          absent_ded: trimmedRecord['Absent_ded'] || trimmedRecord['absent_ded'] || 0,
-          absent_ded2: trimmedRecord['Absent_Ded2'] || trimmedRecord['absent_ded2'] || 0,
-          incentive_ded: trimmedRecord['Incentive_Ded'] || trimmedRecord['incentive_ded'] || 0,
-          loan_ded: trimmedRecord['Loan_Ded'] || trimmedRecord['loan_ded'] || 0,
-          correct_add: trimmedRecord['Correct_Add'] || trimmedRecord['correct_add'] || 0,
-          correct_sub: trimmedRecord['Correct_Sub'] || trimmedRecord['correct_sub'] || 0,
-          tax_ded_phk: trimmedRecord['Tax_Ded_Phk'] || 0,
-          mandah_alw: trimmedRecord['Mandah_Alw'] || trimmedRecord['mandah_alw'] || 0
+          leave_comp: trimmedRecord['Leave_Comp'] || trimmedRecord['leave_comp'] || "0",
+          med_alw: trimmedRecord['Med_Alw'] || trimmedRecord['med_alw'] || "0",
+          others: trimmedRecord['Others'] || trimmedRecord['others'] || "0",
+          religious_alw: trimmedRecord['Religious_Alw'] || trimmedRecord['religious_alw'] || "0",
+          rapel_basic_salary: trimmedRecord['Rapel_Basic_Salary'] || trimmedRecord['rapel_basic_salary'] || "0",
+          rapel_jmstk_alw: trimmedRecord['Rapel_Jmstk_Alw'] || trimmedRecord['rapel_jmstk_alw'] || "0",
+          incentive_alw: trimmedRecord['Incentive_Alw'] || trimmedRecord['incentive_alw'] || "0",
+          acting: trimmedRecord['Acting'] || trimmedRecord['acting'] || "0",
+          performance_alw: trimmedRecord['Performance_Alw'] || trimmedRecord['performance_alw'] || "0",
+          trip_alw: trimmedRecord['Trip_Alw'] || trimmedRecord['trip_alw'] || "0",
+          ot2_wages: trimmedRecord['OT2_Wages'] || trimmedRecord['ot2_wages'] || "0",
+          ot3_wages: trimmedRecord['OT3_Wages'] || trimmedRecord['ot3_wages'] || "0",
+          comp_phk: trimmedRecord['Comp_Phk'] || trimmedRecord['comp_phk'] || "0",
+          tax_alw_phk: trimmedRecord['Tax_Alw_Phk'] || trimmedRecord['tax_alw_phk'] || "0",
+          absent_ded: trimmedRecord['Absent_ded'] || trimmedRecord['absent_ded'] || "0",
+          absent_ded2: trimmedRecord['Absent_Ded2'] || trimmedRecord['absent_ded2'] || "0",
+          incentive_ded: trimmedRecord['Incentive_Ded'] || trimmedRecord['incentive_ded'] || "0",
+          loan_ded: trimmedRecord['Loan_Ded'] || trimmedRecord['loan_ded'] || "0",
+          correct_add: trimmedRecord['Correct_Add'] || trimmedRecord['correct_add'] || "0",
+          correct_sub: trimmedRecord['Correct_Sub'] || trimmedRecord['correct_sub'] || "0",
+          tax_ded_phk: trimmedRecord['Tax_Ded_Phk'] || trimmedRecord['tax_ded_phk'] || "0",
+          mandah_alw: trimmedRecord['Mandah_Alw'] || trimmedRecord['mandah_alw'] || "0"
         }
       }).filter(record => record.employee_id)
       
@@ -433,6 +476,7 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
         messageApi.error(t('incidentUploadPage.noValidRecords'))
         return
       }
+      console.log('incident records:', records)
       
       await importIncidentRecords(records)
       messageApi.success(t('common.success'))
@@ -766,7 +810,7 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
         console.log('加载偶发事件数据参数:', params)
         
         // 直接调用getIncidentRecords，使用新的参数
-        getIncidentRecords(params).then(response => {
+        getIncidentRecords(projectId, currentMonth.toString()).then(response => {
           console.log('加载偶发事件数据响应:', response)
           setIncidentsData((response as any).data)
           setTotalRecords((response as any).total)

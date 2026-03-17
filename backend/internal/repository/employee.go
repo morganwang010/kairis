@@ -1,0 +1,51 @@
+package repository
+
+import (
+	"kairis/backend/internal/model"
+
+	"gorm.io/gorm"
+)
+
+type EmployeeRepository struct {
+	db *gorm.DB
+}
+
+func NewEmployeeRepository(db *gorm.DB) *EmployeeRepository {
+	return &EmployeeRepository{db: db}
+}
+
+func (r *EmployeeRepository) Create(employee *model.Employee) error {
+	return r.db.Create(employee).Error
+}
+
+func (r *EmployeeRepository) Get(id uint) (*model.Employee, error) {
+	var employee model.Employee
+	if err := r.db.First(&employee, id).Error; err != nil {
+		return nil, err
+	}
+	return &employee, nil
+}
+
+func (r *EmployeeRepository) List() ([]model.Employee, error) {
+	var employees []model.Employee
+	if err := r.db.Find(&employees).Error; err != nil {
+		return nil, err
+	}
+	return employees, nil
+}
+
+func (r *EmployeeRepository) Update(employee *model.Employee) error {
+	return r.db.Save(employee).Error
+}
+
+func (r *EmployeeRepository) Delete(id uint) error {
+	return r.db.Delete(&model.Employee{}, id).Error
+}
+
+func (r *EmployeeRepository) GetByEmployeeID(employeeID string) (*model.Employee, error) {
+	var employee model.Employee
+	if err := r.db.Where("employee_id = ?", employeeID).First(&employee).Error; err != nil {
+		return nil, err
+	}
+	return &employee, nil
+}

@@ -102,7 +102,6 @@ const IncidentUploadPage: React.FC = () => {
         sick: trimmedRecord['S'] || trimmedRecord['S'] || 0,
         standby: trimmedRecord['SB'] || trimmedRecord['Standby'] || 0,
         annualleave: trimmedRecord['I&C'] || trimmedRecord['AnnualLeave'] || 0,
-        quarantime: trimmedRecord['隔离'] || trimmedRecord['Quarantime'] || 0,
         absent: trimmedRecord['A'] || trimmedRecord['Absent'] || 0,
         extrawork: trimmedRecord['EW'] || trimmedRecord['ExtraWork'] || 0,
         total_days: trimmedRecord['TOTAL'] || trimmedRecord['TOTAL'] || 0,

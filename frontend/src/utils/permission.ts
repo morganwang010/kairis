@@ -12,10 +12,14 @@ export const hasRole = (user: User | null, role: string): boolean => {
 
 export const hasAnyPermission = (user: User | null, permissions: string[]): boolean => {
   if (!user) return false;
+  if (!Array.isArray(permissions)) return false;
+  if (!Array.isArray(user.permissions)) return false;
   return permissions.some(permission => user.permissions.includes(permission));
 };
 
 export const hasAllPermissions = (user: User | null, permissions: string[]): boolean => {
   if (!user) return false;
+  if (!Array.isArray(permissions)) return false;
+  if (!Array.isArray(user.permissions)) return false;
   return permissions.every(permission => user.permissions.includes(permission));
 };

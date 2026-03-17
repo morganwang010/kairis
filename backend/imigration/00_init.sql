@@ -160,7 +160,7 @@ CREATE TABLE IF NOT EXISTS employees (
     UNIQUE (project_id, employee_id)
 );
 
-CREATE TABLE salary (
+CREATE TABLE IF NOT EXISTS salaries (
   id SERIAL PRIMARY KEY,
   month TEXT NOT NULL,
   project_id INTEGER DEFAULT 0,
@@ -249,7 +249,7 @@ INSERT INTO project (project_name,project_abbr) VALUES
 	 ('bdsi jambi','bdsi jambi'),
 	 ('bdsi duri','bdsi duri');
 
-CREATE TABLE attendance (
+CREATE TABLE attendances (
     id SERIAL PRIMARY KEY,
     employee_id TEXT NOT NULL,
     day1 TEXT DEFAULT '0',
@@ -287,12 +287,10 @@ CREATE TABLE attendance (
     project_id INTEGER,
     permission INTEGER DEFAULT 0,
     off INTEGER DEFAULT 0,
-    annualleave INTEGER DEFAULT 0,
     absent INTEGER DEFAULT 0,
     sick INTEGER DEFAULT 0,
     standby INTEGER DEFAULT 0,
     ew NUMERIC DEFAULT 0,
-    quarantime INTEGER DEFAULT 0,
     month TEXT NOT NULL,
     ot1 NUMERIC DEFAULT 0,
     ew1 NUMERIC DEFAULT 0,
@@ -366,7 +364,7 @@ INSERT INTO salary_coefficient (
   10400    -- 公积金补贴计算是基本工资最大限额
 );
 
-CREATE TABLE incident_records (
+CREATE TABLE incidents (
     id SERIAL PRIMARY KEY,
     employee_id TEXT NOT NULL,
     project_id INTEGER NOT NULL,
