@@ -88,7 +88,7 @@ const TaxRatePage = () => {
     try {
       const data = await getTaxFreeBases()
       // 将下划线命名转换为驼峰命名
-      const formattedData = data.map((item: any) => ({
+      const formattedData = data.data.map((item: any) => ({
         id: item.id,
         grade: item.grade,
         free_tax_base: item.free_tax_base

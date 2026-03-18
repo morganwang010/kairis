@@ -290,3 +290,9 @@ type TaxRates struct {
 	TaxRate   float64 `gorm:"column:tax_rate;type:numeric;not null;check:tax_rate >= 0 AND tax_rate <= 1" json:"tax_rate"`
 	Grade     string  `gorm:"column:grade;type:text;not null" json:"grade"`
 }
+
+type TaxFreeBases struct {
+	ID          uint    `gorm:"primaryKey;autoIncrement;column:id" json:"id"`
+	Grade       string  `gorm:"column:grade;type:text;not null;unique" json:"grade"`
+	FreeTaxBase float64 `gorm:"column:free_tax_base;type:numeric;not null;default:0" json:"free_tax_base"`
+}

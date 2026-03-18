@@ -553,3 +553,18 @@ INSERT INTO tax_rates (id,salary_min,salary_max,tax_rate,grade) VALUES
 (709000001,965000000,0.32,'K/3'),
 (965000001,1419000000,0.33,'K/3'),
 (1419000001,999999999999,0.34,'K/3');
+
+CREATE TABLE tax_free_bases (
+    id SERIAL PRIMARY KEY,  -- PostgreSQL 自增主键（替代 SQLite 的 INTEGER PRIMARY KEY）
+    grade TEXT NOT NULL UNIQUE,  -- 等级（与税率表 grade 关联，保持唯一约束）
+    free_tax_base NUMERIC NOT NULL DEFAULT 0  -- 免税基数（用 NUMERIC 避免浮点精度问题）
+);
+INSERT INTO tax_free_bases (grade, free_tax_base) VALUES
+('TK/0', 54000000),
+('TK/1', 58500000),
+('TK/2', 63000000),
+('TK/3', 67500000),
+('K/0', 58500000),
+('K/1', 63000000),
+('K/2', 67500000),
+('K/3', 72000000);

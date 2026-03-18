@@ -38,6 +38,7 @@ func main() {
 	employeeRepo := repository.NewEmployeeRepository(db)
 	salaryRepo := repository.NewSalaryRepository(db)
 	taxRateRepo := repository.NewTaxRateRepository(db)
+	taxFreeBaseRepo := repository.NewTaxFreeBaseRepository(db)
 
 	userService := service.NewUserService(userRepo, roleRepo)
 	roleService := service.NewRoleService(roleRepo, permissionRepo)
@@ -50,6 +51,7 @@ func main() {
 	employeeService := service.NewEmployeeService(employeeRepo)
 	salaryService := service.NewSalaryService(salaryRepo)
 	taxRateService := service.NewTaxRateService(taxRateRepo)
+	taxFreeBaseService := service.NewTaxFreeBaseService(taxFreeBaseRepo)
 
 	userHandler := handler.NewUserHandler(userService)
 	roleHandler := handler.NewRoleHandler(roleService)
@@ -63,6 +65,7 @@ func main() {
 	employeeHandler := handler.NewEmployeeHandler(employeeService)
 	salaryHandler := handler.NewSalaryHandler(salaryService)
 	taxRateHandler := handler.NewTaxRateHandler(taxRateService)
+	taxFreeBaseHandler := handler.NewTaxFreeBaseHandler(taxFreeBaseService)
 
 	api := r.Group("/api")
 	{
@@ -186,6 +189,16 @@ func main() {
 			taxRates.POST("", taxRateHandler.Create)
 			taxRates.PUT("/:id", taxRateHandler.Update)
 			taxRates.DELETE("/:id", taxRateHandler.Delete)
+		}
+
+		taxFreeBases := api.Group("/tax-free-bases")
+		taxFreeBases.Use(middleware.Auth())
+		{
+			taxFreeBases.GET("", taxFreeBaseHandler.List)
+			taxFreeBases.GET("/:id", taxFreeBaseHandler.Get)
+			taxFreeBases.POST("", taxFreeBaseHandler.Create)
+			taxFreeBases.PUT("/:id", taxFreeBaseHandler.Update)
+			taxFreeBases.DELETE("/:id", taxFreeBaseHandler.Delete)
 		}
 
 		// 公开的许可证接口
