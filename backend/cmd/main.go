@@ -37,6 +37,7 @@ func main() {
 	incidentRepo := repository.NewIncidentRepository(db)
 	employeeRepo := repository.NewEmployeeRepository(db)
 	salaryRepo := repository.NewSalaryRepository(db)
+	taxRateRepo := repository.NewTaxRateRepository(db)
 
 	userService := service.NewUserService(userRepo, roleRepo)
 	roleService := service.NewRoleService(roleRepo, permissionRepo)
@@ -48,6 +49,7 @@ func main() {
 	incidentService := service.NewIncidentService(incidentRepo)
 	employeeService := service.NewEmployeeService(employeeRepo)
 	salaryService := service.NewSalaryService(salaryRepo)
+	taxRateService := service.NewTaxRateService(taxRateRepo)
 
 	userHandler := handler.NewUserHandler(userService)
 	roleHandler := handler.NewRoleHandler(roleService)
@@ -60,6 +62,7 @@ func main() {
 	incidentHandler := handler.NewIncidentHandler(incidentService)
 	employeeHandler := handler.NewEmployeeHandler(employeeService)
 	salaryHandler := handler.NewSalaryHandler(salaryService)
+	taxRateHandler := handler.NewTaxRateHandler(taxRateService)
 
 	api := r.Group("/api")
 	{
@@ -172,6 +175,17 @@ func main() {
 			salaries.PUT("/:id", salaryHandler.Update)
 			salaries.DELETE("/:id", salaryHandler.Delete)
 			salaries.POST("/import", salaryHandler.Import)
+		}
+
+		taxRates := api.Group("/tax-rates")
+		taxRates.Use(middleware.Auth())
+		{
+			taxRates.GET("", taxRateHandler.List)
+			taxRates.GET("/:id", taxRateHandler.Get)
+			taxRates.GET("/grade", taxRateHandler.GetByGrade)
+			taxRates.POST("", taxRateHandler.Create)
+			taxRates.PUT("/:id", taxRateHandler.Update)
+			taxRates.DELETE("/:id", taxRateHandler.Delete)
 		}
 
 		// 公开的许可证接口

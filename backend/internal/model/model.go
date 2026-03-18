@@ -251,7 +251,7 @@ type Employee struct {
 	// 核心业务字段
 	EmployeeID      string    `gorm:"column:employee_id;not null" json:"employee_id"`                               // TEXT NOT NULL
 	ProjectID       int       `gorm:"column:project_id;default:0" json:"project_id"`                                // INTEGER default 0
-	Name            string    `gorm:"column:name;not null" json:"name"`                                             // TEXT NOT NULL
+	EmployeeName    string    `gorm:"column:employee_name;not null" json:"employee_name"`                           // TEXT NOT NULL
 	Department      string    `gorm:"column:department" json:"department"`                                          // TEXT
 	Position        string    `gorm:"column:position" json:"position"`                                              // TEXT
 	HireDate        string    `gorm:"column:hire_date" json:"hire_date"`                                            // TEXT
@@ -281,4 +281,12 @@ type Employee struct {
 	PulsaAlwMonth   float64   `gorm:"column:pulsa_alw_month;default:0.00" json:"pulsa_alw_month"`                   // NUMERIC default 0.00
 	HousingAlwTetap float64   `gorm:"column:housing_alw_tetap;default:0.00" json:"housing_alw_tetap"`               // NUMERIC default 0.00
 	DeleteFlag      int       `gorm:"column:delete_flag;default:0" json:"delete_flag"`                              // INTEGER default 0
+}
+
+type TaxRates struct {
+	ID        uint    `gorm:"primaryKey;autoIncrement;column:id" json:"id"`
+	SalaryMin float64 `gorm:"column:salary_min;type:numeric;not null;default:0" json:"salary_min"`
+	SalaryMax float64 `gorm:"column:salary_max;type:numeric;not null" json:"salary_max"`
+	TaxRate   float64 `gorm:"column:tax_rate;type:numeric;not null;check:tax_rate >= 0 AND tax_rate <= 1" json:"tax_rate"`
+	Grade     string  `gorm:"column:grade;type:text;not null" json:"grade"`
 }

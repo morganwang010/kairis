@@ -38,27 +38,68 @@ type ImportEmployeeRequest struct {
 }
 
 type ImportEmployeeItem struct {
-	EmployeeID string `json:"employee_id"`
-	FullName   string `json:"full_name"`
-	Position   string `json:"position"`
-	Department string `json:"department"`
-	Email      string `json:"email"`
-	Phone      string `json:"phone"`
-	JoinDate   string `json:"join_date"`
-	Status     string `json:"status"`
+	EmployeeID      string  `json:"employee_id"`
+	ProjectID       int     `json:"project_id"`
+	EmployeeName    string  `json:"employee_name"`
+	Department      string  `json:"department"`
+	Position        string  `json:"position"`
+	HireDate        string  `json:"hire_date"`
+	LeaveDate       string  `json:"leave_date"`
+	Salary          float64 `json:"salary"`
+	IdCard          string  `json:"id_card"`
+	Npwp            string  `json:"npwp"`
+	HierarchyID     string  `json:"hierarchy_id"`
+	HierarchyName   string  `json:"hierarchy_name"`
+	JoinDate        string  `json:"join_date"`
+	ResignDate      string  `json:"resign_date"`
+	Email           string  `json:"email"`
+	Phone           string  `json:"phone"`
+	BasicSalary     float64 `json:"basic_salary"`
+	HousingAlw      float64 `json:"housing_alw"`
+	PositionAlw     float64 `json:"position_alw"`
+	FieldAlw        float64 `json:"field_alw"`
+	FixAlw          float64 `json:"fix_alw"`
+	MealAlwDay      float64 `json:"meal_alw_day"`
+	TranspAlwDay    float64 `json:"transp_alw_day"`
+	PulsaAlwDay     float64 `json:"pulsa_alw_day"`
+	AttAlwDay       float64 `json:"att_alw_day"`
+	TaxType         string  `json:"tax_type"`
+	LocationName    string  `json:"location_name"`
+	PulsaAlwMonth   float64 `json:"pulsa_alw_month"`
+	HousingAlwTetap float64 `json:"housing_alw_tetap"`
+	DeleteFlag      int     `json:"delete_flag"`
 }
 
 func (s *EmployeeService) ImportEmployee(req ImportEmployeeRequest) error {
 	for _, employee := range req.Employees {
 		employeeModel := &model.Employee{
-			EmployeeID: employee.EmployeeID,
-			FullName:   employee.FullName,
-			Position:   employee.Position,
-			Department: employee.Department,
-			Email:      employee.Email,
-			Phone:      employee.Phone,
-			JoinDate:   employee.JoinDate,
-			Status:     employee.Status,
+			EmployeeID:      employee.EmployeeID,
+			ProjectID:       employee.ProjectID,
+			EmployeeName:    employee.EmployeeName,
+			Department:      employee.Department,
+			Position:        employee.Position,
+			HireDate:        employee.HireDate,
+			LeaveDate:       employee.LeaveDate,
+			Salary:          employee.Salary,
+			IdCard:          employee.IdCard,
+			Npwp:            employee.Npwp,
+			HierarchyID:     employee.HierarchyID,
+			HierarchyName:   employee.HierarchyName,
+			Email:           employee.Email,
+			BasicSalary:     employee.BasicSalary,
+			HousingAlw:      employee.HousingAlw,
+			PositionAlw:     employee.PositionAlw,
+			FieldAlw:        employee.FieldAlw,
+			FixAlw:          employee.FixAlw,
+			MealAlwDay:      employee.MealAlwDay,
+			TranspAlwDay:    employee.TranspAlwDay,
+			PulsaAlwDay:     employee.PulsaAlwDay,
+			AttAlwDay:       employee.AttAlwDay,
+			TaxType:         employee.TaxType,
+			LocationName:    employee.LocationName,
+			PulsaAlwMonth:   employee.PulsaAlwMonth,
+			HousingAlwTetap: employee.HousingAlwTetap,
+			DeleteFlag:      employee.DeleteFlag,
 		}
 
 		existingEmployee, err := s.employeeRepo.GetByEmployeeID(employee.EmployeeID)

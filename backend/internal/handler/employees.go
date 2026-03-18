@@ -21,7 +21,7 @@ func (h *EmployeeHandler) Create(c *gin.Context) {
 	var req struct {
 		EmployeeID      string  `json:"employee_id"`
 		ProjectID       string  `json:"project_id"`
-		Name            string  `json:"name"`
+		EmployeeName    string  `json:"employee_name"`
 		Department      string  `json:"department"`
 		Position        string  `json:"position"`
 		HireDate        string  `json:"hire_date"`
@@ -70,26 +70,25 @@ func (h *EmployeeHandler) Create(c *gin.Context) {
 	}
 
 	employee := &model.Employee{
-		EmployeeID:      req.EmployeeID,
-		ProjectID:       projectID,
-		Name:            req.Name,
-		Department:      req.Department,
-		Position:        req.Position,
-		HireDate:        req.HireDate,
-		LeaveDate:       req.LeaveDate,
-		Salary:          req.Salary,
-		TaxStatus:       req.TaxStatus,
-		IdCard:          req.IdCard,
-		Npwp:            req.Npwp,
-		HierarchyID:     req.HierarchyID,
-		HierarchyName:   req.HierarchyName,
-		Email:           req.Email,
-		Phone:           req.Phone,
-		BasicSalary:     req.BasicSalary,
-		HousingAlw:      req.HousingAlw,
-		PositionAlw:     req.PositionAlw,
-		FieldAlw:        req.FieldAlw,
-		FixAlw:          req.FixAlw,
+		EmployeeID:   req.EmployeeID,
+		ProjectID:    projectID,
+		EmployeeName: req.EmployeeName,
+		Department:   req.Department,
+		Position:     req.Position,
+		HireDate:     req.HireDate,
+		LeaveDate:    req.LeaveDate,
+		// Salary:          req.Salary,
+		TaxStatus:     req.TaxStatus,
+		IdCard:        req.IdCard,
+		Npwp:          req.Npwp,
+		HierarchyID:   req.HierarchyID,
+		HierarchyName: req.HierarchyName,
+		Email:         req.Email,
+		BasicSalary:   req.BasicSalary,
+		HousingAlw:    req.HousingAlw,
+		PositionAlw:   req.PositionAlw,
+		FieldAlw:      req.FieldAlw,
+		// FixAlw:          req.FixAlw,
 		MealAlwDay:      req.MealAlwDay,
 		TranspAlwDay:    req.TranspAlwDay,
 		PulsaAlwDay:     req.PulsaAlwDay,
@@ -145,7 +144,7 @@ func (h *EmployeeHandler) Update(c *gin.Context) {
 	var req struct {
 		EmployeeID      string  `json:"employee_id"`
 		ProjectID       string  `json:"project_id"`
-		Name            string  `json:"name"`
+		EmployeeName    string  `json:"employee_name"`
 		Department      string  `json:"department"`
 		Position        string  `json:"position"`
 		HireDate        string  `json:"hire_date"`
@@ -186,7 +185,7 @@ func (h *EmployeeHandler) Update(c *gin.Context) {
 	if !ok {
 		return
 	}
-	
+
 	// 转换DeleteFlag为int类型
 	deleteFlag, ok := StringToInt(c, req.DeleteFlag, "delete_flag")
 	if !ok {
@@ -194,27 +193,26 @@ func (h *EmployeeHandler) Update(c *gin.Context) {
 	}
 
 	employee := &model.Employee{
-		ID:              uint(id),
-		EmployeeID:      req.EmployeeID,
-		ProjectID:       projectID,
-		Name:            req.Name,
-		Department:      req.Department,
-		Position:        req.Position,
-		HireDate:        req.HireDate,
-		LeaveDate:       req.LeaveDate,
-		Salary:          req.Salary,
-		TaxStatus:       req.TaxStatus,
-		IdCard:          req.IdCard,
-		Npwp:            req.Npwp,
-		HierarchyID:     req.HierarchyID,
-		HierarchyName:   req.HierarchyName,
-		Email:           req.Email,
-		Phone:           req.Phone,
-		BasicSalary:     req.BasicSalary,
-		HousingAlw:      req.HousingAlw,
-		PositionAlw:     req.PositionAlw,
-		FieldAlw:        req.FieldAlw,
-		FixAlw:          req.FixAlw,
+		ID:            uint(id),
+		EmployeeID:    req.EmployeeID,
+		ProjectID:     projectID,
+		EmployeeName:  req.EmployeeName,
+		Department:    req.Department,
+		Position:      req.Position,
+		HireDate:      req.HireDate,
+		LeaveDate:     req.LeaveDate,
+		Salary:        req.Salary,
+		TaxStatus:     req.TaxStatus,
+		IdCard:        req.IdCard,
+		Npwp:          req.Npwp,
+		HierarchyID:   req.HierarchyID,
+		HierarchyName: req.HierarchyName,
+		Email:         req.Email,
+		BasicSalary:   req.BasicSalary,
+		HousingAlw:    req.HousingAlw,
+		PositionAlw:   req.PositionAlw,
+		FieldAlw:      req.FieldAlw,
+		// FixAlw:          req.FixAlw,
 		MealAlwDay:      req.MealAlwDay,
 		TranspAlwDay:    req.TranspAlwDay,
 		PulsaAlwDay:     req.PulsaAlwDay,
@@ -252,39 +250,39 @@ func (h *EmployeeHandler) Delete(c *gin.Context) {
 func (h *EmployeeHandler) Import(c *gin.Context) {
 	var req struct {
 		Records []struct {
-			EmployeeID      string  `json:"employee_id"`
-			ProjectID       string  `json:"project_id"`
-			Name            string  `json:"name"`
-			Department      string  `json:"department"`
-			Position        string  `json:"position"`
-			HireDate        string  `json:"hire_date"`
-			LeaveDate       string  `json:"leave_date"`
-			Salary          float64 `json:"salary"`
-			TaxStatus       float64 `json:"tax_status"`
-			IdCard          string  `json:"id_card"`
-			Npwp            string  `json:"npwp"`
-			HierarchyID     string  `json:"hierarchy_id"`
-			HierarchyName   string  `json:"hierarchy_name"`
-			JoinDate        string  `json:"join_date"`
-			ResignDate      string  `json:"resign_date"`
-			Email           string  `json:"email"`
-			BasicSalary     float64 `json:"basic_salary"`
-			HousingAlw      float64 `json:"housing_alw"`
-			PositionAlw     float64 `json:"position_alw"`
-			FieldAlw        float64 `json:"field_alw"`
-			FixAlw          float64 `json:"fix_alw"`
-			MealAlwDay      float64 `json:"meal_alw_day"`
-			TranspAlwDay    float64 `json:"transp_alw_day"`
-			PulsaAlwDay     float64 `json:"pulsa_alw_day"`
-			AttAlwDay       float64 `json:"att_alw_day"`
-			TaxType         string  `json:"tax_type"`
-			LocationName    string  `json:"location_name"`
-			PulsaAlwMonth   float64 `json:"pulsa_alw_month"`
-			HousingAlwTetap float64 `json:"housing_alw_tetap"`
-			DeleteFlag      string  `json:"delete_flag"`
+			EmployeeID    string `json:"employee_id"`
+			ProjectID     string `json:"project_id"`
+			Name          string `json:"employee_name"`
+			Department    string `json:"department"`
+			Position      string `json:"position"`
+			HireDate      string `json:"hire_date"`
+			LeaveDate     string `json:"leave_date"`
+			Salary        string `json:"salary"`
+			TaxStatus     string `json:"tax_status"`
+			IdCard        string `json:"id_card"`
+			Npwp          string `json:"npwp"`
+			HierarchyID   string `json:"hierarchy_id"`
+			HierarchyName string `json:"hierarchy_name"`
+			JoinDate      string `json:"join_date"`
+			ResignDate    string `json:"resign_date"`
+			Email         string `json:"email"`
+			BasicSalary   string `json:"basic_salary"`
+			HousingAlw    string `json:"housing_alw"`
+			PositionAlw   string `json:"position_alw"`
+			FieldAlw      string `json:"field_alw"`
+			// FixAlw          string `json:"fix_alw"`
+			MealAlwDay      string `json:"meal_alw/day"`
+			TranspAlwDay    string `json:"transp_alw/day"`
+			PulsaAlwDay     string `json:"pulsa_alw/day"`
+			AttAlwDay       string `json:"att_alw/day"`
+			TaxType         string `json:"tax_type"`
+			LocationName    string `json:"location_name"`
+			PulsaAlwMonth   string `json:"pulsa_alw/month"`
+			HousingAlwTetap string `json:"housing_alw/TJ_Tidak_Tetap"`
+			DeleteFlag      string `json:"delete_flag"`
 		} `json:"records"`
 	}
-
+	// slog.Info("Before binding", "req", &req)
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": err.Error()})
 		return
@@ -302,41 +300,105 @@ func (h *EmployeeHandler) Import(c *gin.Context) {
 		}
 
 		// 转换DeleteFlag为int类型
-		deleteFlag, ok := StringToInt(c, item.DeleteFlag, "delete_flag")
+		var deleteFlag int
+		if item.DeleteFlag == "" {
+			deleteFlag = 0
+		} else {
+			var ok bool
+			deleteFlag, ok = StringToInt(c, item.DeleteFlag, "delete_flag")
+			if !ok {
+				return
+			}
+		}
+		// 转换Salary为float64类型
+		// salary, ok := StringToFloat64(c, item.Salary, "salary")
+		// if !ok {
+		// 	return
+		// }
+		basicSalary, ok := StringToFloat64(c, item.BasicSalary, "basic_salary")
+		if !ok {
+			return
+		}
+		// 转换HousingAlw为float64类型
+		housingAlw, ok := StringToFloat64(c, item.HousingAlw, "housing_alw")
+		if !ok {
+			return
+		}
+		// 转换PositionAlw为float64类型
+		positionAlw, ok := StringToFloat64(c, item.PositionAlw, "position_alw")
+		if !ok {
+			return
+		}
+		// 转换FieldAlw为float64类型
+		fieldAlw, ok := StringToFloat64(c, item.FieldAlw, "field_alw")
+		if !ok {
+			return
+		}
+		// 转换FixAlw为float64类型
+		// fixAlw, ok := StringToFloat64(c, item.FixAlw, "fix_alw")
+		// if !ok {
+		// 	return
+		// }
+		// 转换MealAlwDay为float64类型
+		mealAlwDay, ok := StringToFloat64(c, item.MealAlwDay, "meal_alw_day")
+		if !ok {
+			return
+		}
+		// 转换TranspAlwDay为float64类型
+		transpAlwDay, ok := StringToFloat64(c, item.TranspAlwDay, "transp_alw_day")
+		if !ok {
+			return
+		}
+		// 转换PulsaAlwDay为float64类型
+		pulsaAlwDay, ok := StringToFloat64(c, item.PulsaAlwDay, "pulsa_alw/day")
+		if !ok {
+			return
+		}
+		// 转换AttAlwDay为float64类型
+		attAlwDay, ok := StringToFloat64(c, item.AttAlwDay, "att_alw_day")
+		if !ok {
+			return
+		}
+		// 转换PulsaAlwMonth为float64类型
+		pulsaAlwMonth, ok := StringToFloat64(c, item.PulsaAlwMonth, "pulsa_alw/month")
+		if !ok {
+			return
+		}
+		// 转换HousingAlwTetap为float64类型
+		housingAlwTetap, ok := StringToFloat64(c, item.HousingAlwTetap, "housing_alw/TJ_Tidak_Tetap")
 		if !ok {
 			return
 		}
 
 		importReq.Employees[i] = service.ImportEmployeeItem{
-			EmployeeID:      item.EmployeeID,
-			ProjectID:       projectID,
-			Name:            item.Name,
-			Department:      item.Department,
-			Position:        item.Position,
-			HireDate:        item.HireDate,
-			LeaveDate:       item.LeaveDate,
-			Salary:          item.Salary,
-			TaxStatus:       item.TaxStatus,
-			IdCard:          item.IdCard,
-			Npwp:            item.Npwp,
-			HierarchyID:     item.HierarchyID,
-			HierarchyName:   item.HierarchyName,
-			JoinDate:        item.JoinDate,
-			ResignDate:      item.ResignDate,
-			Email:           item.Email,
-			BasicSalary:     item.BasicSalary,
-			HousingAlw:      item.HousingAlw,
-			PositionAlw:     item.PositionAlw,
-			FieldAlw:        item.FieldAlw,
-			FixAlw:          item.FixAlw,
-			MealAlwDay:      item.MealAlwDay,
-			TranspAlwDay:    item.TranspAlwDay,
-			PulsaAlwDay:     item.PulsaAlwDay,
-			AttAlwDay:       item.AttAlwDay,
+			EmployeeID:   item.EmployeeID,
+			ProjectID:    projectID,
+			EmployeeName: item.Name,
+			Department:   item.Department,
+			Position:     item.Position,
+			HireDate:     item.HireDate,
+			LeaveDate:    item.LeaveDate,
+			// Salary:          salary,
+			IdCard:        item.IdCard,
+			Npwp:          item.Npwp,
+			HierarchyID:   item.HierarchyID,
+			HierarchyName: item.HierarchyName,
+			JoinDate:      item.JoinDate,
+			ResignDate:    item.ResignDate,
+			Email:         item.Email,
+			BasicSalary:   basicSalary,
+			HousingAlw:    housingAlw,
+			PositionAlw:   positionAlw,
+			FieldAlw:      fieldAlw,
+			// FixAlw:          fixAlw,
+			MealAlwDay:      mealAlwDay,
+			TranspAlwDay:    transpAlwDay,
+			PulsaAlwDay:     pulsaAlwDay,
+			AttAlwDay:       attAlwDay,
 			TaxType:         item.TaxType,
 			LocationName:    item.LocationName,
-			PulsaAlwMonth:   item.PulsaAlwMonth,
-			HousingAlwTetap: item.HousingAlwTetap,
+			PulsaAlwMonth:   pulsaAlwMonth,
+			HousingAlwTetap: housingAlwTetap,
 			DeleteFlag:      deleteFlag,
 		}
 	}

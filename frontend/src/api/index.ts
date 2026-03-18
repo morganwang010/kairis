@@ -431,7 +431,7 @@ export const deleteAllIncidentRecords = async (projectId: string, month: string)
 // 获取税率列表
 export const getTaxRates = async (grade: string) => {
   try {
-    const response = await apiClient.get('/tax-rates', { params: { grade } });
+    const response = await apiClient.get('/tax-rates/grade', { params: { grade } });
     console.log('获取税率列表成功:', response.data);
     return response.data;
   } catch (error) {

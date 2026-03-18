@@ -56,7 +56,8 @@ const TaxRatePage = () => {
       // 转换为string类型以匹配API参数要求
       const data = await getTaxRates(grade.toString())
       // 将下划线命名转换为驼峰命名
-      const formattedData = data.map((item: any) => ({
+      console.log('tax-rates原始数据:', data)
+      const formattedData = data.data.map((item: any) => ({
         id: item.id,
         grade: item.grade,
         salary_min: item.salary_min,

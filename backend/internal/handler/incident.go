@@ -3,6 +3,7 @@ package handler
 import (
 	"kairis/backend/internal/model"
 	"kairis/backend/internal/service"
+	"log/slog"
 	"net/http"
 	"strconv"
 
@@ -253,7 +254,7 @@ func (h *IncidentHandler) Import(c *gin.Context) {
 			MandahAlw        string `json:"mandah_alw"`
 		} `json:"records"`
 	}
-
+	slog.Info("Before binding", "req", &req)
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": err.Error()})
 		return

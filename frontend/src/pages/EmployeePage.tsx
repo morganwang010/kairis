@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Card, Table, Button, Modal, Form, Input, Select, DatePicker, Pagination,  message,  Upload, Tabs, Checkbox } from 'antd'
 import { PlusOutlined, EditOutlined, DeleteOutlined, UploadOutlined, SyncOutlined } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/es/table'
-import { getDepartments, deleteEmployee, getProjects, importEmployeeRecords, importSingleEmployeeRecord, updateEmployee } from '../api'
+import { getDepartments, deleteEmployee, getProjects, importEmployeeRecords, importSingleEmployeeRecord, updateEmployee, getEmployees } from '../api'
 // import { invoke, isTauri } from '@tauri-apps/api/core'
 import dayjs from 'dayjs'
 import ScientificNumberDisplay from '../components/ScientificNumberDisplay';
@@ -149,15 +149,13 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId, projectName }) => {
   // 加载员工数据
   const loadEmployees = async (filters?: any) => {
     try {
-      if (await isTauri()) {
+      if (true) {
         // 在Tauri环境中，调用后端API，传递分页参数
-        const result = await invoke('get_employees', {
-          query: {
+        const result = await getEmployees( {
             ...filters,
             project_id: projectId,
             page: currentPage.toString(),
             page_size: pageSize.toString()
-          }
         })
         const response = result as { data: any[]; total: number };
         console.log(response.data)
@@ -191,8 +189,8 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId, projectName }) => {
     // 先加载部门和职级数据
     const loadInitialData = async () => {
       await Promise.all([
-        loadDepartments(),
-        loadRanks(),
+        // loadDepartments(),
+        // loadRanks(),
         fetchProjects()
       ])
       // 再加载员工数据
@@ -460,7 +458,7 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId, projectName }) => {
       messageApi.warning(t('employeePage.selectProject'));
       return;
     }
-    console.log('选择的项目ID:',  projectId);
+    // console.log('选择的项目ID:',  projectId);
     
     setImportLoading(true);
     
@@ -472,8 +470,13 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId, projectName }) => {
         ...record,
         project_id: projectId
       }));
-      console.log('选择的项目ID:',  projectId);
-      
+      console.log('导入数据格式如下:',  importData);
+      // 将值转换为字符串
+      importData.forEach(item => {
+        Object.keys(item).forEach(key => {
+          item[key] = item[key].toString();
+        });
+      });
       // 使用importEmployeeRecords API函数替代直接的fetch调用
       try {
         await importEmployeeRecords(importData);
@@ -628,7 +631,7 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId, projectName }) => {
       render: (_, __, index) => (currentPage - 1) * pageSize + index + 1,
     },
     { title: t('employeePage.projectName'), dataIndex: 'project_name', key: 'project_name', width: 140 },
-    { title: t('employeePage.employeeName'), dataIndex: 'name', key: 'name', width: 150 },
+    { title: t('employeePage.employeeName'), dataIndex: 'employee_name', key: 'employee_name', width: 150 },
     { title: t('employeePage.employeeId'), dataIndex: 'employee_id', key: 'employee_id', width: 120 },
     { title: t('employeePage.taxStatus'), dataIndex: 'tax_type', key: 'tax_type', width: 80 },
     { title: t('employeePage.idCard'), dataIndex: 'id_card', key: 'id_card', width: 150 },
