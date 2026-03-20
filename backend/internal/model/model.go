@@ -296,3 +296,28 @@ type TaxFreeBases struct {
 	Grade       string  `gorm:"column:grade;type:text;not null;unique" json:"grade"`
 	FreeTaxBase float64 `gorm:"column:free_tax_base;type:numeric;not null;default:0" json:"free_tax_base"`
 }
+
+type SalaryCoefficient struct {
+	ID          uint      `gorm:"primaryKey;autoIncrement;column:id" json:"id"`
+	CJmstkAlw   float64   `gorm:"column:c_jmstk_alw;type:numeric;default:0.0000" json:"c_jmstk_alw"`
+	CPensionAlw float64   `gorm:"column:c_pension_alw;type:numeric;default:0.0000" json:"c_pension_alw"`
+	CAskesAlw   float64   `gorm:"column:c_askes_alw;type:numeric;default:0.0000" json:"c_askes_alw"`
+	COtHour1    float64   `gorm:"column:c_ot_hour1;type:numeric;default:0.00" json:"c_ot_hour1"`
+	COtWages1   float64   `gorm:"column:c_ot_wages1;type:numeric;default:0.0000" json:"c_ot_wages1"`
+	CEwHour1    float64   `gorm:"column:c_ew_hour1;type:numeric;default:0.00" json:"c_ew_hour1"`
+	CEwWages1   float64   `gorm:"column:c_ew_wages1;type:numeric;default:0.0000" json:"c_ew_wages1"`
+	CEwHour2    float64   `gorm:"column:c_ew_hour2;type:numeric;default:0.00" json:"c_ew_hour2"`
+	CEwWages2   float64   `gorm:"column:c_ew_wages2;type:numeric;default:0.0000" json:"c_ew_wages2"`
+	CEwHour3    float64   `gorm:"column:c_ew_hour3;type:numeric;default:0.00" json:"c_ew_hour3"`
+	CEwWages3   float64   `gorm:"column:c_ew_wages3;type:numeric;default:0.0000" json:"c_ew_wages3"`
+	CJmstkFee   float64   `gorm:"column:c_jmstk_fee;type:numeric;default:0.0000" json:"c_jmstk_fee"`
+	CPensionDed float64   `gorm:"column:c_pension_ded;type:numeric;default:0.0000" json:"c_pension_ded"`
+	CAskesDed   float64   `gorm:"column:c_askes_ded;type:numeric;default:0.0000" json:"c_askes_ded"`
+	JmstkMax    float64   `gorm:"column:jmstk_max;type:numeric;default:0.0000" json:"jmstk_max"`
+	PensionMax  float64   `gorm:"column:pension_max;type:numeric;default:0.0000" json:"pension_max"`
+	AskesMax    float64   `gorm:"column:askes_max;type:numeric;default:0.0000" json:"askes_max"`
+	AskesMin    float64   `gorm:"column:askes_min;type:numeric;default:0.0000" json:"askes_min"`
+	CreateTime  time.Time `gorm:"column:create_time;default:CURRENT_TIMESTAMP" json:"create_time"`
+	UpdateTime  time.Time `gorm:"column:update_time;default:CURRENT_TIMESTAMP;autoUpdateTime" json:"update_time"`
+	IsDelete    int       `gorm:"column:is_delete;default:0" json:"is_delete"`
+}

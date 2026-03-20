@@ -3,6 +3,7 @@ package handler
 import (
 	"kairis/backend/internal/model"
 	"kairis/backend/internal/service"
+	"log/slog"
 	"net/http"
 	"strconv"
 
@@ -50,7 +51,17 @@ func (h *SalaryHandler) Get(c *gin.Context) {
 }
 
 func (h *SalaryHandler) List(c *gin.Context) {
-	salaries, err := h.salaryService.List()
+	month := c.Query("month")
+	projectIDStr := c.Query("project_id")
+
+	slog.Info("List salaries", "month", month, "project_id", projectIDStr)
+
+	projectID, ok := StringToInt(c, projectIDStr, "project_id")
+	if !ok {
+		return
+	}
+
+	salaries, err := h.salaryService.List(month, projectID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
 		return
@@ -101,7 +112,7 @@ func (h *SalaryHandler) Import(c *gin.Context) {
 	var req struct {
 		ProjectID string `json:"projectId"`
 		Month     string `json:"month"`
-		Records []struct {
+		Records   []struct {
 			EmployeeID       string  `json:"employee_id"`
 			TaxStatus        float64 `json:"tax_status"`
 			BasicSalary      float64 `json:"basic_salary"`
@@ -240,6 +251,41 @@ func (h *SalaryHandler) Import(c *gin.Context) {
 	}
 
 	if err := h.salaryService.ImportSalary(importReq); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"code": 200, "message": "Success"})
+}
+
+func (h *SalaryHandler) Calculate(c *gin.Context) {
+	var req struct {
+		Params struct {
+			Month     string `json:"month"`
+			ProjectID string `json:"project_id"`
+		} `json:"params"`
+	}
+	// slog.Info("Calculate salary", "params", req)
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": "Invalid request body"})
+		return
+	}
+
+	month := req.Params.Month
+	projectIDStr := req.Params.ProjectID
+	slog.Info("Calculate salary", "month", month, "project_id", projectIDStr)
+
+	if month == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": "Month is required"})
+		return
+	}
+
+	projectID, ok := StringToInt(c, projectIDStr, "project_id")
+	if !ok {
+		return
+	}
+
+	if err := h.salaryService.Calculate(month, projectID); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
 		return
 	}

@@ -76,6 +76,7 @@ export const getSalaries = async (params?: {
 }) => {
   try {
     const response = await apiClient.get('/salaries', { params });
+    console.log('获取薪资列表成功11:', response.data);
     return response.data;
   } catch (error) {
     console.error('获取薪资列表失败:', error);
@@ -578,7 +579,7 @@ export const calculateMonthlySalary = async (params: {
   project_id?: string;
 }) => {
   try {
-    const response = await apiClient.get('/salary/calculate', { params });
+    const response = await apiClient.post('/salaries/calculate', { params });
     console.log('计算薪资成功:', response.data);
     return response.data;
   } catch (error) {

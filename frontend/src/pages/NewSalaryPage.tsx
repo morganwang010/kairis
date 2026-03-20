@@ -966,8 +966,8 @@ const loadData = async () => {
     },
         {
       title: t('newSalaryPage.annualleave'),
-      dataIndex: 'annualleave',
-      key: 'annualleave'
+      dataIndex: 'leave_replc',
+      key: 'leave_replc'
     },
           {
       title: t('newSalaryPage.OT1'),

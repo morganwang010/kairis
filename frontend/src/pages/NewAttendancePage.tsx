@@ -26,7 +26,7 @@ interface AttendanceRecord {
   sick: number
   standby: number
   ew: number
-  annualleave: number
+  leave_replc: number
   absent: number
   unpresent: number
   extrawork: number
@@ -708,8 +708,8 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
       },
         {
         title: t('newAttendancePage.annualleave'),
-        dataIndex: 'annualleave',
-        key: 'annualleave',
+        dataIndex: 'leave_replc',
+        key: 'leave_replc',
         width: 100,
       },
             {
@@ -747,7 +747,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
       render: (record: AttendanceRecord) => {
         // 计算所有状态的天数总和
         let total = 0;
-        total = record.annualleave + record.work + record.off + record.sick + record.standby  + record.absent;
+        total = record.leave_replc + record.work + record.off + record.sick + record.standby  + record.absent;
         // for (let i = 1; i <= 31; i++) {
         //   if (record.days[i]) {
         //     total++;
@@ -815,7 +815,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
       unpresent: record.unpresent || 0,
       absent: record.absent,
       sick: record.sick,
-      annualleave: record.annualleave,
+      leave_replc: record.leave_replc,
       ew: record.ew,
       standby: record.standby,
       extrawork: record.extrawork,
@@ -874,6 +874,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
             ew3: values.ew3 || 0,
             days: editingRecord?.days || {},
             permission: values.permission || 0,
+            leave_replc: values.leave_replc || 0,
           }
 
           // 初始化天数记录
@@ -988,7 +989,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
               unpresent: record.unpresent || 0,
               absent: record.absent,
               sick: record.sick,
-              annualleave: record.annualleave,
+              leave_replc: record.leave_replc,
               ew: record.ew,
               standby: record.standby,
               extrawork: record.extrawork || 0,

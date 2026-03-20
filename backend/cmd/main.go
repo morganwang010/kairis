@@ -178,6 +178,7 @@ func main() {
 			salaries.PUT("/:id", salaryHandler.Update)
 			salaries.DELETE("/:id", salaryHandler.Delete)
 			salaries.POST("/import", salaryHandler.Import)
+			salaries.POST("/calculate", salaryHandler.Calculate)
 		}
 
 		taxRates := api.Group("/tax-rates")

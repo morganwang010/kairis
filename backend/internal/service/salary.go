@@ -21,8 +21,8 @@ func (s *SalaryService) Get(id uint) (*model.Salaries, error) {
 	return s.salaryRepo.Get(id)
 }
 
-func (s *SalaryService) List() ([]model.Salaries, error) {
-	return s.salaryRepo.List()
+func (s *SalaryService) List(month string, projectID int) ([]repository.AttendanceWithEmployeeAndIncident, error) {
+	return s.salaryRepo.List(month, projectID)
 }
 
 func (s *SalaryService) Update(salary *model.Salaries) error {
@@ -166,4 +166,10 @@ func (s *SalaryService) ImportSalary(req ImportSalaryRequest) error {
 		}
 	}
 	return nil
+}
+
+func (s *SalaryService) Calculate(month string, projectID int) error {
+	// 这里实现薪资计算逻辑
+	// 参考salary.rs中的calculate_monthly_salary方法
+	return s.salaryRepo.Calculate(month, projectID)
 }
