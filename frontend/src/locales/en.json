@@ -771,7 +771,7 @@
     "sick": "Sick",
     "standby": "Standby",
     "extrawork": "EW",
-    "annualleave": "Leave_Replc",
+    "leaveReplc": "Leave_Replc",
     "quarantime": "Quarantine Time",
     "total": "Total",
     "ot1": "OT1",

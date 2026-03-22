@@ -9,6 +9,10 @@ import (
 type IncidentRepository struct {
 	db *gorm.DB
 }
+type IncidentWithEmployee struct {
+	model.Incidents
+	EmployeeName string `json:"employee_name"`
+}
 
 func NewIncidentRepository(db *gorm.DB) *IncidentRepository {
 	return &IncidentRepository{db: db}
@@ -27,26 +31,29 @@ func (r *IncidentRepository) GetByID(id uint) (*model.Incidents, error) {
 	return &incident, nil
 }
 
-func (r *IncidentRepository) List(offset, limit int, projectID, month string) ([]model.Incidents, int64, error) {
-	var incidents []model.Incidents
+func (r *IncidentRepository) List(offset, limit int, projectID, month string) ([]IncidentWithEmployee, int64, error) {
+	var incidents []IncidentWithEmployee
 	var total int64
 
-	query := r.db.Model(&model.Incidents{})
-
-	if projectID != "" {
-		query = query.Where("project_id = ?", projectID)
+	// 先查询总数
+	if err := r.db.Table("incidents as a").
+		Joins("LEFT JOIN employees as e ON a.employee_id = e.employee_id").
+		Where("a.month = ? AND a.project_id = ?", month, projectID).
+		Count(&total).Error; err != nil {
+		return incidents, total, err
 	}
 
-	if month != "" {
-		query = query.Where("month = ?", month)
+	// 再查询分页数据
+	if err := r.db.Table("incidents as a").
+		Select(`a.*, e.employee_name,e.position`).
+		Joins("LEFT JOIN employees as e ON a.employee_id = e.employee_id").
+		Where("a.month = ? AND a.project_id = ?", month, projectID).
+		Offset(offset).
+		Limit(limit).
+		Find(&incidents).Error; err != nil {
+		return incidents, total, err
 	}
-
-	if err := query.Count(&total).Error; err != nil {
-		return nil, 0, err
-	}
-
-	err := query.Offset(offset).Limit(limit).Find(&incidents).Error
-	return incidents, total, err
+	return incidents, total, nil
 }
 
 func (r *IncidentRepository) Update(incident *model.Incidents) error {

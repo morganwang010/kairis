@@ -160,7 +160,7 @@ const LayoutComponent = () => {
                   items={[
                     {
                       key: 'dashboard',
-                      label: t('menu.dashboard'),
+                      label: t('common.home'),
                       onClick: () => navigate('/system/dashboard'),
                       icon: <DashboardOutlined />,
                     },
@@ -185,6 +185,12 @@ const LayoutComponent = () => {
                       label: t('common.taxRates'),
                       icon: <AppstoreOutlined />,
                       onClick: () => navigate('/app/tax-rates'),
+                    },
+                    {
+                      key: 'settings',
+                      label: t('common.settings'),
+                      icon: <AppstoreOutlined />,
+                      onClick: () => navigate('/app/settings'),
                     },
                     {
                       key: 'system',

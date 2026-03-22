@@ -27,26 +27,29 @@ func (r *AttendanceRepository) GetByID(id uint) (*model.Attendances, error) {
 	return &attendance, nil
 }
 
-func (r *AttendanceRepository) List(offset, limit int, projectID, month string) ([]model.Attendances, int64, error) {
-	var attendances []model.Attendances
+func (r *AttendanceRepository) List(offset, limit int, projectID, month string) ([]AttendanceWithEmployee, int64, error) {
+	var attendances []AttendanceWithEmployee
 	var total int64
 
-	query := r.db.Model(&model.Attendances{})
-
-	if projectID != "" {
-		query = query.Where("project_id = ?", projectID)
+	// 先查询总数
+	if err := r.db.Table("attendances as a").
+		Joins("LEFT JOIN employees as e ON a.employee_id = e.employee_id").
+		Where("a.month = ? AND a.project_id = ?", month, projectID).
+		Count(&total).Error; err != nil {
+		return attendances, total, err
 	}
 
-	if month != "" {
-		query = query.Where("month = ?", month)
+	// 再查询分页数据
+	if err := r.db.Table("attendances as a").
+		Select(`a.*, e.employee_name,e.position`).
+		Joins("LEFT JOIN employees as e ON a.employee_id = e.employee_id").
+		Where("a.month = ? AND a.project_id = ?", month, projectID).
+		Offset(offset).
+		Limit(limit).
+		Find(&attendances).Error; err != nil {
+		return attendances, total, err
 	}
-
-	if err := query.Count(&total).Error; err != nil {
-		return nil, 0, err
-	}
-
-	err := query.Offset(offset).Limit(limit).Find(&attendances).Error
-	return attendances, total, err
+	return attendances, total, nil
 }
 
 func (r *AttendanceRepository) Update(attendance *model.Attendances) error {

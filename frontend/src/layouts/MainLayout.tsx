@@ -83,8 +83,8 @@ const MainLayout = () => {
           style={{ height: '100%', borderRight: 0 }}
           items={[
             {
-              key: 'dashboard',
-              label: t('menu.dashboard'),
+              key: 'Home',
+              label: t('common.home'),
               onClick: () => navigate('/dashboard'),
               icon: <DashboardOutlined />,
             },

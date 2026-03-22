@@ -68,12 +68,29 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
   const [modal, contextHolder] = Modal.useModal();
   // 选中状态管理
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
+  // 点击行高亮状态
+  const [highlightedRowId, setHighlightedRowId] = useState<string | null>(null)
   // 分页状态管理
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
   const [total, setTotal] = useState(0)
   const [filterForm] = Form.useForm()
   const [filterValues, setFilterValues] = useState<{[key: string]: any}>({})
+
+  // 数据刷新后恢复高亮状态
+  useEffect(() => {
+    if (highlightedRowId) {
+      setTimeout(() => {
+        const row = document.querySelector(`.ant-table-tbody tr[data-row-key="${highlightedRowId}"]`);
+        if (row) {
+          const tds = row.querySelectorAll('td');
+          tds.forEach(td => {
+            (td as HTMLElement).style.backgroundColor = '#e6f7ff';
+          });
+        }
+      }, 100);
+    }
+  }, [data, highlightedRowId, currentPage]);
 // 页面加载时设定当前月份
   useEffect(() => {
     setCurrentMonth(dayjs().format('YYYY-MM'))
@@ -258,7 +275,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
         const trimmedRecord = trimRecord(record)
         
         return {
-          employee_id: trimmedRecord['Employee_Id'],
+        employee_id: trimmedRecord['Employee_Id'],
         project_id: projectId,
         project_name: trimmedRecord['Project_Name'] || projectName,
         month: trimmedRecord['Month'] || new Date().toISOString().slice(0, 7),
@@ -580,7 +597,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
           unpresent: record.unpresent,
           absent: record.absent,
           sick: record.sick,
-          annualleave: record.annualleave,
+          leave_replc: record.leave_replc || 0,
           ew: record.ew,
           standby: record.standby,
           extrawork: record.extrawork || 0,
@@ -592,6 +609,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
           days: record.days || {} ,// 确保days字段存在
           permission: record.permission || 0
         }))
+        console.log('formattedAttendanceRecords', formattedRecords)
          setData(formattedRecords)
       
       } else {
@@ -664,13 +682,13 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
         key: 'position',
         width: 120,
       },
-         {
+      {
         title: t('newAttendancePage.work'),
         dataIndex: 'work',
         key: 'work',
         width: 100,
       },
-         {
+      {
         title: t('newAttendancePage.off'),
         dataIndex: 'off',
         key: 'off',
@@ -682,13 +700,13 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
         key: 'permission',
         width: 100,
       },
-         {
+      {
         title: t('newAttendancePage.unpresent'),
         dataIndex: 'unpresent',
         key: 'unpresent',
         width: 100,
       },
-         {
+      {
         title: t('newAttendancePage.sick'),
         dataIndex: 'sick',
         key: 'sick',
@@ -706,13 +724,13 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
         key: 'ew',
         width: 100,
       },
-        {
-        title: t('newAttendancePage.annualleave'),
+      {
+        title: t('newAttendancePage.leaveReplc'),
         dataIndex: 'leave_replc',
         key: 'leave_replc',
         width: 100,
       },
-            {
+      {
         title: t('newAttendancePage.ot1'),
         dataIndex: 'ot1',
         key: 'ot1',
@@ -1048,13 +1066,10 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
             .table-row-light {
               background-color: #ffffff;
             }
-            .table-row-light:hover {
-              background-color: #f5f5f5 !important;
-            }
             .table-row-dark {
               background-color: #fafafa;
             }
-            .table-row-dark:hover {
+            .ant-table-tbody > tr:hover > td {
               background-color: #f5f5f5 !important;
             }
           `}
@@ -1144,11 +1159,37 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
           columns={generateColumns()}
           dataSource={data}
           rowKey="id"
-          rowClassName={(_, index) => (index % 2 === 0 ? 'table-row-light' : 'table-row-dark')}
+          rowClassName={(record, index) => {
+            return index % 2 === 0 ? 'table-row-light' : 'table-row-dark';
+          }}
           scroll={{ x: 'max-content', y: 'calc(100vh - 450px)' }}
           pagination={false}
-
           loading={loading}
+          onRow={(record) => ({
+            onClick: (e) => {
+              const newHighlightedId = highlightedRowId === record.id ? null : record.id;
+              setHighlightedRowId(newHighlightedId);
+              
+              // 直接通过DOM操作确保立即生效
+              const row = e.currentTarget;
+              const allRows = document.querySelectorAll('.ant-table-tbody > tr');
+              
+              allRows.forEach((r, index) => {
+                const tds = r.querySelectorAll('td');
+                tds.forEach(td => {
+                  (td as HTMLElement).style.backgroundColor = '';
+                });
+              });
+              
+              if (newHighlightedId) {
+                const tds = row.querySelectorAll('td');
+                tds.forEach(td => {
+                  (td as HTMLElement).style.backgroundColor = '#e6f7ff';
+                });
+              }
+            },
+            style: { cursor: 'pointer' }
+          })}
         />
 
           <Pagination
@@ -1255,8 +1296,8 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
               <InputNumber placeholder="请输入加班天数" min={0} style={{ width: '100%' }} />
             </Form.Item> 
             <Form.Item
-              name="annualleave"
-              label={t('newAttendancePage.annualleave')}
+              name="leave_replc"
+              label={t('newAttendancePage.leaveReplc')}
             >
               <InputNumber placeholder="请输入年假天数" min={0} style={{ width: '100%' }} />
             </Form.Item> 

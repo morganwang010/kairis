@@ -39,6 +39,7 @@ func main() {
 	salaryRepo := repository.NewSalaryRepository(db)
 	taxRateRepo := repository.NewTaxRateRepository(db)
 	taxFreeBaseRepo := repository.NewTaxFreeBaseRepository(db)
+	salaryCoefficientRepo := repository.NewSalaryCoefficientRepository(db)
 
 	userService := service.NewUserService(userRepo, roleRepo)
 	roleService := service.NewRoleService(roleRepo, permissionRepo)
@@ -52,6 +53,7 @@ func main() {
 	salaryService := service.NewSalaryService(salaryRepo)
 	taxRateService := service.NewTaxRateService(taxRateRepo)
 	taxFreeBaseService := service.NewTaxFreeBaseService(taxFreeBaseRepo)
+	salaryCoefficientService := service.NewSalaryCoefficientService(salaryCoefficientRepo)
 
 	userHandler := handler.NewUserHandler(userService)
 	roleHandler := handler.NewRoleHandler(roleService)
@@ -66,6 +68,7 @@ func main() {
 	salaryHandler := handler.NewSalaryHandler(salaryService)
 	taxRateHandler := handler.NewTaxRateHandler(taxRateService)
 	taxFreeBaseHandler := handler.NewTaxFreeBaseHandler(taxFreeBaseService)
+	salaryCoefficientHandler := handler.NewSalaryCoefficientHandler(salaryCoefficientService)
 
 	api := r.Group("/api")
 	{
@@ -200,6 +203,16 @@ func main() {
 			taxFreeBases.POST("", taxFreeBaseHandler.Create)
 			taxFreeBases.PUT("/:id", taxFreeBaseHandler.Update)
 			taxFreeBases.DELETE("/:id", taxFreeBaseHandler.Delete)
+		}
+
+		salaryCoefficients := api.Group("/salary-coefficients")
+		salaryCoefficients.Use(middleware.Auth())
+		{
+			salaryCoefficients.GET("", salaryCoefficientHandler.List)
+			salaryCoefficients.GET("/:id", salaryCoefficientHandler.Get)
+			salaryCoefficients.POST("", salaryCoefficientHandler.Create)
+			salaryCoefficients.PUT("/:id", salaryCoefficientHandler.Update)
+			salaryCoefficients.DELETE("/:id", salaryCoefficientHandler.Delete)
 		}
 
 		// 公开的许可证接口

@@ -630,7 +630,6 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId, projectName }) => {
       width: 80,
       render: (_, __, index) => (currentPage - 1) * pageSize + index + 1,
     },
-    { title: t('employeePage.projectName'), dataIndex: 'project_name', key: 'project_name', width: 140 },
     { title: t('employeePage.employeeName'), dataIndex: 'employee_name', key: 'employee_name', width: 150 },
     { title: t('employeePage.employeeId'), dataIndex: 'employee_id', key: 'employee_id', width: 120 },
     { title: t('employeePage.taxStatus'), dataIndex: 'tax_type', key: 'tax_type', width: 80 },

@@ -619,33 +619,34 @@ export const sendEmail = async (record: any) => {
 
 // System Config API
 export const getSystemConfigs = async () => {
-  const response = await apiClient.get('/system-configs');
+  const response = await apiClient.get('/settings');
   return response.data;
 };
 
 export const getSystemConfigByName = async (name: string) => {
-  const response = await apiClient.get('/system-configs/name', { params: { name } });
+  const response = await apiClient.get('/settings/name', { params: { name } });
   return response.data;
 };
 
 export const updateSystemConfig = async (id: number, name: string, config: any) => {
-  const response = await apiClient.put(`/system-configs/${id}`, { name, config });
+  const response = await apiClient.put(`/settings/${id}`, { name, config });
   return response.data;
 };
 
 export const insertSystemConfig = async (config: any) => {
-  const response = await apiClient.post('/system-configs', config);
+  const response = await apiClient.post('/settings', config);
   return response.data;
 };
 
 // Salary Coefficient API
 export const getSalaryCoefficient = async () => {
-  const response = await apiClient.get('/salary-coefficient');
+  const response = await apiClient.get('/salary-coefficients');
+  console.log('获取薪资系数成功:', response.data);
   return response.data;
 };
 
 export const updateSalaryCoefficient = async (coefficient: any) => {
-  const response = await apiClient.put('/salary-coefficient', coefficient);
+  const response = await apiClient.put('/salary-coefficients', coefficient);
   return response.data;
 };
 
@@ -683,7 +684,7 @@ export const getEmployeeCount = async (config: any) => {
 // System Config API
 
 export const deleteSystemConfig = async (id: number) => {
-  const result = await apiClient.delete(`/system-configs/${id}`);
+  const result = await apiClient.delete(`/settings/${id}`);
   return result;
 };
 

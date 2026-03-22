@@ -688,10 +688,8 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
       render: (_, __, index) => (currentPage - 1) * pageSize + index + 1,
     },
     { title: t('incidentPage.month'), dataIndex: 'month', key: 'month', width: 120 },
-    { title: t('incidentPage.projectName'), dataIndex: 'project_name', key: 'project_name', width: 120 },
     { title: t('incidentPage.employeeName'), dataIndex: 'employee_name', key: 'employee_name', width: 120 },
     { title: t('incidentPage.employeeId'), dataIndex: 'employee_id', key: 'employee_id', width: 120 },
-    
     { title: t('incidentPage.leaveComp'), dataIndex: 'leave_comp', key: 'leave_comp', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : '-' },
     { title: t('incidentPage.medAlw'), dataIndex: 'med_alw', key: 'med_alw', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : '-' },
     { title: t('incidentPage.others'), dataIndex: 'others', key: 'others', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : '-' },
@@ -703,19 +701,16 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
     { title: t('incidentPage.performanceAlw'), dataIndex: 'performance_alw', key: 'performance_alw', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : '-' },
     { title: t('incidentPage.tripAlw'), dataIndex: 'trip_alw', key: 'trip_alw', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : '-' },
     { title: t('incidentPage.mandahAlw'), dataIndex: 'mandah_alw', key: 'mandah_alw', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : '-' },
-    
     { title: t('incidentPage.otWages2'), dataIndex: 'ot2_wages', key: 'ot2_wages', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : '-' },
     { title: t('incidentPage.otWages3'), dataIndex: 'ot3_wages', key: 'ot3_wages', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : '-' },
     { title: t('incidentPage.compPhk'), dataIndex: 'comp_phk', key: 'comp_phk', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : '-' },
     { title: t('incidentPage.taxAlwPhk'), dataIndex: 'tax_alw_phk', key: 'tax_alw_phk', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : '-' },
     { title: t('incidentPage.absentDed2'), dataIndex: 'absent_ded2', key: 'absent_ded2', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : '-' },
-    
     { title: t('incidentPage.incentiveDed'), dataIndex: 'incentive_ded', key: 'incentive_ded', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : '-' },
     { title: t('incidentPage.loanDed'), dataIndex: 'loan_ded', key: 'loan_ded', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : '-' },
     { title: t('incidentPage.correctAdd'), dataIndex: 'correct_add', key: 'correct_add', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : '-' },
     { title: t('incidentPage.correctSub'), dataIndex: 'correct_sub', key: 'correct_sub', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : '-' },
     { title: t('incidentPage.taxDedPhk'), dataIndex: 'tax_ded_phk', key: 'tax_ded_phk', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : '-' },
-   
     {
       title: t('common.action'),
       key: 'action',

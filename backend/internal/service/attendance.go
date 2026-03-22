@@ -81,7 +81,7 @@ func (s *AttendanceService) GetAttendanceByID(id uint) (*model.Attendances, erro
 	return s.attendanceRepo.GetByID(id)
 }
 
-func (s *AttendanceService) ListAttendances(offset, limit int, projectID, month string) ([]model.Attendances, int64, error) {
+func (s *AttendanceService) ListAttendances(offset, limit int, projectID, month string) ([]repository.AttendanceWithEmployee, int64, error) {
 	return s.attendanceRepo.List(offset, limit, projectID, month)
 }
 
