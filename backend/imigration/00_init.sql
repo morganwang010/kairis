@@ -603,3 +603,10 @@ INSERT INTO salary_coefficient (
   0.05,    -- 社保扣除5%
   100400
 );
+CREATE TABLE system_configs (
+    id SERIAL PRIMARY KEY,  -- PostgreSQL的自增主键
+    name TEXT NOT NULL,  -- 配置项名称
+    config TEXT NOT NULL,    -- 配置项内容
+    create_time TIMESTAMP DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'PRC'),  -- 本地时间（中国时区）
+    update_time TIMESTAMP DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'PRC')
+);

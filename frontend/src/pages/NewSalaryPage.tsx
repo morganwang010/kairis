@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Card, Table, Button, Space, Modal, Form, Input, DatePicker, InputNumber, message, Upload, Tabs,Pagination, Switch } from 'antd'
 import { PlusOutlined, EditOutlined, DeleteOutlined, UploadOutlined, SyncOutlined, InboxOutlined , FileExcelOutlined} from '@ant-design/icons'
 import ScientificNumberDisplay from '../components/ScientificNumberDisplay'
-import { calculateMonthlySalary, getSalaries, updateSalary as apiUpdateSalary, addSalary as apiAddSalary, importSingleSalaryRecord, importSalaryRecords ,updateSalaryCalculateStatus, deleteSalaryRecord} from '../api';
+import { calculateMonthlySalary, getSalaries, updateSalary , addSalary, importSingleSalaryRecord, importSalaryRecords ,updateSalaryCalculateStatus, deleteSalaryRecord} from '../api';
 import dayjs from 'dayjs'
 import * as XLSX from 'xlsx'
 import type { UploadProps } from 'antd'
@@ -350,13 +350,14 @@ const loadData = async () => {
 
 
   // 封装API调用函数
-  const updateSalary = async (id: number, data: Partial<SalaryRecord>) => {
+  const updateSalaryResult = async (id: number, data: Partial<SalaryRecord>) => {
     try {
       // 调用实际的API更新薪资记录
-      if (apiUpdateSalary) {
-        await apiUpdateSalary(id, data);
-      } else {
-        console.log('API函数updateSalary不可用，模拟更新:', id, data);
+      try {
+        await updateSalary(id, data);
+      } catch (error) {
+        console.error('更新薪资记录失败:', error);
+        messageApi.error('API函数updateSalary不可用，模拟更新:');
       }
       // 重新加载数据以反映更新
       const updatedData = await fetchSalaryData();
@@ -364,7 +365,7 @@ const loadData = async () => {
       return true;
     } catch (error) {
       console.error('更新薪资记录失败:', error);
-      messageApi.error('更新薪资记录失败');
+      messageApi.error(t('common.updateFailed'));
       return false;
     }
   };
@@ -372,10 +373,10 @@ const loadData = async () => {
   const addSalary = async (data: Omit<SalaryRecord, 'id' | 'create_time' | 'update_time'>) => {
     try {
       // 调用实际的API添加薪资记录
-      if (apiAddSalary) {
-        await apiAddSalary(data);
+      if (addSalary) {
+        await addSalary(data);
       } else {
-        console.log('API函数addSalary不可用，模拟添加:', data);
+        messageApi.error('API函数addSalary不可用，模拟添加:', data);
       }
       // 重新加载数据以反映新添加的记录
       const updatedData = await fetchSalaryData();
@@ -1371,28 +1372,6 @@ const loadData = async () => {
       const excelFileName = `Salary_Records_${currentMonth}.xlsx`;
     XLSX.writeFile(workbook, excelFileName);
     messageApi.success('Export Excel Sucess');
-
-
-
-     // 修复：使用Blob和下载链接来触发浏览器的保存对话框
-  // 这样用户可以选择保存路径
-  // const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-  // const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-  // const url = URL.createObjectURL(blob);
-  // const link = document.createElement('a');
-  // link.href = url;
-  // link.download = excelFileName;
-  // link.style.display = 'none';
-  
-  // // 触发点击事件，打开保存对话框
-  // document.body.appendChild(link);
-  // link.click();
-  
-  // // 清理
-  // document.body.removeChild(link);
-  // URL.revokeObjectURL(url);
-  // messageApi.success('Excel导出成功');
-
 
   }
 // 处理筛选表单提交

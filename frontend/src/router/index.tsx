@@ -25,14 +25,14 @@ const WithSuspense = (Component: React.LazyExoticComponent<ComponentType<any>>) 
 };
 
 // 导入布局组件
-const MainLayout = WithSuspense(lazy(() => import('../layouts/MainLayout')));
-const SystemLayout = WithSuspense(lazy(() => import('../layouts/SystemLayout')));
+// const MainLayout = WithSuspense(lazy(() => import('../layouts/MainLayout')));
+// const SystemLayout = WithSuspense(lazy(() => import('../layouts/SystemLayout')));
 
-const Dashboard = lazy(() => import('../pages/Dashboard'));
-const UserManagement = lazy(() => import('../pages/system/UserManagement'));
-const RoleManagement = lazy(() => import('../pages/system/RoleManagement'));
-const PermissionManagement = lazy(() => import('../pages/system/PermissionManagement'));
-const MenuManagement = lazy(() => import('../pages/system/MenuManagement'));
+// const Dashboard = lazy(() => import('../pages/Dashboard'));
+// const UserManagement = lazy(() => import('../pages/system/UserManagement'));
+// const RoleManagement = lazy(() => import('../pages/system/RoleManagement'));
+// const PermissionManagement = lazy(() => import('../pages/system/PermissionManagement'));
+// const MenuManagement = lazy(() => import('../pages/system/MenuManagement'));
 
 // 根路径重定向组件
 const RootRedirect = () => {

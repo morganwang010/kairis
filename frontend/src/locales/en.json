@@ -784,7 +784,8 @@
     "ew": "EW",
     "confirmDeleteTitle": "Delete Confirm",
     "confirmDeleteContent": "Are you sure delete this record?",
-    "exportToExcel": "Export to Excel"
+    "exportToExcel": "Export to Excel",
+    "editFailed": "Edit failed"
   },
   "salaryUploadPage": {
     "title": "Salary Import",

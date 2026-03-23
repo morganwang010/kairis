@@ -21,8 +21,8 @@ func (s *SalaryService) Get(id uint) (*model.Salaries, error) {
 	return s.salaryRepo.Get(id)
 }
 
-func (s *SalaryService) List(month string, projectID int) ([]repository.AttendanceWithEmployeeAndIncident, error) {
-	return s.salaryRepo.List(month, projectID)
+func (s *SalaryService) List(offset, limit int, month string, projectID int) ([]repository.AttendanceWithEmployeeAndIncident, int64, error) {
+	return s.salaryRepo.List(offset, limit, month, projectID)
 }
 
 func (s *SalaryService) Update(salary *model.Salaries) error {

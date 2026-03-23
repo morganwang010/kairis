@@ -765,7 +765,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
       render: (record: AttendanceRecord) => {
         // 计算所有状态的天数总和
         let total = 0;
-        total = record.leave_replc + record.work + record.off + record.sick + record.standby  + record.absent;
+        total = record.leave_replc + record.work + record.off + record.sick + record.standby  + record.absent + record.permission;
         // for (let i = 1; i <= 31; i++) {
         //   if (record.days[i]) {
         //     total++;
@@ -926,7 +926,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
           setIsModalVisible(false)
         } catch (error) {
           console.error(editingRecord ? '更新考勤记录失败:' : '添加考勤记录失败:', error)
-          messageApi.error(editingRecord ? '更新失败，请稍后重试' : '添加失败，请稍后重试')
+          messageApi.error(editingRecord ? t('newAttendancePage.editFailed') : t('newAttendancePage.addFailed'))
         }
       })
   }

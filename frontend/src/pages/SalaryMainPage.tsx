@@ -13,7 +13,7 @@ import EmployeePage from './EmployeePage'
 const SalaryMainPage = () => {
   const params = useParams<{ projectId: string }>()
   const [activeTabKey, setActiveTabKey] = useState<string>('attendance')
-  const [projectName, setProjectName] = useState<string>('所有项目')
+  const [projectName, setProjectName] = useState<string>('')
   const { t } = useTranslation()
   
   // 根据路由参数确定当前项目

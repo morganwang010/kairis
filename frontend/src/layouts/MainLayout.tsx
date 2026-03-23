@@ -75,61 +75,7 @@ const MainLayout = () => {
         <div style={{ height: 64, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: collapsed ? 16 : 20, fontWeight: 'bold' }}>
           {collapsed ? 'K' : 'Kairis'}
         </div>
-        <Menu 
-          theme="dark" 
-          mode="inline" 
-          defaultSelectedKeys={['dashboard']}
-          defaultOpenKeys={['system']}
-          style={{ height: '100%', borderRight: 0 }}
-          items={[
-            {
-              key: 'Home',
-              label: t('common.home'),
-              onClick: () => navigate('/dashboard'),
-              icon: <DashboardOutlined />,
-            },
-            {
-              key: 'system',
-              label: t('menu.system'),
-              icon: <SettingOutlined />,
-              children: [
-                {
-                  key: 'user',
-                  label: t('menu.user'),
-                  onClick: () => navigate('/system/user'),
-                },
-                {
-                  key: 'role',
-                  label: t('menu.role'),
-                  onClick: () => navigate('/system/role'),
-                },
-                {
-                  key: 'permission',
-                  label: t('menu.permission'),
-                  onClick: () => navigate('/system/permission'),
-                },
-                {
-                  key: 'menu',
-                  label: t('menu.menu'),
-                  onClick: () => navigate('/system/menu'),
-                },
-              ],
-            },
-            {
-              key: 'app',
-              label: t('common.project'),
-              onClick: handleLogout,
-              icon: <LogoutOutlined />,
-              children: [
-              {
-                key: 'user',
-                label: t('menu.user'),
-                onClick: () => navigate('/system/user'),
-              },
-            ]
-            },
-          ]}
-        />
+        
       </Sider>
       <Layout 
         style={{

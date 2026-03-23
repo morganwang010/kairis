@@ -154,14 +154,14 @@ const LayoutComponent = () => {
                 <Menu 
                   theme="dark" 
                   mode="inline" 
-                  defaultSelectedKeys={['dashboard']}
-                  defaultOpenKeys={['system']}
+                  // defaultSelectedKeys={['dashboard']}
+                  // defaultOpenKeys={['system']}
                   style={{ height: '100%', borderRight: 0 }}
                   items={[
                     {
                       key: 'dashboard',
                       label: t('common.home'),
-                      onClick: () => navigate('/system/dashboard'),
+                      onClick: () => navigate('/app/home'),
                       icon: <DashboardOutlined />,
                     },
 

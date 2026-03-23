@@ -1,7 +1,7 @@
 // 导入axios
 import axios from 'axios';
 import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import 'jspdf-autotable';
 
 // Extend jsPDF interface to include autoTable methods
 declare module 'jspdf' {
@@ -87,7 +87,7 @@ export const getSalaries = async (params?: {
 // 更新薪资
 export const updateSalary = async (_id: number, data: any) => {
   try {
-    const response = await apiClient.put(`/salary/${_id}`, data);
+    const response = await apiClient.put(`/salaries/${_id}`, data);
     return response.data;
   } catch (error) {
     console.error('更新薪资失败:', error);
@@ -98,7 +98,7 @@ export const updateSalary = async (_id: number, data: any) => {
 // 添加薪资
 export const addSalary = async (data: any) => {
   try {
-    const response = await apiClient.post('/salary', data);
+    const response = await apiClient.post('/salaries', data);
     return response.data;
   } catch (error) {
     console.error('添加薪资失败:', error);
@@ -330,7 +330,8 @@ export const importSingleAttendanceRecord = async (record: any) => {
 // 更新考勤记录
 export const updateAttendanceRecord = async (record: any) => {
   try {
-    const response = await apiClient.put('/attendances', record);
+    console.log('更新考勤记录请求:', record);
+    const response = await apiClient.put(`/attendances/${record.id}`, record);
     console.log('更新考勤记录成功:', response.data);
     return response.data;
   } catch (error) {
@@ -392,7 +393,7 @@ export const addIncident = async (record: any) => {
 // 更新偶发事件记录
 export const updateIncident = async (record: any) => {
   try {
-    const response = await apiClient.put('/incidents', record);
+    const response = await apiClient.put(`/incidents/${record.id}`, record);
     console.log('更新偶发事件记录成功:', response.data);
     return response.data;
   } catch (error) {
@@ -601,11 +602,17 @@ export const sendEmail = async (record: any) => {
       to: string;
       subject: string;
       body: string;
+      employee_id: string;
+      month: string;
+      project_id?: string;
     } = {
       from: 'hrms@example.com',
       to: record.email,
       subject: '您的薪资详情',
       body: `您的薪资详情如下：\n${record.salary_details || '暂无详细信息'}`,
+      employee_id: record.employee_id || '',
+      month: record.month || '',
+      project_id: record.project_id || '',
     };
     
     const response = await apiClient.post('/email/send', emailData);
@@ -619,22 +626,23 @@ export const sendEmail = async (record: any) => {
 
 // System Config API
 export const getSystemConfigs = async () => {
-  const response = await apiClient.get('/settings');
-  return response.data;
+  const response = await apiClient.get('/system-configs');
+  console.log('获取系统配置成功:', response.data);
+  return response.data.data;
 };
 
 export const getSystemConfigByName = async (name: string) => {
-  const response = await apiClient.get('/settings/name', { params: { name } });
+  const response = await apiClient.get('/system-configs/name', { params: { name } });
   return response.data;
 };
 
 export const updateSystemConfig = async (id: number, name: string, config: any) => {
-  const response = await apiClient.put(`/settings/${id}`, { name, config });
+  const response = await apiClient.put(`/system-configs/${id}`, { name, config });
   return response.data;
 };
 
 export const insertSystemConfig = async (config: any) => {
-  const response = await apiClient.post('/settings', config);
+  const response = await apiClient.post('/system-configs', config);
   return response.data;
 };
 
@@ -642,7 +650,7 @@ export const insertSystemConfig = async (config: any) => {
 export const getSalaryCoefficient = async () => {
   const response = await apiClient.get('/salary-coefficients');
   console.log('获取薪资系数成功:', response.data);
-  return response.data;
+  return response.data.data[0];
 };
 
 export const updateSalaryCoefficient = async (coefficient: any) => {
@@ -775,7 +783,7 @@ export const generateAndDownloadPDF = (records: any | any[], projectName?: strin
       ['Position',record.position || record.department || '', 'Join_Date', record.joinDate || record.join_date || ''],
     ];
     
-    autoTable(doc, {
+    (doc as any).autoTable({
       startY: startY,
       body: employeeInfo,
       theme: 'plain',
@@ -832,7 +840,7 @@ export const generateAndDownloadPDF = (records: any | any[], projectName?: strin
 
     ];
     
-    autoTable(doc, {
+    (doc as any).autoTable({
       startY: doc.lastAutoTable.finalY + 10,
       body: salaryDetails,
       theme: 'grid',

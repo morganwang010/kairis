@@ -59,3 +59,12 @@ func (r *AttendanceRepository) Update(attendance *model.Attendances) error {
 func (r *AttendanceRepository) Delete(id uint) error {
 	return r.db.Delete(&model.Attendances{}, id).Error
 }
+
+func (r *AttendanceRepository) GetByEmployeeIDAndMonth(employeeID, month string, projectID int) (*model.Attendances, error) {
+	var attendance model.Attendances
+	err := r.db.Where("employee_id = ? AND month = ? AND project_id = ?", employeeID, month, projectID).First(&attendance).Error
+	if err != nil {
+		return nil, err
+	}
+	return &attendance, nil
+}

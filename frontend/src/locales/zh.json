@@ -813,7 +813,8 @@
     "confirmDeleteContent": "确定删除此记录吗？",
     "exportToExcel": "导出到Excel",
     "editAttendance": "编辑考勤",
-    "addAttendance": "添加考勤"
+    "addAttendance": "添加考勤",
+    "editFailed": "编辑考勤失败"
   },
   "salaryUploadPage": {
     "title": "薪资导入",

@@ -53,6 +53,8 @@ func (h *SalaryHandler) Get(c *gin.Context) {
 func (h *SalaryHandler) List(c *gin.Context) {
 	month := c.Query("month")
 	projectIDStr := c.Query("project_id")
+	offsetStr := c.Query("offset")
+	limitStr := c.Query("limit")
 
 	slog.Info("List salaries", "month", month, "project_id", projectIDStr)
 
@@ -61,13 +63,31 @@ func (h *SalaryHandler) List(c *gin.Context) {
 		return
 	}
 
-	salaries, err := h.salaryService.List(month, projectID)
+	offset, limit := 0, 10
+	if offsetStr != "" {
+		var err error
+		offset, err = strconv.Atoi(offsetStr)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": err.Error()})
+			return
+		}
+	}
+	if limitStr != "" {
+		var err error
+		limit, err = strconv.Atoi(limitStr)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": err.Error()})
+			return
+		}
+	}
+
+	salaries, total, err := h.salaryService.List(offset, limit, month, projectID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"code": 200, "data": salaries})
+	c.JSON(http.StatusOK, gin.H{"code": 200, "data": salaries, "total": total})
 }
 
 func (h *SalaryHandler) Update(c *gin.Context) {

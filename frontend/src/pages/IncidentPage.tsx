@@ -94,7 +94,7 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
       if (typeof value === 'string') {
         trimmedRecord[key] = value.trim()
       } else {
-        trimmedRecord[key] = value
+        trimmedRecord[key] = String(value).trim()
       }
     })
     return trimmedRecord
@@ -161,39 +161,6 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
       })
     }
 
-  // 表格高度相关状态
-  // const [ setTableHeight] = useState<number>(500) // 默认高度
-
-  // 计算表格高度
-  // const calculateTableHeight = () => {
-  //   // 窗口高度
-  //   const windowHeight = window.innerHeight
-    
-  //   // 页面头部和其他元素的大致高度（根据页面布局调整）
-  //   const headerHeight = 250 // 包括Card头部、月份选择器、操作按钮等
-    
-  //   // 分页组件高度
-  //   const paginationHeight = 60
-    
-  //   // 表格最大高度 = 窗口高度 - 头部高度 - 分页高度 - 边距
-  //   // const maxHeight = windowHeight - headerHeight - paginationHeight - 40 // 40为额外边距
-    
-  //   // 设置最小高度和最大高度限制
-  //   // setTableHeight(Math.max(300, Math.min(maxHeight, 800)))
-  // }
-
-  // 监听窗口大小变化
-  // useEffect(() => {
-  //   calculateTableHeight()
-    
-  //   // 添加窗口大小变化监听器
-  //   window.addEventListener('resize', calculateTableHeight)
-    
-  //   // 清理函数
-  //   return () => {
-  //     window.removeEventListener('resize', calculateTableHeight)
-  //   }
-  // }, [])
 
   // 加载员工列表
   const loadEmployees = async () => {
@@ -324,7 +291,7 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
   // 提交表单
   const handleSubmit = async () => {
     try {
-      const values = await form.validateFields()
+      const values = await trimRecord(form.validateFields())
       
       if (editingIncident) {
         // 更新记录

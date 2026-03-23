@@ -106,7 +106,6 @@ type UpdateAttendanceRequest struct {
 	Day30      string  `json:"day30"`
 	Day31      string  `json:"day31"`
 	Work       int     `json:"work"`
-	ProjectID  int     `json:"project_id"`
 	Permission int     `json:"permission"`
 	Off        int     `json:"off"`
 	Absent     int     `json:"absent"`
@@ -246,10 +245,12 @@ func (h *AttendanceHandler) Update(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": "Invalid attendance ID"})
 		return
 	}
-
+	slog.Info("更新考勤记录请求", "id", id)
 	var req UpdateAttendanceRequest
+
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": err.Error()})
+		slog.Error("更新考勤记录请求参数错误", "id", id, "error", err.Error())
 		return
 	}
 
@@ -291,7 +292,6 @@ func (h *AttendanceHandler) Update(c *gin.Context) {
 	attendance.Day30 = req.Day30
 	attendance.Day31 = req.Day31
 	attendance.Work = req.Work
-	attendance.ProjectID = req.ProjectID
 	attendance.Permission = req.Permission
 	attendance.Off = req.Off
 	attendance.Absent = req.Absent

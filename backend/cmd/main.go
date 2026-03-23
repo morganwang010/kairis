@@ -40,6 +40,9 @@ func main() {
 	taxRateRepo := repository.NewTaxRateRepository(db)
 	taxFreeBaseRepo := repository.NewTaxFreeBaseRepository(db)
 	salaryCoefficientRepo := repository.NewSalaryCoefficientRepository(db)
+	systemConfigRepo := repository.NewSystemConfigRepository(db)
+	salarySlipRepo := repository.NewSalaryRepository(db)
+	emailRepo := repository.NewEmailRepository(db)
 
 	userService := service.NewUserService(userRepo, roleRepo)
 	roleService := service.NewRoleService(roleRepo, permissionRepo)
@@ -54,6 +57,9 @@ func main() {
 	taxRateService := service.NewTaxRateService(taxRateRepo)
 	taxFreeBaseService := service.NewTaxFreeBaseService(taxFreeBaseRepo)
 	salaryCoefficientService := service.NewSalaryCoefficientService(salaryCoefficientRepo)
+	systemConfigService := service.NewSystemConfigService(systemConfigRepo)
+	salarySlipService := service.NewSalarySlipService(salarySlipRepo)
+	emailService := service.NewEmailService(emailRepo)
 
 	userHandler := handler.NewUserHandler(userService)
 	roleHandler := handler.NewRoleHandler(roleService)
@@ -69,6 +75,9 @@ func main() {
 	taxRateHandler := handler.NewTaxRateHandler(taxRateService)
 	taxFreeBaseHandler := handler.NewTaxFreeBaseHandler(taxFreeBaseService)
 	salaryCoefficientHandler := handler.NewSalaryCoefficientHandler(salaryCoefficientService)
+	systemConfigHandler := handler.NewSystemConfigHandler(systemConfigService)
+	salarySlipHandler := handler.NewSalarySlipHandler(salarySlipService)
+	emailHandler := handler.NewEmailHandler(emailService)
 
 	api := r.Group("/api")
 	{
@@ -184,6 +193,22 @@ func main() {
 			salaries.POST("/calculate", salaryHandler.Calculate)
 		}
 
+		salarySlips := api.Group("/salary-slips")
+		salarySlips.Use(middleware.Auth())
+		{
+			salarySlips.GET("", salaryHandler.List)
+			// salarySlips.GET("/:id", salarySlipHandler.Get)
+			salarySlips.POST("", salarySlipHandler.Create)
+			salarySlips.PUT("/:id", salarySlipHandler.Update)
+			salarySlips.DELETE("/:id", salarySlipHandler.Delete)
+		}
+
+		email := api.Group("/email")
+		email.Use(middleware.Auth())
+		{
+			email.POST("/send", emailHandler.SendEmail)
+		}
+
 		taxRates := api.Group("/tax-rates")
 		taxRates.Use(middleware.Auth())
 		{
@@ -213,6 +238,17 @@ func main() {
 			salaryCoefficients.POST("", salaryCoefficientHandler.Create)
 			salaryCoefficients.PUT("/:id", salaryCoefficientHandler.Update)
 			salaryCoefficients.DELETE("/:id", salaryCoefficientHandler.Delete)
+		}
+
+		systemConfigs := api.Group("/system-configs")
+		systemConfigs.Use(middleware.Auth())
+		{
+			systemConfigs.GET("", systemConfigHandler.List)
+			systemConfigs.GET("/:id", systemConfigHandler.Get)
+			systemConfigs.GET("/name/:name", systemConfigHandler.GetByName)
+			systemConfigs.POST("", systemConfigHandler.Create)
+			systemConfigs.PUT("/:id", systemConfigHandler.Update)
+			systemConfigs.DELETE("/:id", systemConfigHandler.Delete)
 		}
 
 		// 公开的许可证接口

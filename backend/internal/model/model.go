@@ -321,3 +321,37 @@ type SalaryCoefficient struct {
 	UpdateTime  time.Time `gorm:"column:update_time;default:CURRENT_TIMESTAMP;autoUpdateTime" json:"update_time"`
 	IsDelete    int       `gorm:"column:is_delete;default:0" json:"is_delete"`
 }
+
+// SystemConfig 系统配置表
+type SystemConfig struct {
+	ID         uint      `gorm:"primaryKey;autoIncrement" json:"id"`
+	Name       string    `gorm:"type:text;not null" json:"name"`
+	Config     string    `gorm:"type:text;not null" json:"config"`
+	CreateTime time.Time `gorm:"column:create_time;default:CURRENT_TIMESTAMP" json:"create_time"`
+	UpdateTime time.Time `gorm:"column:update_time;default:CURRENT_TIMESTAMP" json:"update_time"`
+}
+
+type SalarySlips struct {
+	ID             uint      `gorm:"column:id;primaryKey;autoIncrement" json:"id"`
+	Month          string    `gorm:"column:month;not null" json:"month"`
+	ProjectID      int       `gorm:"column:project_id;default:0" json:"project_id"`
+	EmployeeID     string    `gorm:"column:employee_id;not null" json:"employee_id"`
+	EmployeeName   string    `gorm:"column:employee_name" json:"employee_name"`
+	Department     string    `gorm:"column:department" json:"department"`
+	Position       string    `gorm:"column:position" json:"position"`
+	IdCard         string    `gorm:"column:id_card" json:"id_card"`
+	BankAccount    string    `gorm:"column:bank_account" json:"bank_account"`
+	BankName       string    `gorm:"column:bank_name" json:"bank_name"`
+	BasicSalary    float64   `gorm:"column:basic_salary;default:0.00" json:"basic_salary"`
+	AllowanceTotal float64   `gorm:"column:allowance_total;default:0.00" json:"allowance_total"`
+	DeductionTotal float64   `gorm:"column:deduction_total;default:0.00" json:"deduction_total"`
+	OvertimeTotal  float64   `gorm:"column:overtime_total;default:0.00" json:"overtime_total"`
+	GrossSalary    float64   `gorm:"column:gross_salary;default:0.00" json:"gross_salary"`
+	TaxDeduction   float64   `gorm:"column:tax_deduction;default:0.00" json:"tax_deduction"`
+	NetSalary      float64   `gorm:"column:net_salary;default:0.00" json:"net_salary"`
+	Status         string    `gorm:"column:status;default:'0'" json:"status"`
+	Remark         string    `gorm:"column:remark" json:"remark"`
+	CreateTime     time.Time `gorm:"column:create_time;default:CURRENT_TIMESTAMP" json:"create_time"`
+	UpdateTime     time.Time `gorm:"column:update_time;default:CURRENT_TIMESTAMP;autoUpdateTime" json:"update_time"`
+	DeleteFlag     int       `gorm:"column:delete_flag;default:0" json:"delete_flag"`
+}

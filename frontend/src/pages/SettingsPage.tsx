@@ -57,27 +57,7 @@ const SettingsPage = () => {
         const coefficient = await getSalaryCoefficient();
         // 薪资系数API已经返回正确的数据结构，可以直接使用
         console.log('薪资系数:', coefficient);
-        // 为了构建通过，使用默认值
-        // setSalaryCoefficient({
-        //     c_jmstk_alw: 0,
-        //     c_pension_alw: 0,
-        //     c_askes_alw: 0,
-        //     c_ot_hour1: 0,
-        //     c_ot_wages1: 0,
-        //     c_ew_hour1: 0,
-        //     c_ew_wages1: 0,
-        //     c_ew_hour2: 0,
-        //     c_ew_wages2: 0,
-        //     c_ew_hour3: 0,
-        //     c_ew_wages3: 0,
-        //     c_jmstk_fee: 0,
-        //     c_pension_ded: 0,
-        //     c_askes_ded: 0,
-        //     jmstk_max: 0,
-        //     pension_max: 0,
-        //     askes_max: 0,
-        //     askes_min: 0
-        //   });
+        setSalaryCoefficient(coefficient);
         salaryForm.setFieldsValue(coefficient);
       } catch (error) {
         console.error('Failed to fetch settings:', error);
@@ -196,15 +176,6 @@ const SettingsPage = () => {
     }
   };
 
-  // 备份和恢复功能暂未实现
-  // const handleBackup = () => {
-  //   console.log('手动备份');
-  //   message.success('备份成功');
-  // };
-
-  // const handleRestore = (file: any) => {
-  //   console.log('恢复备份', file);
-  // };
 
   return (
     <div>
