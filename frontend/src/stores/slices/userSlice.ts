@@ -8,16 +8,23 @@ interface UserState {
   isAuthenticated: boolean;
 }
 
+// 初始状态 - 纯内存存储，移除 localStorage 依赖
 const initialState: UserState = {
   user: null,
-  token: localStorage.getItem('token'),
-  isAuthenticated: !!localStorage.getItem('token'),
+  token: null,
+  isAuthenticated: false,
 };
 
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
+    setCredentials: (state, action: PayloadAction<{ user: User; token: string }>) => {
+      console.log('setCredentials', action.payload);
+      state.user = action.payload.user;
+      state.token = action.payload.token;
+      state.isAuthenticated = true;
+    },
     setUser: (state, action: PayloadAction<User>) => {
       state.user = action.payload;
       state.isAuthenticated = true;
@@ -25,16 +32,14 @@ const userSlice = createSlice({
     setToken: (state, action: PayloadAction<string>) => {
       state.token = action.payload;
       state.isAuthenticated = true;
-      localStorage.setItem('token', action.payload);
     },
     logout: (state) => {
       state.user = null;
       state.token = null;
       state.isAuthenticated = false;
-      localStorage.removeItem('token');
     },
   },
 });
 
-export const { setUser, setToken, logout } = userSlice.actions;
+export const { setCredentials, setUser, setToken, logout } = userSlice.actions;
 export default userSlice.reducer;

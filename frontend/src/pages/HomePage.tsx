@@ -2,7 +2,7 @@ import { Card, Row, Col, Statistic, Progress } from 'antd'
 import { UserOutlined, FileTextOutlined, AreaChartOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
 import { useState, useEffect } from 'react'
-import { getEmployeeCount, getSalaries } from '../api'
+import { getEmployeeCount,  getSalariesTotal } from '../api'
 
 const HomePage = () => {
   const { t } = useTranslation();
@@ -16,12 +16,14 @@ const HomePage = () => {
       try {
         setLoading(true);
         // const [count, salaries] = await Promise.all([
-        const [count] = await Promise.all([
+        const [employees, salaries] = await Promise.all([
           getEmployeeCount({}),
-          getSalaries({})
+          getSalariesTotal({})
         ]);
-        setEmployeeCount(count.total);
-        
+        console.log(employees);
+        console.log(salaries);
+        setEmployeeCount(employees.total);
+        setSalarySummary(salaries.total);
         // // 计算薪资汇总
         // const totalSalary = salaries.reduce((sum: number, salary: any) => {
         //   const roundOffSalary = parseFloat(salary.round_off_salary) || 0;

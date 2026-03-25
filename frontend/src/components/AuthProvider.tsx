@@ -1,25 +1,33 @@
 import type { ReactNode } from 'react'
 import { createContext, useContext, useEffect, useState, useCallback } from 'react'
 import { Modal } from 'antd'
-import {  logout, checkLicenseStatus } from '../api'
-// import { getCurrentWindow } from "@tauri-apps/api/window";
+import { logout } from '../api'
+import { useDispatch, useSelector } from 'react-redux'
+import { setCredentials, logout as logoutAction, setToken } from '../stores/slices/userSlice'
+import type { RootState } from '../stores'
+import store from '../stores'
 
-
-
-interface User {
-  user_id: number
+// const login = useCallback((userData: AuthUser, token: string) => {
+//   // 🔴 将用户信息和 Token 写入 Redux Store
+//   dispatch(setCredentials({ user: userData, token }))
+//   //                              ↑
+//   //                     这个 action 会触发 userSlice 中的 reducer
+// }, [dispatch])
+// 使用与 types/index.ts 一致的 User 接口
+interface AuthUser {
+  id: string
   username: string
-  role: string
-  full_name?: string
-  email?: string
-  token: string
+  email: string
+  avatar?: string
+  roles: string[]
+  permissions: string[]
 }
 
 interface AuthContextType {
-  user: User | null
+  user: AuthUser | null
   isAuthenticated: boolean
   loading: boolean
-  login: (user: User) => void
+  login: (userData: AuthUser, token: string) => void
   logout: () => Promise<void>
   checkAuth: () => Promise<void>
 }
@@ -37,106 +45,147 @@ interface AuthProviderProps {
   children: ReactNode
 }
 
+// 安全选项：使用 sessionStorage（比 localStorage 安全，会话结束即清除）
+// 注意：最安全的方式是使用 HttpOnly Cookie，不将 token 存储在 JS 可访问的存储中
+const TOKEN_STORAGE_KEY = 'token'
+const USER_STORAGE_KEY = 'user'
+
+// 简单的加密函数（生产环境建议使用更安全的加密方案）
+const simpleEncrypt = (data: string): string => {
+  return btoa(encodeURIComponent(data))
+}
+
+const simpleDecrypt = (data: string): string => {
+  try {
+    return decodeURIComponent(atob(data))
+  } catch {
+    return ''
+  }
+}
+
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState<User | null>(null)
+  const dispatch = useDispatch()
+  const { user, isAuthenticated } = useSelector((state: RootState) => state.user)
   const [loading, setLoading] = useState<boolean>(true)
   const [modalVisible, setModalVisible] = useState<boolean>(false)
+
+  // 从安全存储恢复认证状态（用于页面刷新）
+  const restoreAuthFromStorage = useCallback(() => {
+    try {
+      const encryptedToken = sessionStorage.getItem(TOKEN_STORAGE_KEY)
+      const encryptedUser = sessionStorage.getItem(USER_STORAGE_KEY)
+      
+      if (encryptedToken && encryptedUser) {
+        const token = simpleDecrypt(encryptedToken)
+        const userData = JSON.parse(simpleDecrypt(encryptedUser)) as AuthUser
+        console.log('userData', userData);
+        console.log('token00000', token);
+        setTimeout(() => {
+          console.log('token00000', token);
+        }, 6000)
+        if (token && userData) {
+          dispatch(setCredentials({ user: userData, token }))
+          return true
+        }
+      }
+      return false
+    } catch (error) {
+      console.error('恢复认证状态失败:', error)
+      return false
+    }
+  }, [dispatch])
+
+  // 安全地存储认证信息（仅用于页面刷新恢复）
+  const secureStoreAuth = useCallback((userData: AuthUser, token: string) => {
+    try {
+      const encryptedToken = simpleEncrypt(token)
+      const encryptedUser = simpleEncrypt(JSON.stringify(userData))
+      // localStorage.setItem('token', encryptedToken)
+      // localStorage.setItem('user', encryptedUser)
+
+      sessionStorage.setItem(TOKEN_STORAGE_KEY, encryptedToken)
+      sessionStorage.setItem(USER_STORAGE_KEY, encryptedUser)
+    } catch (error) {
+      console.error('存储认证信息失败:', error)
+    }
+  }, [])
+
+  // 清除安全存储的认证信息
+  const clearSecureStorage = useCallback(() => {
+    // sessionStorage.removeItem(TOKEN_STORAGE_KEY)
+    // sessionStorage.removeItem(USER_STORAGE_KEY)
+    // // 清除所有遗留的 localStorage（迁移用）
+    // localStorage.removeItem('token')
+    // localStorage.removeItem('user')
+    // localStorage.removeItem('savedUser')
+    // localStorage.removeItem('justLoggedIn')
+    // localStorage.removeItem('license')
+  }, [])
 
   // 检查认证状态
   const checkAuth = useCallback(async () => {
     setLoading(true)
     try {
-      // 同时检查user和savedUser，增加可靠性
-      const userStr = localStorage.getItem('user') || localStorage.getItem('savedUser')
-      const token = localStorage.getItem('token')
-      const justLoggedIn = localStorage.getItem('justLoggedIn')
-      
-      console.log('userStr:', userStr)
-      console.log('token:', token)
-      console.log('justLoggedIn:', justLoggedIn)
-      console.log('当前路径:', window.location.pathname)
-      
-      // 如果没有token或用户信息，跳转到登录页面
+      // 如果 Redux 中已有认证状态，直接使用
+      if (isAuthenticated && user) {
+        console.log('已从 Redux 获取认证状态')
+        return
+      }
+
+      // 否则尝试从安全存储恢复
+      // const restored = restoreAuthFromStorage()
+      const token = sessionStorage.getItem(TOKEN_STORAGE_KEY)
       if (!token) {
-        console.log('没有token或用户信息，跳转到登录页面')
-        setUser(null)
-        // 未登录，跳转到登录页面
-        if (window.location.pathname !== '/login') {
-          window.location.href = '/login'
-        }
-        return
-      }
-      if (!userStr) {
-        console.log('没有用户信息，跳转到登录页面')
-        setUser(null)
-        // 未登录，跳转到登录页面
-        if (window.location.pathname !== '/login') {
-          window.location.href = '/login'
-        }
-        return
-      }
-      // 直接使用本地存储的用户信息设置user状态
-      // 避免token验证导致的Tauri回调ID失效问题
-      try {
-        const userData = JSON.parse(userStr)
-        setUser(userData)
-        console.log('设置用户状态成功:', userData)
-      } catch (parseError) {
-        console.error('解析用户信息失败:', parseError)
-        // 解析失败，不设置用户状态，保持当前状态
-      }
-      
-      // 如果用户刚刚登录，清除标志
-      if (justLoggedIn === 'true') {
-        console.log('用户刚刚登录，清除登录标志')
-        // 清除刚刚登录的标志
-        localStorage.removeItem('justLoggedIn')
+        console.log('没有认证信息，跳转到登录页面')
+        // if (window.location.pathname !== '/login') {
+        //   window.location.href = '/login'
+        // }
       }
     } catch (error) {
       console.error('检查认证状态失败:', error)
-      // 检查失败，不清除本地存储，避免误判
-      // 保持当前用户状态
     } finally {
       setLoading(false)
     }
-  }, [])
-
-
+  }, [isAuthenticated, user, restoreAuthFromStorage])
 
   // 登录
-  const login = useCallback((user: User) => {
-    console.log('登录用户:', user)
-    setUser(user)
-    // 存储用户信息到localStorage
-    localStorage.setItem('user', JSON.stringify(user))
+  const login = useCallback((userData: AuthUser, token: string) => {
+    console.log('登录用户:', userData)
+    
+    // 1. 存储到 Redux（主要存储，内存中，XSS 难以直接访问）
+    dispatch(setCredentials({ user: userData, token }))
 
-    localStorage.setItem('savedUser', JSON.stringify(user))
-    // 存储token到localStorage
-    localStorage.setItem('token', user.token)
-    // 登录成功后，设置一个标志，避免在checkAuth中立即验证token
-    localStorage.setItem('justLoggedIn', 'true')
-    // 登录成功后，执行checkAuth，确保认证状态正确
-    checkAuth()
-  }, [checkAuth])
-  // },[])
+    dispatch(setToken(token))
+    
+    // 2. 安全存储到 sessionStorage（仅用于页面刷新恢复，会话结束自动清除）
+    secureStoreAuth(userData, token)
+    
+    // 3. 清除遗留的 localStorage（迁移用）
+    // clearSecureStorage()
+  }, [dispatch, secureStoreAuth])
 
   // 登出
   const handleLogout = useCallback(async () => {
     try {
-      const token = localStorage.getItem('token')
-      if (token) {
-        await logout(token)
+      // 从 Redux store 获取 token
+      const state = store.getState()
+      const currentToken = state.user?.token || ''
+      
+      if (currentToken) {
+        await logout(currentToken)
       }
     } catch (error) {
       console.error('登出失败:', error)
     } finally {
-      localStorage.removeItem('token')
-      localStorage.removeItem('savedUser')
-      localStorage.removeItem('license')
-      setUser(null)
+      // 1. 清除 Redux 状态
+      dispatch(logoutAction())
+      
+      // 2. 清除安全存储
+      clearSecureStorage()
+      
       window.location.href = '/login'
     }
-  }, [])
+  }, [dispatch, clearSecureStorage])
 
   // 处理登录拦截
   const handleModalOk = () => {
@@ -146,131 +195,30 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   // 组件挂载时检查认证状态
   useEffect(() => {
-    // 检查认证状态
     checkAuth()
-  }, [])
-
-  // 用户登录后获取license状态
-  useEffect(() => {
-    const fetchLicenseStatus = async () => {
-      if (user) {
-        try {
-          const licenseResult = await checkLicenseStatus()
-          localStorage.setItem('license', JSON.stringify(licenseResult))
-          console.log('登录成功，获取并存储License状态:', licenseResult)
-        } catch (error) {
-          console.error('登录成功后获取License状态失败:', error)
-        }
-      }
-    }
-
-    fetchLicenseStatus()
-  }, [user])
-
-  // 监听路由变化，检查是否需要登录
-  useEffect(() => {
-    const handleRouteChange = () => {
-      const token = localStorage.getItem('token')
-      const currentPath = window.location.pathname
-      
-      // 如果不在登录页面且没有token，显示登录提示
-      if (!token && !currentPath.startsWith('/login')) {
-        setModalVisible(true)
-        window.location.href = '/login'
-      }
-    }
-
-    window.addEventListener('popstate', handleRouteChange)
-    window.addEventListener('pushstate', handleRouteChange)
-    window.addEventListener('replacestate', handleRouteChange)
-
-
-
-
-    return () => {
-      window.removeEventListener('popstate', handleRouteChange)
-      window.removeEventListener('pushstate', handleRouteChange)
-      window.removeEventListener('replacestate', handleRouteChange)
-    }
   }, [checkAuth])
 
-  // 监听窗口关闭事件，清除登录信息
-  // useEffect(() => {
-  //   // 尝试使用Tauri的窗口关闭事件
-  //   const setupCloseListener = async () => {
-  //     try {
-  //       // 动态导入Tauri API，避免在非Tauri环境中出错
-  //       const { getCurrentWindow } = await import('@tauri-apps/api/window')
-        
-  //       // 获取当前窗口
-  //       const window = getCurrentWindow()
-        
-  //       // 监听Tauri窗口关闭事件
-  //       const unlisten = await window.onCloseRequested(() => {
-  //         console.log('Tauri窗口关闭请求，清除登录信息')
-  //         // 清除所有登录相关信息
-  //         localStorage.removeItem('token')
-  //         localStorage.removeItem('user')
-  //         localStorage.removeItem('license')
-  //         localStorage.removeItem('justLoggedIn')
-  //         localStorage.removeItem('savedUser')
-  //       })
-        
-  //       return unlisten
-  //     } catch (error) {
-  //       console.error('设置Tauri窗口关闭事件监听器失败:', error)
-  //       // 回退到浏览器的beforeunload事件
-  //       const handleBeforeUnload = () => {
-  //         console.log('浏览器窗口关闭请求，清除登录信息')
-  //         // 清除所有登录相关信息
-  //         localStorage.removeItem('token')
-  //         // localStorage.removeItem('user')
-  //         // localStorage.removeItem('license')
-  //         // localStorage.removeItem('justLoggedIn')
-  //         // localStorage.removeItem('savedUser')
-  //       }
-
-  //       // 添加浏览器窗口关闭事件监听器
-  //       window.addEventListener('beforeunload', handleBeforeUnload)
-
-  //       return () => {
-  //         // 移除监听器
-  //         window.removeEventListener('beforeunload', handleBeforeUnload)
-  //       }
-  //     }
-  //   }
-
-  //   let unlistenFn: (() => void) | undefined
-
-  //   // 立即执行设置监听器的函数
-  //   setupCloseListener().then(unlisten => {
-  //     unlistenFn = unlisten
-  //   })
-
-  //   return () => {
-  //     // 移除监听器
-  //     if (unlistenFn) {
-  //       unlistenFn()
-  //     }
-  //   }
-  // }, [checkAuth])
- 
-  
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, loading, login, logout: handleLogout, checkAuth }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        isAuthenticated,
+        loading,
+        login,
+        logout: handleLogout,
+        checkAuth
+      }}
+    >
       {children}
-      
-      {/* 登录拦截模态框 */}
       <Modal
-        title="登录提醒"
+        title="登录过期"
         open={modalVisible}
         onOk={handleModalOk}
-        okText="去登录"
-        cancelText={null}
-        maskClosable={false}
+        onCancel={() => setModalVisible(false)}
+        okText="重新登录"
+        cancelText="取消"
       >
-        <p>您尚未登录或登录已过期</p>
-        <p>请先登录以继续使用系统功能</p>
+        <p>您的登录状态已过期，请重新登录。</p>
       </Modal>
     </AuthContext.Provider>
   )

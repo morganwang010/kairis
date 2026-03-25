@@ -164,7 +164,7 @@ const LayoutComponent = () => {
                     {
                       key: 'dashboard',
                       label: t('common.home'),
-                      onClick: () => navigate('/app/home'),
+                      onClick: () => navigate('/app'),
                       icon: <DashboardOutlined />,
                     },
 
@@ -194,6 +194,12 @@ const LayoutComponent = () => {
                       label: t('common.settings'),
                       icon: <AppstoreOutlined />,
                       onClick: () => navigate('/app/settings'),
+                    },
+                    {
+                      key: 'license',
+                      label: t('common.license'),
+                      icon: <AppstoreOutlined />,
+                      onClick: () => navigate('/app/license'),
                     },
                     {
                       key: 'system',
@@ -243,7 +249,7 @@ const LayoutComponent = () => {
             <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
               <Space style={{ cursor: 'pointer' }}>
                 <Avatar icon={<UserOutlined />} />
-                <span>{user.full_name || user.username}</span>
+                <span>{ user.username}</span>
               </Space>
             </Dropdown>
           )}

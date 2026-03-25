@@ -116,3 +116,8 @@ func (s *EmployeeService) ImportEmployee(req ImportEmployeeRequest) error {
 	}
 	return nil
 }
+
+// TotalEmployees 获取员工总数（在职员工）
+func (s *EmployeeService) TotalEmployees() (int64, error) {
+	return s.employeeRepo.TotalEmployees()
+}

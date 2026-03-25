@@ -785,7 +785,8 @@
     "confirmDeleteTitle": "Delete Confirm",
     "confirmDeleteContent": "Are you sure delete this record?",
     "exportToExcel": "Export to Excel",
-    "editFailed": "Edit failed"
+    "editFailed": "Edit failed",
+    "loadRecordsError": "Failed to load attendance records"
   },
   "salaryUploadPage": {
     "title": "Salary Import",

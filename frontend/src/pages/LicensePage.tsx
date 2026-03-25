@@ -1,4 +1,4 @@
-import { Card, Form, Input, Button, message, Alert, Typography, Space, Divider } from 'antd'
+import { Card, Form, Input, Button, message, Alert, Typography, Space, Divider, Modal } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { LockOutlined, CheckCircleOutlined, ClockCircleOutlined } from '@ant-design/icons'
 import { useEffect, useState } from 'react'
@@ -13,7 +13,9 @@ const LicensePage = () => {
   const [licenseStatus, setLicenseStatus] = useState<any>(null)
   const [loading, setLoading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
-
+  const [messageApi, messageContextHolder] = message.useMessage();
+  const [ _, contextHolder] = Modal.useModal();
+  
   // 检查license状态
   const checkStatus = async () => {
     setLoading(true)
@@ -22,9 +24,10 @@ const LicensePage = () => {
       const result = await checkLicenseStatus()
       setLicenseStatus(result)
       console.log('License状态:', result)
+      messageApi.success('License状态检查成功')
     } catch (error) {
       console.error('检查License状态失败:', error)
-      message.error('检查License状态失败')
+      messageApi.error('检查License状态失败')
     } finally {
       setLoading(false)
     }
@@ -35,8 +38,8 @@ const LicensePage = () => {
     setSubmitting(true)
     try {
       const result = await activateLicense({
-        license_key: values.licenseKey,
-        company_name: values.companyName
+        "license_key": values.licenseKey,
+        "company_name": values.companyName || '',
       })
       
       // 类型断言
@@ -65,6 +68,8 @@ const LicensePage = () => {
 
   return (
     <div style={{ padding: '20px', width: '100%', margin: '0 auto' }}>
+      {contextHolder}
+      {messageContextHolder}
       <Card className="mb-4">
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '24px' }}>
           <LockOutlined style={{ fontSize: '24px', color: '#1890ff', marginRight: '12px' }} />
@@ -76,9 +81,8 @@ const LicensePage = () => {
           <Title level={4} style={{ marginBottom: '16px' }}>{t('licensePage.licenseStatus') }</Title>
           {loading ? (
             <div style={{ padding: '20px', textAlign: 'center' }}>检查中...</div>
-          ) : licenseStatus && licenseStatus.data && licenseStatus.data.message === 'Success' ? (
-            <Alert
-              message={licenseStatus.data.message === 'Success' ? t('licensePage.licenseStatusActive') : t('licensePage.licenseStatusInvalid')}
+          ) : licenseStatus && licenseStatus.message === 'Success' ? (
+            <Alert 
               description={
                 <div>
                   <Text>{licenseStatus.message}</Text>
@@ -86,36 +90,36 @@ const LicensePage = () => {
                     <Space direction="vertical" style={{ marginTop: '8px' }}>
                       <Divider style={{ margin: '8px 0' }} />
                       <div>
-                        <Text strong>License Key:</Text> {licenseStatus.data.data.license_key}
+                        <Text strong>License Key:</Text> {licenseStatus.data.license_key}
                       </div>
                       <div>
-                        <Text strong>{t('licensePage.status') }</Text> {licenseStatus.data.data.status}
+                        <Text strong>{t('licensePage.status') }</Text> {licenseStatus.data.status}
                       </div>
                       {licenseStatus.data.activation_date && (
                         <div>
-                          <Text strong>{t('licensePage.activationDate') }</Text> {new Date(licenseStatus.data.data.activation_date).toLocaleString()}
+                          <Text strong>{t('licensePage.activationDate') }</Text> {new Date(licenseStatus.data.activation_date).toLocaleString()}
                         </div>
                       )}
                       {licenseStatus.data.expiration_date && (
                         <div>
-                          <Text strong>{t('licensePage.expirationDate') }</Text> {new Date(licenseStatus.data.data.expiration_date).toLocaleString()}
+                          <Text strong>{t('licensePage.expirationDate') }</Text> {new Date(licenseStatus.data.expiration_date).toLocaleString()}
                         </div>
                       )}
                       {licenseStatus.data.company_name && (
                         <div>
-                          <Text strong>{t('licensePage.companyName') }</Text> {licenseStatus.data.data.company_name}
+                          <Text strong>{t('licensePage.companyName') }</Text> {licenseStatus.data.company_name}
                         </div>
                       )}
                       {licenseStatus.data.employee_count && (
                         <div>
-                          <Text strong>{t('licensePage.employeeCount') }</Text> {licenseStatus.data.data.employee_count}
+                          <Text strong>{t('licensePage.employeeCount') }</Text> {licenseStatus.data.employee_count}
                         </div>
                       )}
                     </Space>
                   )}
                 </div>
               }
-              type={licenseStatus.data.message === 'Success' ? 'success' : 'error'}
+              type="success"
               showIcon
             />
           ) : (

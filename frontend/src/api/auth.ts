@@ -1,5 +1,5 @@
 import request from '../utils/request';
-import type { LoginResponse } from '../types';
+import type { ApiResponse, LoginResponse } from '../types';
 
 export interface LoginParams {
   username: string;
@@ -8,6 +8,6 @@ export interface LoginParams {
 
 export const authApi = {
   login: (data: LoginParams) => {
-    return request.post<LoginResponse>('/auth/login', data);
+    return request.post<ApiResponse<LoginResponse>>('/auth/login', data);
   },
 };

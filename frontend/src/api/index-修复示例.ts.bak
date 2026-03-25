@@ -103,22 +103,6 @@ export const getSalaries = async (params?: {
   }
 };
 
-// 获取薪资汇总
-export const getSalariesTotal = async (params?: {
-  month?: string;
-  project_id?: string;
-}) => {
-  try {
-    const response = await apiClient.get('/salaries/total', { params });
-    return response;
-  } catch (error) {
-    console.error('获取薪资汇总失败:', error);
-    throw error;
-  }
-};
-
-
-
 // 更新薪资
 export const updateSalary = async (_id: number, data: any) => {
   try {
@@ -319,7 +303,7 @@ export const getAttendanceRecords = async (params?: {
     console.log('考勤查询参数:', params)
     const response = await apiClient.get('/attendances', { params });
     console.log('获取考勤记录成功:', response.data);
-    return response;
+    return response.data;
   } catch (error) {
     console.error('获取考勤记录失败:', error);
     throw error;
@@ -406,7 +390,7 @@ export const getIncidentRecords = async (projectId: string, month: string) => {
   try {
     const response = await apiClient.get('/incidents', { params: { projectId, month } });
     console.log('获取偶发事件记录成功:', response.data);
-    return response;
+    return response.data;
   } catch (error) {
     console.error('获取偶发事件记录失败:', error);
     throw error;
@@ -470,7 +454,7 @@ export const getTaxRates = async (grade: string) => {
   try {
     const response = await apiClient.get('/tax-rates/grade', { params: { grade } });
     console.log('获取税率列表成功:', response.data);
-    return response;
+    return response.data;
   } catch (error) {
     console.error('获取税率列表失败:', error);
     throw error;
@@ -517,8 +501,8 @@ export const deleteTaxRate = async (id: string) => {
 export const getTaxFreeBases = async () => {
   try {
     const response = await apiClient.get('/tax-free-bases');
-    // console.log('获取免税收入基数列表成功:', response.data);
-    return response;
+    console.log('获取免税收入基数列表成功:', response.data);
+    return response.data;
   } catch (error) {
     console.error('获取免税收入基数列表失败:', error);
     throw error;
@@ -685,7 +669,7 @@ export const insertSystemConfig = async (config: any) => {
 export const getSalaryCoefficient = async () => {
   const response = await apiClient.get('/salary-coefficients');
   console.log('获取薪资系数成功:', response.data);
-  return response.data[0];
+  return response.data.data[0];
 };
 
 export const updateSalaryCoefficient = async (coefficient: any) => {
@@ -693,7 +677,12 @@ export const updateSalaryCoefficient = async (coefficient: any) => {
   return response.data;
 };
 
-
+// License API
+export const checkLicenseStatus = async () => {
+  // console.log("checkLicenseStatus")
+  const result = await apiClient.get('licenses/check');
+  return result;
+};
 
 export const logout = async (token: string) => {
   try {
@@ -709,9 +698,9 @@ export const logout = async (token: string) => {
 export const getEmployeeCount = async (config: any) => {
   try {
     // 使用getEmployees API获取总数，page=1, page_size=1即可获取总数而不需要获取大量数据
-    const result = await apiClient.get('employees/totalEmployees', config);
+    const result = await apiClient.get('get_totalEmployees', config);
     // const response = result as { total: number };
-    return { "total": result.data.total };
+    return { total: result.data.total };
   } catch (error) {
     console.error('获取员工总数失败:', error);
     throw error;
@@ -919,20 +908,15 @@ export const getProjectName = async (projectId: string) => {
     return '';
   }
 };
-// License API
-export const checkLicenseStatus = async () => {
-  // console.log("checkLicenseStatus")
-  const result = await apiClient.get('licenses/check');
-  return result;
-};
+
 
 export const activateLicense = async (request: {
-  "license_key": string;
-  "company_name": string;
+  license_key: string;
+  company_name?: string;
 }) => {
 console.log("activateLicense request:",request)
   const result = await apiClient.post('/licenses/activate', { 
-    ...request,
+request:request,
   });
   return result;
 };

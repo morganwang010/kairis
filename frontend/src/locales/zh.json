@@ -814,7 +814,8 @@
     "exportToExcel": "导出到Excel",
     "editAttendance": "编辑考勤",
     "addAttendance": "添加考勤",
-    "editFailed": "编辑考勤失败"
+    "editFailed": "编辑考勤失败",
+    "loadRecordsError": "加载考勤记录失败，请稍后重试"
   },
   "salaryUploadPage": {
     "title": "薪资导入",

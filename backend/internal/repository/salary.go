@@ -480,3 +480,13 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 
 	return nil
 }
+
+// Total 获取薪资汇总
+func (r *SalaryRepository) Total() (float64, error) {
+	var total float64
+	// GORM Sum 方法正确用法：Sum("列名", &接收变量)
+	if err := r.db.Model(&model.Salaries{}).Select("COALESCE(SUM(round_off_salary), 0)").Scan(&total).Error; err != nil {
+		return 0, err
+	}
+	return total, nil
+}

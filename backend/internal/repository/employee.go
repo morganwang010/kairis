@@ -49,3 +49,15 @@ func (r *EmployeeRepository) GetByEmployeeID(employeeID string) (*model.Employee
 	}
 	return &employee, nil
 }
+
+// TotalEmployees 获取员工总数（在职员工）
+func (r *EmployeeRepository) TotalEmployees() (int64, error) {
+	var count int64
+	// if err := r.db.Model(&model.Employee{}).Where("status = ?", "active").Count(&count).Error; err != nil {
+	if err := r.db.Model(&model.Employee{}).Count(&count).Error; err != nil {
+
+		return 0, err
+
+	}
+	return count, nil
+}

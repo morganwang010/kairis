@@ -1,6 +1,7 @@
 import axios from 'axios';
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { message } from 'antd';
+import store from '../stores';
 
 const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8083/api';
 
@@ -13,12 +14,30 @@ class Request {
   }
 
   private setupInterceptors() {
-    // 请求拦截器 - 添加JWT Token
+    // 请求拦截器 - ✅ 从 Redux 获取 Token（内存中，未加密）
     this.instance.interceptors.request.use(
       (config: InternalAxiosRequestConfig) => {
-        const token = localStorage.getItem('token');
+        // 🔴 重要：直接从 Redux store 获取内存中的 token（未加密）
+        const state = store.getState();
+        const token = state.user?.token;  // 使用可选链防止访问不存在的属性
+        console.log('拦截器从 Redux 获取 token:', token ? '已获取' : '未获取');
+        
         if (token && config.headers) {
           config.headers.Authorization = `Bearer ${token}`;
+        } else if (!token) {
+          // 如果 Redux 中没有 token，尝试从 sessionStorage 解密获取（用于页面刷新后的首次请求）
+          try {
+            const encryptedToken = sessionStorage.getItem('token');
+            if (encryptedToken) {
+              const decryptedToken = decodeURIComponent(atob(encryptedToken));
+              console.log('拦截器从 sessionStorage 解密获取 token');
+              if (config.headers) {
+                config.headers.Authorization = `Bearer ${decryptedToken}`;
+              }
+            }
+          } catch (e) {
+            console.log('从 sessionStorage 获取 token 失败');
+          }
         }
         return config;
       },
@@ -27,17 +46,10 @@ class Request {
       }
     );
 
-    // 响应拦截器
+    // 响应拦截器 - 正确处理响应格式
     this.instance.interceptors.response.use(
       (response: AxiosResponse) => {
-        const { code, data, message: msg } = response.data;
-        
-        if (code === 200) {
-          return data;
-        } else {
-          message.error(msg || '请求失败');
-          return Promise.reject(new Error(msg || '请求失败'));
-        }
+        return response.data;
       },
       (error) => {
         if (error.response) {
@@ -45,7 +57,8 @@ class Request {
           switch (status) {
             case 401:
               message.error('未授权，请重新登录');
-              localStorage.removeItem('token');
+              store.dispatch({ type: 'user/logout' });
+              sessionStorage.clear();
               window.location.href = '/login';
               break;
             case 403:
@@ -68,24 +81,33 @@ class Request {
     );
   }
 
-  public get<T = unknown>(url: string, config?: AxiosRequestConfig): Promise<T> {
+  public get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
     return this.instance.get(url, config);
   }
 
-  public post<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
+  public post<T = any>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
     return this.instance.post(url, data, config);
   }
 
-  public put<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
+  public put<T = any>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
     return this.instance.put(url, data, config);
   }
 
-  public delete<T = unknown>(url: string, config?: AxiosRequestConfig): Promise<T> {
+  public delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
     return this.instance.delete(url, config);
+  }
+
+  public patch<T = any>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
+    return this.instance.patch(url, data, config);
   }
 }
 
-export default new Request({
+const request = new Request({
   baseURL,
-  timeout: 10000,
+  timeout: 30000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
+
+export default request;

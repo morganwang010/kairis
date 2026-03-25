@@ -1,31 +1,30 @@
-import { Card, Form, Input, Button, message, Typography } from 'antd'
+import { Card, Form, Input, Button, message, Modal, Typography, Checkbox } from 'antd'
 import { UserOutlined, LockOutlined, LoginOutlined } from '@ant-design/icons'
 import { useState, useEffect } from 'react'
-// import { invoke } from '@tauri-apps/api/core'
 import { useNavigate } from 'react-router-dom'
-// import { login } from '../api'
-// import { useAuth } from '../components/AuthProvider'
-// import { t } from 'i18next'
 import { authApi } from '../api/auth';
-// import type { LoginResponse } from '../types';
+import { useAuth } from '../components/AuthProvider'
 const { Title } = Typography
 const { Item } = Form
+
 
 const LoginPage = () => {
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
-  // const { login: authLogin } = useAuth()
+  const { login } = useAuth()  // 这个 login 方法内部已经会存入 Redux
+  const [messageApi, messageContextHolder] = message.useMessage();
+  const [ _, contextHolder] = Modal.useModal();
 
-  // 组件挂载时从localStorage读取保存的用户信息
+  // 组件挂载时从 sessionStorage 读取"记住我"的用户名
   useEffect(() => {
-    const savedUser = localStorage.getItem('savedUser1')
-    if (savedUser) {
+    const savedCredential = sessionStorage.getItem('savedUser1')
+    if (savedCredential) {
       try {
-        const userData = JSON.parse(savedUser)
+        const { username, password } = JSON.parse(savedCredential)
         form.setFieldsValue({
-          username: userData.username,
-          password: atob(userData.password), // 解码Base64密码
+          username,
+          password: atob(password),
           remember: true
         })
       } catch (error) {
@@ -35,54 +34,57 @@ const LoginPage = () => {
   }, [form])
 
   const handleLogin = async (values: any) => {
-
     setLoading(true)
-    console.log('登录请求11111:', values)
+    console.log('登录请求:', values)
     try {
-      console.log('登录请求:', values)
-      // 直接使用invoke进行登录，避免通过api.ts中的login函数
-      // const { invoke } = await import('@tauri-apps/api/core')
-      const loginRequest = { username: values.username, password: values.password }
-      console.log("request:", loginRequest)
+      const loginRequest = { "username": values.username, "password": values.password }
       const result = await authApi.login(loginRequest)
       
-      console.log('登录结果:', result)
+      console.log('登录结果22:', result.data.user.id)
       
-      // 检查结果是否存在
       if (!result) {
-        message.error('登录失败：未收到响应')
+        messageApi.error('登录失败：未收到响应')
         return
       }
-      
-      // 保存token和用户信息
-      localStorage.setItem('token', result.token)
-      localStorage.setItem('user', JSON.stringify(result.user))
-      localStorage.setItem('savedUser', JSON.stringify({
-        user_id: result.user.id,
-        username: result.user.username,
-        role: result.user.roles?.[0] || '',
-        full_name: result.user.username,
-        email: result.user.email,
-        token: result.token
-      }))
+      console.log('登录结果3333:', result.data.user.id)
 
-      // 保存记住密码
-      if (values.remember) {
-        localStorage.setItem('savedUser1', JSON.stringify({
-          username: values.username,
-          password: btoa(values.password) // Base64编码密码
-        }))
-      } else {
-        localStorage.removeItem('savedUser1')
+      if (!result.data.user) {
+        messageApi.error('登录失败：未收到用户信息')
+        return
       }
 
-      message.success('登录成功')
-      // 导航到首页
+      // 使用后端返回的完整用户信息（确保包含 roles 和 permissions）
+      const userData = {
+        id: String(result.data.user.id),  // 确保是字符串类型
+        username: result.data.user.username,
+        email: result.data.user.email,
+        avatar: result.data.user.avatar || '',
+        roles: result.data.user.roles || [],
+        permissions: result.data.user.permissions || [],
+      }
+      // store.dispatch({ token: result.data.token, user: userData })
+
+      // ✅ 这一步已经将用户信息和 token 存入 Redux
+      // AuthProvider 的 login 方法内部会调用 dispatch(setCredentials(...))
+      login(userData, result.data.token)
+
+      // "记住我"功能：只保存用户名/密码到 sessionStorage（用于自动填充表单）
+      // token 和用户信息已由 AuthProvider 管理，无需重复存储
+      if (values.remember) {
+        sessionStorage.setItem('savedUser1', JSON.stringify({
+          username: values.username,
+          password: btoa(values.password)
+        }))
+      } else {
+        sessionStorage.removeItem('savedUser1')
+      }
+
+      messageApi.success('登录成功')
       navigate('/app')
 
     } catch (error) {
       console.error('登录失败:', error)
-      message.error('登录失败：用户名或密码错误')
+      messageApi.error('登录失败：用户名或密码错误')
     } finally {
       setLoading(false)
     }
@@ -94,8 +96,11 @@ const LoginPage = () => {
       display: 'flex', 
       alignItems: 'center', 
       justifyContent: 'center',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      width: '100vw',
     }}>
+             {contextHolder}
+       {messageContextHolder}
       <Card 
         title={<Title level={4} style={{ color: '#1890ff', margin: 0 }}>用户登录</Title>}
         style={{ 
@@ -132,11 +137,11 @@ const LoginPage = () => {
               size="large"
             />
           </Item>
-          {/* <Item name="remember" valuePropName="checked" noStyle>
+          <Item name="remember" valuePropName="checked">
             <Form.Item>
-              <Input.Checkbox>记住我</Input.Checkbox>
+              <Checkbox>记住密码</Checkbox>
             </Form.Item>
-          </Item> */}
+          </Item>
           <Item>
             <Button
               type="primary"

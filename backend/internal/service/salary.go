@@ -173,3 +173,8 @@ func (s *SalaryService) Calculate(month string, projectID int) error {
 	// 参考salary.rs中的calculate_monthly_salary方法
 	return s.salaryRepo.Calculate(month, projectID)
 }
+
+// Total 获取薪资汇总
+func (s *SalaryService) Total() (float64, error) {
+	return s.salaryRepo.Total()
+}

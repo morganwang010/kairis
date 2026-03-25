@@ -37,10 +37,10 @@ import LicenseProvider from '../components/LicenseProvider'
 
 // 根路径重定向组件
 const RootRedirect = () => {
-  const token = localStorage.getItem('savedUser')
-  console.log('first check token:', token)
-  return <Navigate to={token ? '/app' : '/login'} replace />
-}
+  const savedUser = sessionStorage.getItem('savedUser1')
+  console.log('first check token:', savedUser)
+  return <Navigate to={savedUser ? '/app' : '/app/license'} replace />
+} 
 
 // 创建一个包装组件，用于包装所有需要认证和授权的路由
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {

@@ -10,10 +10,13 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: ['user/setUser'],
+        ignoredActions: ['user/setUser', 'user/setCredentials'],
       },
     }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+
+// 导出 store 实例，供非组件文件使用
+export default store;

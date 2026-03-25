@@ -99,17 +99,17 @@ CREATE TABLE IF NOT EXISTS role_permissions (
 CREATE INDEX IF NOT EXISTS idx_role_permissions_role_id ON role_permissions(role_id);
 CREATE INDEX IF NOT EXISTS idx_role_permissions_permission_id ON role_permissions(permission_id);
 
--- 菜单-权限关联表
-CREATE TABLE IF NOT EXISTS menu_permissions (
-    menu_id UUID NOT NULL,
-    permission_id UUID NOT NULL,
-    PRIMARY KEY (menu_id, permission_id),
-    CONSTRAINT fk_menu_permissions_menu FOREIGN KEY (menu_id) REFERENCES menus(id) ON DELETE CASCADE,
-    CONSTRAINT fk_menu_permissions_permission FOREIGN KEY (permission_id) REFERENCES permissions(id) ON DELETE CASCADE
-);
+    -- 菜单-权限关联表
+    CREATE TABLE IF NOT EXISTS menu_permissions (
+        menu_id UUID NOT NULL,
+        permission_id UUID NOT NULL,
+        PRIMARY KEY (menu_id, permission_id),
+        CONSTRAINT fk_menu_permissions_menu FOREIGN KEY (menu_id) REFERENCES menus(id) ON DELETE CASCADE,
+        CONSTRAINT fk_menu_permissions_permission FOREIGN KEY (permission_id) REFERENCES permissions(id) ON DELETE CASCADE
+    );
 
-CREATE INDEX IF NOT EXISTS idx_menu_permissions_menu_id ON menu_permissions(menu_id);
-CREATE INDEX IF NOT EXISTS idx_menu_permissions_permission_id ON menu_permissions(permission_id);
+    CREATE INDEX IF NOT EXISTS idx_menu_permissions_menu_id ON menu_permissions(menu_id);
+    CREATE INDEX IF NOT EXISTS idx_menu_permissions_permission_id ON menu_permissions(permission_id);
 
 -- 插入默认管理员用户
 INSERT INTO users (id, username, email, password, status, created_at, updated_at)
@@ -240,7 +240,7 @@ CREATE TABLE projects (
     status TEXT NULL DEFAULT 'active'
 );
 
-INSERT INTO project (project_name,project_abbr) VALUES
+INSERT INTO projects (project_name,project_abbr) VALUES
 	 ('bohai_ho','bohai_ho '),
 	 ('bdsi_downhole','bdsi_downhole'),
 	 ('bdsi_mudlogging','bdsi_mudlogging'),
@@ -427,7 +427,7 @@ CREATE TABLE tax_rates (
     grade TEXT NOT NULL   -- 税率等级，保持唯一约束
 );
 
-INSERT INTO tax_rates (id,salary_min,salary_max,tax_rate,grade) VALUES
+INSERT INTO tax_rates (salary_min,salary_max,tax_rate,grade) VALUES
 (0.0,5400000.0,0.0,'TK/0,TK/1,K/0'),
 (400001.0,5650000.0,0.0025,'TK/0,TK/1,K/0'),
 (650001.0,5950000.0,0.005,'TK/0,TK/1,K/0'),
@@ -437,7 +437,7 @@ INSERT INTO tax_rates (id,salary_min,salary_max,tax_rate,grade) VALUES
 (500001.0,8550000.0,0.015,'TK/0,TK/1,K/0'),
 (550001.0,9650000.0,0.0175,'TK/0,TK/1,K/0'),
 (650001.0,10050000,0.02,'TK/0,TK/1,K/0'),
-(10050001,10350000,0.0225,'TK/0,TK/1,K/0');
+(10050001,10350000,0.0225,'TK/0,TK/1,K/0'),
 (10350001,10700000,0.025,'TK/0,TK/1,K/0'),
 (10700001,11050000,0.03,'TK/0,TK/1,K/0'),
 (11050001,11600000,0.035,'TK/0,TK/1,K/0'),
@@ -447,7 +447,7 @@ INSERT INTO tax_rates (id,salary_min,salary_max,tax_rate,grade) VALUES
 (15100001,16950000,0.07,'TK/0,TK/1,K/0'),
 (16950001,19750000,0.08,'TK/0,TK/1,K/0'),
 (19750001,24150000,0.09,'TK/0,TK/1,K/0'),
-(24150001,26450000,0.1,'TK/0,TK/1,K/0');
+(24150001,26450000,0.1,'TK/0,TK/1,K/0'),
 (26450001,28000000,0.11,'TK/0,TK/1,K/0'),
 (28000001,30050000,0.12,'TK/0,TK/1,K/0'),
 (30050001,32400000,0.13,'TK/0,TK/1,K/0'),
@@ -457,7 +457,7 @@ INSERT INTO tax_rates (id,salary_min,salary_max,tax_rate,grade) VALUES
 (43850001,47800000,0.17,'TK/0,TK/1,K/0'),
 (47800001,51400000,0.18,'TK/0,TK/1,K/0'),
 (51400001,56300000,0.19,'TK/0,TK/1,K/0'),
-(56300001,62200000,0.2,'TK/0,TK/1,K/0');
+(56300001,62200000,0.2,'TK/0,TK/1,K/0'),
 (62200001,68600000,0.21,'TK/0,TK/1,K/0'),
 (68600001,77500000,0.22,'TK/0,TK/1,K/0'),
 (77500001,89000000,0.23,'TK/0,TK/1,K/0'),
@@ -467,7 +467,7 @@ INSERT INTO tax_rates (id,salary_min,salary_max,tax_rate,grade) VALUES
 (157000001,206000000,0.27,'TK/0,TK/1,K/0'),
 (206000001,337000000,0.28,'TK/0,TK/1,K/0'),
 (337000001,454000000,0.29,'TK/0,TK/1,K/0'),
-(454000001,550000000,0.3,'TK/0,TK/1,K/0');
+(454000001,550000000,0.3,'TK/0,TK/1,K/0'),
 (550000001,695000000,0.31,'TK/0,TK/1,K/0'),
 (695000001,910000000,0.32,'TK/0,TK/1,K/0'),
 (910000001,1400000000,0.33,'TK/0,TK/1,K/0'),
@@ -477,7 +477,7 @@ INSERT INTO tax_rates (id,salary_min,salary_max,tax_rate,grade) VALUES
 (6500001.0,6850000.0,0.005,'TK/2,TK/3,K/1,K/2'),
 (6850001.0,7300000.0,0.0075,'TK/2,TK/3,K/1,K/2'),
 (7300001.0,9200000.0,0.01,'TK/2,TK/3,K/1,K/2'),
-(9200001.0,10750000,0.015,'TK/2,TK/3,K/1,K/2');
+(9200001.0,10750000,0.015,'TK/2,TK/3,K/1,K/2'),
 (10750001,11250000,0.02,'TK/2,TK/3,K/1,K/2'),
 (11250001,11600000,0.025,'TK/2,TK/3,K/1,K/2'),
 (11600001,12600000,0.03,'TK/2,TK/3,K/1,K/2'),
@@ -487,7 +487,7 @@ INSERT INTO tax_rates (id,salary_min,salary_max,tax_rate,grade) VALUES
 (16400001,18450000,0.07,'TK/2,TK/3,K/1,K/2'),
 (18450001,21850000,0.08,'TK/2,TK/3,K/1,K/2'),
 (21850001,26000000,0.09,'TK/2,TK/3,K/1,K/2'),
-(26000001,27700000,0.1,'TK/2,TK/3,K/1,K/2');
+(26000001,27700000,0.1,'TK/2,TK/3,K/1,K/2'),
 (27700001,29350000,0.11,'TK/2,TK/3,K/1,K/2'),
 (29350001,31450000,0.12,'TK/2,TK/3,K/1,K/2'),
 (31450001,33950000,0.13,'TK/2,TK/3,K/1,K/2'),
@@ -497,7 +497,7 @@ INSERT INTO tax_rates (id,salary_min,salary_max,tax_rate,grade) VALUES
 (45800001,49500000,0.17,'TK/2,TK/3,K/1,K/2'),
 (49500001,53800000,0.18,'TK/2,TK/3,K/1,K/2'),
 (53800001,58500000,0.19,'TK/2,TK/3,K/1,K/2'),
-(58500001,64000000,0.2,'TK/2,TK/3,K/1,K/2');
+(58500001,64000000,0.2,'TK/2,TK/3,K/1,K/2'),
 (64000001,71000000,0.21,'TK/2,TK/3,K/1,K/2'),
 (71000001,80000000,0.22,'TK/2,TK/3,K/1,K/2'),
 (80000001,93000000,0.23,'TK/2,TK/3,K/1,K/2'),
@@ -507,7 +507,7 @@ INSERT INTO tax_rates (id,salary_min,salary_max,tax_rate,grade) VALUES
 (163000001,211000000,0.27,'TK/2,TK/3,K/1,K/2'),
 (211000001,374000000,0.28,'TK/2,TK/3,K/1,K/2'),
 (374000001,459000000,0.29,'TK/2,TK/3,K/1,K/2'),
-(459000001,555000000,0.3,'TK/2,TK/3,K/1,K/2');
+(459000001,555000000,0.3,'TK/2,TK/3,K/1,K/2'),
 (555000001,704000000,0.31,'TK/2,TK/3,K/1,K/2'),
 (704000001,957000000,0.32,'TK/2,TK/3,K/1,K/2'),
 (957000001,1405000000,0.33,'TK/2,TK/3,K/1,K/2'),
@@ -517,7 +517,7 @@ INSERT INTO tax_rates (id,salary_min,salary_max,tax_rate,grade) VALUES
 (6950001.0,7350000.0,0.005,'K/3'),
 (7350001.0,7800000.0,0.0075,'K/3'),
 (7800001.0,8850000.0,0.01,'K/3'),
-(8850001.0,9800000.0,0.0125,'K/3');
+(8850001.0,9800000.0,0.0125,'K/3'),
 (9800001.0,10950000,0.015,'K/3'),
 (10950001,11200000,0.0175,'K/3'),
 (11200001,12050000,0.02,'K/3'),
@@ -526,7 +526,7 @@ INSERT INTO tax_rates (id,salary_min,salary_max,tax_rate,grade) VALUES
 (14150001,15550000,0.05,'K/3'),
 (15550001,17050000,0.06,'K/3'),
 (17050001,19500000,0.07,'K/3'),
-(19500001,22700000,0.08,'K/3');
+(19500001,22700000,0.08,'K/3'),
 (22700001,26600000,0.09,'K/3'),
 (26600001,28100000,0.1,'K/3'),
 (28100001,30100000,0.11,'K/3'),
@@ -537,7 +537,7 @@ INSERT INTO tax_rates (id,salary_min,salary_max,tax_rate,grade) VALUES
 (43000001,47400000,0.16,'K/3'),
 (47400001,51200000,0.17,'K/3'),
 (51200001,55800000,0.18,'K/3'),
-(55800001,60400000,0.19,'K/3');
+(55800001,60400000,0.19,'K/3'),
 (60400001,66700000,0.2,'K/3'),
 (66700001,74500000,0.21,'K/3'),
 (74500001,83200000,0.22,'K/3'),
@@ -547,7 +547,7 @@ INSERT INTO tax_rates (id,salary_min,salary_max,tax_rate,grade) VALUES
 (134000001,169000000,0.26,'K/3'),
 (169000001,221000000,0.27,'K/3'),
 (221000001,390000000,0.28,'K/3'),
-(390000001,463000000,0.29,'K/3');
+(390000001,463000000,0.29,'K/3'),
 (463000001,561000000,0.3,'K/3'),
 (561000001,709000000,0.31,'K/3'),
 (709000001,965000000,0.32,'K/3'),

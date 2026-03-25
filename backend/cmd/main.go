@@ -179,6 +179,9 @@ func main() {
 			employees.PUT("/:id", employeeHandler.Update)
 			employees.DELETE("/:id", employeeHandler.Delete)
 			employees.POST("/import", employeeHandler.Import)
+			employees.GET("/totalEmployees", employeeHandler.TotalEmployees)
+			// employees.GET("/totalActiveEmployees", employeeHandler.TotalActiveEmployees)
+			// employees.GET("/totalInactiveEmployees", employeeHandler.TotalInactiveEmployees)
 		}
 
 		salaries := api.Group("/salaries")
@@ -191,6 +194,7 @@ func main() {
 			salaries.DELETE("/:id", salaryHandler.Delete)
 			salaries.POST("/import", salaryHandler.Import)
 			salaries.POST("/calculate", salaryHandler.Calculate)
+			salaries.GET("/total", salaryHandler.TotalSalary)
 		}
 
 		salarySlips := api.Group("/salary-slips")

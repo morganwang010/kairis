@@ -182,7 +182,7 @@ func (h *LicenseHandler) Activate(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"code": 200, "message": "License activated successfully", "data": license})
+	c.JSON(http.StatusOK, gin.H{"code": 200, "message": "License activated successfully", "success": true, "data": license})
 }
 
 func (h *LicenseHandler) Deactivate(c *gin.Context) {

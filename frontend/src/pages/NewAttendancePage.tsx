@@ -621,7 +621,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
     }
     } catch (error) {
       console.error('加载考勤数据失败:', error)
-      messageApi.error('加载考勤数据失败，请稍后重试')
+      messageApi.error(t('newAttendancePage.loadRecordsError'))
     } finally {
       setLoading(false)
     }

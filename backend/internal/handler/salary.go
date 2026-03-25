@@ -312,3 +312,39 @@ func (h *SalaryHandler) Calculate(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"code": 200, "message": "Success"})
 }
+
+// 获取薪资汇总
+func (h *SalaryHandler) TotalSalary(c *gin.Context) {
+	// var req struct {
+	// 	Params struct {
+	// 		Month     string `json:"month"`
+	// 		ProjectID string `json:"project_id"`
+	// 	} `json:"params"`
+	// }
+	// slog.Info("Total salary", "params", req)
+	// if err := c.ShouldBindJSON(&req); err != nil {
+	// 	c.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": "Invalid request body"})
+	// 	return
+	// }
+
+	// month := req.Params.Month
+	// projectIDStr := req.Params.ProjectID
+	// slog.Info("Total salary", "month", month, "project_id", projectIDStr)
+
+	// if month == "" {
+	// 	c.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": "Month is required"})
+	// 	return
+	// }
+
+	// projectID, ok := StringToInt(c, projectIDStr, "project_id")
+	// if !ok {
+	// 	return
+	// }
+	total, err := h.salaryService.Total()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"code": 200, "total": total})
+}

@@ -410,3 +410,14 @@ func (h *EmployeeHandler) Import(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"code": 200, "message": "Success"})
 }
+
+// TotalEmployees 获取员工总数（在职员工）
+func (h *EmployeeHandler) TotalEmployees(c *gin.Context) {
+	total, err := h.employeeService.TotalEmployees()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"code": 200, "message": "Success", "data": gin.H{"total": total}})
+}
