@@ -40,7 +40,7 @@ const LicensePage = () => {
       })
       
       // 类型断言
-      const typedResult = result as { success: boolean; message?: string }
+      const typedResult = (result as unknown) as { success: boolean; message?: string }
       
       if (typedResult.success) {
         message.success('License激活成功')

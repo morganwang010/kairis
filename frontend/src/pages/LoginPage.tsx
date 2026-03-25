@@ -1,21 +1,21 @@
-import { Card, Form, Input, Button, message, Typography, Space, Divider } from 'antd'
+import { Card, Form, Input, Button, message, Typography } from 'antd'
 import { UserOutlined, LockOutlined, LoginOutlined } from '@ant-design/icons'
 import { useState, useEffect } from 'react'
 // import { invoke } from '@tauri-apps/api/core'
 import { useNavigate } from 'react-router-dom'
 // import { login } from '../api'
-import { useAuth } from '../components/AuthProvider'
-import { t } from 'i18next'
+// import { useAuth } from '../components/AuthProvider'
+// import { t } from 'i18next'
 import { authApi } from '../api/auth';
-import type { LoginResponse } from '../types';
-const { Title, Text, Paragraph } = Typography
+// import type { LoginResponse } from '../types';
+const { Title } = Typography
 const { Item } = Form
 
 const LoginPage = () => {
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
-  const { login: authLogin } = useAuth()
+  // const { login: authLogin } = useAuth()
 
   // 组件挂载时从localStorage读取保存的用户信息
   useEffect(() => {

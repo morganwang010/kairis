@@ -53,3 +53,9 @@ export interface RouteConfig {
     icon: string;
   };
 }
+export interface Role {
+  id: string;
+  name: string;
+  code: string;
+  description?: string;
+}

@@ -1,7 +1,9 @@
-import { Layout, Menu, Select, Button, Dropdown, Avatar, Space } from 'antd'
+import { Layout, Menu, Select,  Dropdown, Avatar, Space } from 'antd'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useState, useEffect, useCallback } from 'react'
-import { HomeOutlined, SettingOutlined, AppstoreOutlined, PieChartOutlined, AccountBookOutlined, InfoCircleOutlined, LockOutlined, MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, LogoutOutlined, DashboardOutlined, FolderOutlined } from '@ant-design/icons';
+import {  SettingOutlined, AppstoreOutlined,  UserOutlined, LogoutOutlined, DashboardOutlined, FolderOutlined } from '@ant-design/icons';
+// import { HomeOutlined, SettingOutlined, AppstoreOutlined, PieChartOutlined, AccountBookOutlined, InfoCircleOutlined, LockOutlined, MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, LogoutOutlined, DashboardOutlined, FolderOutlined } from '@ant-design/icons';
+
 import { useTranslation } from 'react-i18next'
 import i18n from '../i18n'
 import { getProjects } from '../api'
@@ -13,7 +15,7 @@ const LayoutComponent = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const currentPath = location.pathname || '/' 
-  const [openKeys, setOpenKeys] = useState<string[]>([])
+  // const [openKeys, setOpenKeys] = useState<string[]>([])
   const [activeProjects, setActiveProjects] = useState<Array<{id: string, name: string}>>([])
   const [collapsed, setCollapsed] = useState(false)
   const { t, i18n: { language } } = useTranslation()
@@ -23,6 +25,7 @@ const LayoutComponent = () => {
   const handleLanguageChange = (value: string) => {
     i18n.changeLanguage(value)
     localStorage.setItem('i18nextLng', value)
+    setCollapsed(false)
   }
   
   // 加载项目数据
@@ -64,38 +67,38 @@ const LayoutComponent = () => {
   // 根据当前路径设置默认打开的菜单
   useEffect(() => {
     if (currentPath.startsWith('/salary')) {
-      setOpenKeys(['salary'])
+      // setOpenKeys(['salary'])
     }
     // 保留其他菜单的展开状态，不强制关闭
   }, [currentPath])
   
   // 处理菜单展开/折叠事件
-  const handleOpenChange = useCallback((keys: string[]) => {
-    console.log('菜单展开/折叠事件:', keys);
-    // 折叠状态下不处理子菜单展开
-    if (collapsed) return;
+  // const handleOpenChange = useCallback((keys: string[]) => {
+  //   console.log('菜单展开/折叠事件:', keys);
+  //   // 折叠状态下不处理子菜单展开
+  //   if (collapsed) return;
     
-    // 只处理顶级菜单的展开/折叠
-    const latestOpenKey = keys.find(key => openKeys.indexOf(key) === -1)
-    if (latestOpenKey) {
-      setOpenKeys(latestOpenKey === 'salary' ? ['salary'] : [])
-            // 当展开薪资菜单时，重新加载项目数据
-      if (latestOpenKey === 'salary') {
-        loadActiveProjects();
-      }
-    } else {
-      setOpenKeys(keys)
-    }
-  }, [openKeys, loadActiveProjects, collapsed])
+  //   // 只处理顶级菜单的展开/折叠
+  //   const latestOpenKey = keys.find(key => openKeys.indexOf(key) === -1)
+  //   if (latestOpenKey) {
+  //     setOpenKeys(latestOpenKey === 'salary' ? ['salary'] : [])
+  //           // 当展开薪资菜单时，重新加载项目数据
+  //     if (latestOpenKey === 'salary') {
+  //       loadActiveProjects();
+  //     }
+  //   } else {
+  //     setOpenKeys(keys)
+  //   }
+  // }, [openKeys, loadActiveProjects, collapsed])
   
   // 切换折叠状态
-  const toggleCollapsed = () => {
-    setCollapsed(!collapsed);
-    // 折叠时清空展开的菜单
-    if (!collapsed) {
-      setOpenKeys([]);
-    }
-  };
+  // const toggleCollapsed = () => {
+  //   setCollapsed(!collapsed);
+  //   // 折叠时清空展开的菜单
+  //   if (!collapsed) {
+  //     setOpenKeys([]);
+  //   }
+  // };
   
   // 处理菜单点击事件
   const handleMenuClick = useCallback(({ key }: { key: string }) => {

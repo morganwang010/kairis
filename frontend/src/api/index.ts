@@ -237,7 +237,7 @@ export const deleteSalaryRecord = async (id: number) => {
   try {
     console.log('删除薪资记录:', id);
     const response = await apiClient.delete('/salary/delete', {
-      id: id.toString(),
+      data: id.toString(),
     });
     return response;
   } catch (error) {
@@ -263,7 +263,7 @@ export const updateSalaryCalculateStatus = async (id: number, checked: number) =
 
 
 // 删除项目
-export const deleteProjects = async (ids: number[]) => {
+export const deleteProjects = async (ids: string[]) => {
   try {
     const response = await apiClient.delete('/projects', { data: { ids } });
     return response.data;
@@ -590,7 +590,7 @@ export const calculateMonthlySalary = async (params: {
 };
 
 // 邮件发送API
-export const sendEmail = async (record: any) => {
+export const sendEmail = async (record: any, month: string, projectID: string) => {
   try {
     // 确保员工邮箱存在，避免"missing field `to`"错误
     if (!record || !record.email) {
@@ -611,8 +611,8 @@ export const sendEmail = async (record: any) => {
       subject: '您的薪资详情',
       body: `您的薪资详情如下：\n${record.salary_details || '暂无详细信息'}`,
       employee_id: record.employee_id || '',
-      month: record.month || '',
-      project_id: record.project_id || '',
+      month: record.month || month,
+      project_id: projectID || '',
     };
     
     const response = await apiClient.post('/email/send', emailData);

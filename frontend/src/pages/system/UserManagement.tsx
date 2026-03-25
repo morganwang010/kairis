@@ -53,11 +53,13 @@ const UserManagement = () => {
         page: pagination.current,
         pageSize: pagination.pageSize,
       });
-      if (response?.list) {
-        setUsers(response.list);
-        setTotal(response.total);
+      if (response?.data) {
+        {   
+        setUsers(response.data.list);
+        setTotal(response.data.total);
       }
-    } catch (_error) {
+    }
+   } catch (error) {
       message.error(t('common.loadFailed'));
     } finally {
       setLoading(false);
@@ -88,7 +90,7 @@ const UserManagement = () => {
     form.setFieldsValue({
       username: user.username,
       email: user.email,
-      phone: user.phone || '',
+      phone: user.email || '',
       avatar: user.avatar || '',
       status: 'active',
     });
@@ -124,8 +126,9 @@ const UserManagement = () => {
       const userData: CreateUserParams = {
         username: values.username,
         email: values.email,
-        phone: values.phone,
+        phone: values.email || '',
         avatar: values.avatar,
+        password: values.password,
       };
 
       // 只有新增时才包含密码

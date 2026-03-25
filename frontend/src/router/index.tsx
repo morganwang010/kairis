@@ -1,4 +1,5 @@
-import React, { lazy, Suspense, type ComponentType } from 'react'
+import React from 'react'
+// import React, { lazy, Suspense, type ComponentType } from 'react'
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import Layout from '../components/Layout'
 import HomePage from '../pages/HomePage'
@@ -16,13 +17,13 @@ import AuthProvider from '../components/AuthProvider'
 import LicenseProvider from '../components/LicenseProvider'
 
 // 包装lazy组件，返回一个组件
-const WithSuspense = (Component: React.LazyExoticComponent<ComponentType<any>>) => {
-  return () => (
-    <Suspense fallback={<div>Loading...</div>}>
-      <Component />
-    </Suspense>
-  );
-};
+// const WithSuspense = (Component: React.LazyExoticComponent<ComponentType<any>>) => {
+//   return () => (
+//     <Suspense fallback={<div>Loading...</div>}>
+//       <Component />
+//     </Suspense>
+//   );
+// };
 
 // 导入布局组件
 // const MainLayout = WithSuspense(lazy(() => import('../layouts/MainLayout')));

@@ -142,7 +142,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
       onOk: async () => {
         try {
           for (const id of selectedRowKeys) {
-            await deleteAttendanceRecord(Number(id))  
+            await deleteAttendanceRecord(Number(id).toString())  
           }
           setData(data.filter(item => !selectedRowKeys.includes(item.id)))
           setSelectedRowKeys([])
@@ -852,7 +852,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
       content: t('newAttendancePage.confirmDeleteContent'),
       onOk: async () => {
         try {
-          await deleteAttendanceRecord(Number(id))  
+          await deleteAttendanceRecord(id)  
           setData(data.filter(item => item.id !== id))
           messageApi.success('删除成功')
         } catch (error) {
@@ -1159,7 +1159,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
           columns={generateColumns()}
           dataSource={data}
           rowKey="id"
-          rowClassName={(record, index) => {
+          rowClassName={(index) => {
             return index % 2 === 0 ? 'table-row-light' : 'table-row-dark';
           }}
           scroll={{ x: 'max-content', y: 'calc(100vh - 450px)' }}
@@ -1174,7 +1174,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
               const row = e.currentTarget;
               const allRows = document.querySelectorAll('.ant-table-tbody > tr');
               
-              allRows.forEach((r, index) => {
+              allRows.forEach((r) => {
                 const tds = r.querySelectorAll('td');
                 tds.forEach(td => {
                   (td as HTMLElement).style.backgroundColor = '';
@@ -1183,7 +1183,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
               
               if (newHighlightedId) {
                 const tds = row.querySelectorAll('td');
-                tds.forEach(td => {
+                tds.forEach((td: Element) => {
                   (td as HTMLElement).style.backgroundColor = '#e6f7ff';
                 });
               }

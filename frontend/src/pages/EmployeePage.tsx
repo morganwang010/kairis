@@ -1,9 +1,9 @@
 import { useState, useEffect, type FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Card, Table, Button, Modal, Form, Input, Select, DatePicker, Pagination,  message,  Upload, Tabs, Checkbox } from 'antd'
+import { Card, Table, Button, Modal, Form, Input,  DatePicker, Pagination,  message,  Upload, Tabs, Checkbox } from 'antd'
 import { PlusOutlined, EditOutlined, DeleteOutlined, UploadOutlined, SyncOutlined } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/es/table'
-import { getDepartments, deleteEmployee, getProjects, importEmployeeRecords, importSingleEmployeeRecord, updateEmployee, getEmployees } from '../api'
+import {  deleteEmployee, getProjects, importEmployeeRecords, importSingleEmployeeRecord, updateEmployee, getEmployees } from '../api'
 // import { invoke, isTauri } from '@tauri-apps/api/core'
 import dayjs from 'dayjs'
 import ScientificNumberDisplay from '../components/ScientificNumberDisplay';
@@ -58,9 +58,9 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId, projectName }) => {
   const [singleImportLoading, setSingleImportLoading] = useState<Record<string, boolean>>({})
   // const [selectedProject, setSelectedProject] = useState<string>('')
   // const [projects, setProjects] = useState<any[]>([])
-  const [departments, setDepartments] = useState<{ id: string; name: string }[]>([])
-  // const [ranks, setRanks] = useState<{ id: any; name: string; salary?: number }[]>([])
-  const [loading, setLoading] = useState(false)
+  // const [departments, setDepartments] = useState<{ id: string; name: string }[]>([])
+  // // const [ranks, setRanks] = useState<{ id: any; name: string; salary?: number }[]>([])
+  // const [loading, setLoading] = useState(false)
   const [filterValues, setFilterValues] = useState<{[key: string]: any}>({})
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
@@ -116,35 +116,35 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId, projectName }) => {
   }
 
   // 加载部门数据
-  const loadDepartments = async () => {
-    try {
-      setLoading(true)
-      const deptData = await getDepartments()
-      // 确保id为字符串类型
-      setDepartments(deptData.map((item: { id: number; name: string }) => ({ id: item.id.toString(), name: item.name })))
-    } catch (error) {
-      console.error(t('employeePage.loadDepartmentsError'), error)
-      messageApi.error(t('employeePage.loadDepartmentsError'))
-    } finally {
-      setLoading(false)
-    }
-  }
+  // const loadDepartments = async () => {
+  //   try {
+  //     setLoading(true)
+  //     const deptData = await getDepartments()
+  //     // 确保id为字符串类型
+  //     setDepartments(deptData.map((item: { id: number; name: string }) => ({ id: item.id.toString(), name: item.name })))
+  //   } catch (error) {
+  //     console.error(t('employeePage.loadDepartmentsError'), error)
+  //     messageApi.error(t('employeePage.loadDepartmentsError'))
+  //   } finally {
+  //     setLoading(false)
+  //   }
+  // }
 
-  // 加载职级数据
-  const loadRanks = async () => {
-    try {
-      setLoading(true)
-      // const rankData = await getRanks()
-      // setRanks(rankData)
-    } catch (error) {
-      console.error(t('employeePage.loadRanksError'), error)
-      messageApi.error(t('employeePage.loadRanksError'))
-      // 提供默认职级数据作为备选
+  // // 加载职级数据
+  // const loadRanks = async () => {
+  //   try {
+  //     setLoading(true)
+  //     // const rankData = await getRanks()
+  //     // setRanks(rankData)
+  //   } catch (error) {
+  //     console.error(t('employeePage.loadRanksError'), error)
+  //     messageApi.error(t('employeePage.loadRanksError'))
+  //     // 提供默认职级数据作为备选
 
-    } finally {
-      setLoading(false)
-    }
-  }
+  //   } finally {
+  //     setLoading(false)
+  //   }
+  // }
 
   // 加载员工数据
   const loadEmployees = async (filters?: any) => {
@@ -822,11 +822,12 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId, projectName }) => {
               <Input />
             </Form.Item>
             <Form.Item labelCol={{ span: 8 }} label={t('employeePage.department')} name="department" rules={[{ required: true, message: t('employeePage.enterDepartment') }]}>
-              <Select loading={loading}>
+               <Input />
+              {/* <Select loading={loading}>
                 {departments.map(dept => (
                   <Select.Option key={dept.id} value={dept.name}>{dept.name}</Select.Option>
                 ))}
-              </Select>
+              </Select> */}
             </Form.Item>
             <Form.Item labelCol={{ span: 8 }} label={t('employeePage.position')} name="position" rules={[{ required: true, message: t('employeePage.enterPosition') }]}>
                 <Input />

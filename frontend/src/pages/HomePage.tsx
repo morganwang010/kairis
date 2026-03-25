@@ -17,10 +17,10 @@ const HomePage = () => {
         setLoading(true);
         // const [count, salaries] = await Promise.all([
         const [count] = await Promise.all([
-          getEmployeeCount(),
+          getEmployeeCount({}),
           getSalaries({})
         ]);
-        setEmployeeCount(count);
+        setEmployeeCount(count.total);
         
         // // 计算薪资汇总
         // const totalSalary = salaries.reduce((sum: number, salary: any) => {

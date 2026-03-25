@@ -87,3 +87,12 @@ go run cmd/main.go
 - POST `/api/menus` - 创建菜单
 - PUT `/api/menus/:id` - 更新菜单
 - DELETE `/api/menus/:id` - 删除菜单
+
+
+编译为linux下可执行文件：
+通过powershell执行以下命令：
+
+$env:CGO_ENABLED = "0"
+$env:GOOS = "linux"
+$env:GOARCH = "amd64"
+go build -o haris-backend main.go

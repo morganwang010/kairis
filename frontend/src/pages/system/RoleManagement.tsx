@@ -24,11 +24,11 @@ import type { Role } from '../../types';
 
 const { TextArea } = Input;
 
-interface RoleFormValues {
-  name: string;
-  code: string;
-  description?: string;
-}
+// interface RoleFormValues {
+//   name: string;
+//   code: string;
+//   description?: string;
+// }
 
 const RoleManagement = () => {
   const { t } = useTranslation();
@@ -52,9 +52,9 @@ const RoleManagement = () => {
         page: pagination.current,
         pageSize: pagination.pageSize,
       });
-      if (response?.list) {
-        setRoles(response.list);
-        setTotal(response.total);
+      if (response?.data?.list) {
+        setRoles(response.data.list || []);
+        setTotal(response.data.total);
       }
     } catch (error) {
       message.error(t('common.loadFailed'));

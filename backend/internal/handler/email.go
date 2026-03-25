@@ -55,7 +55,7 @@ func (h *EmailHandler) SendEmail(c *gin.Context) {
 		Body:       req.Body,
 		EmployeeID: req.EmployeeID,
 		Month:      req.Month,
-		ProjectID:  projectID,
+		ProjectID:  req.ProjectID,
 	}
 
 	resp, err := h.emailService.SendEmail(serviceReq)

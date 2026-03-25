@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Card, Table, Button, Space, Modal, Form, Input, DatePicker, InputNumber, message, Upload, Tabs,Pagination, Switch } from 'antd'
 import { PlusOutlined, EditOutlined, DeleteOutlined, UploadOutlined, SyncOutlined, InboxOutlined , FileExcelOutlined} from '@ant-design/icons'
 import ScientificNumberDisplay from '../components/ScientificNumberDisplay'
-import { calculateMonthlySalary, getSalaries, updateSalary , addSalary, importSingleSalaryRecord, importSalaryRecords ,updateSalaryCalculateStatus, deleteSalaryRecord} from '../api';
+import { calculateMonthlySalary, getSalaries, updateSalary , importSingleSalaryRecord, importSalaryRecords ,updateSalaryCalculateStatus, deleteSalaryRecord} from '../api';
 import dayjs from 'dayjs'
 import * as XLSX from 'xlsx'
 import type { UploadProps } from 'antd'
@@ -350,25 +350,25 @@ const loadData = async () => {
 
 
   // 封装API调用函数
-  const updateSalaryResult = async (id: number, data: Partial<SalaryRecord>) => {
-    try {
-      // 调用实际的API更新薪资记录
-      try {
-        await updateSalary(id, data);
-      } catch (error) {
-        console.error('更新薪资记录失败:', error);
-        messageApi.error('API函数updateSalary不可用，模拟更新:');
-      }
-      // 重新加载数据以反映更新
-      const updatedData = await fetchSalaryData();
-      setSalaryRecords(updatedData);
-      return true;
-    } catch (error) {
-      console.error('更新薪资记录失败:', error);
-      messageApi.error(t('common.updateFailed'));
-      return false;
-    }
-  };
+  // const updateSalaryResult = async (id: number, data: Partial<SalaryRecord>) => {
+  //   try {
+  //     // 调用实际的API更新薪资记录
+  //     try {
+  //       await updateSalary(id, data);
+  //     } catch (error) {
+  //       console.error('更新薪资记录失败:', error);
+  //       messageApi.error('API函数updateSalary不可用，模拟更新:');
+  //     }
+  //     // 重新加载数据以反映更新
+  //     const updatedData = await fetchSalaryData();
+  //     setSalaryRecords(updatedData);
+  //     return true;
+  //   } catch (error) {
+  //     console.error('更新薪资记录失败:', error);
+  //     messageApi.error(t('common.updateFailed'));
+  //     return false;
+  //   }
+  // };
 
   const addSalary = async (data: Omit<SalaryRecord, 'id' | 'create_time' | 'update_time'>) => {
     try {
@@ -376,7 +376,7 @@ const loadData = async () => {
       if (addSalary) {
         await addSalary(data);
       } else {
-        messageApi.error('API函数addSalary不可用，模拟添加:', data);
+        messageApi.error('API函数addSalary不可用，模拟添加:');
       }
       // 重新加载数据以反映新添加的记录
       const updatedData = await fetchSalaryData();

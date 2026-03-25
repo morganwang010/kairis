@@ -1,18 +1,18 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { Layout, Menu, theme, Button, Dropdown, Avatar } from 'antd';
+import { Layout,  theme, Button, Dropdown, Avatar } from 'antd';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   UserOutlined,
   LogoutOutlined,
   GlobalOutlined,
-  DashboardOutlined,
-  SettingOutlined,
+  // DashboardOutlined,
+  // SettingOutlined,
 } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../stores';
-import { toggleCollapsed } from '../stores/slices/menuSlice';
+// import { toggleCollapsed } from '../stores/slices/menuSlice';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 

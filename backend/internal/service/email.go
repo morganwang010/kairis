@@ -27,7 +27,7 @@ type SendEmailRequest struct {
 	Body       string `json:"body"`
 	EmployeeID string `json:"employee_id"`
 	Month      string `json:"month"`
-	ProjectID  int    `json:"project_id"`
+	ProjectID  string `json:"project_id"`
 }
 
 // SendEmailResponse 发送邮件响应结构
@@ -161,6 +161,7 @@ func (s *EmailService) GeneratePDF(salary *repository.SalaryWithEmployee) ([]byt
 // SendEmail 发送邮件（带PDF附件）
 func (s *EmailService) SendEmail(req SendEmailRequest) (*SendEmailResponse, error) {
 	// 获取薪资数据（联合查询）
+
 	salary, err := s.emailRepo.GetSalaryWithEmployeeByMonth(req.EmployeeID, req.Month, req.ProjectID)
 	if err != nil {
 		return &SendEmailResponse{
@@ -234,7 +235,13 @@ func (s *EmailService) SendEmail(req SendEmailRequest) (*SendEmailResponse, erro
 			Message: fmt.Sprintf("发送邮件失败: %v", err),
 		}, nil
 	}
-
+	// 发送成功后，更新salary数据表中的email_sent字段
+	if err := s.emailRepo.UpdateSalaryEmailSent(req.EmployeeID, req.Month, req.ProjectID, true); err != nil {
+		return &SendEmailResponse{
+			Success: false,
+			Message: fmt.Sprintf("更新薪资数据失败: %v", err),
+		}, nil
+	}
 	return &SendEmailResponse{
 		Success: true,
 		Message: fmt.Sprintf("邮件发送成功！收件人: %s, 主题: %s", req.To, req.Subject),

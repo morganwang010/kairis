@@ -215,7 +215,7 @@ const ProjectPage: React.FC = () => {
         try {
           // 调用删除项目API
           console.log(t('common.startDeleteProject'), id);
-          deleteProjects({ project_id: parseInt(id) }).then(() => {
+          deleteProjects([id]).then(() => {
             // 刷新项目列表
              console.log(t('common.endDeleteProject'), id);
             loadProjects();

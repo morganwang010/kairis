@@ -1,8 +1,8 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
-import { Suspense } from 'react'
-import { Spin } from 'antd'
-import route from './router'
-import type { RouteConfig } from './types'
+// import { Routes, Route, Navigate } from 'react-router-dom'
+// import { Suspense } from 'react'
+// import { Spin } from 'antd'
+// import route from './router'
+// import type { RouteConfig } from './types'
 import { RouterProvider } from 'react-router-dom'
 import router from './router'
 // const renderRoutes = (routes: RouteConfig[]) => {

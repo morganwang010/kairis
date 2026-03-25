@@ -1,4 +1,4 @@
-import { Table, TableProps } from 'antd';
+import { Table, type TableProps } from 'antd';
 import { useMemo } from 'react';
 
 interface VirtualTableProps<T> extends TableProps<T> {
