@@ -51,7 +51,7 @@ jobs:
           username: ${{ secrets.TENCENT_USER }}
           key: ${{ secrets.TENCENT_SSH_KEY }}
           # 前端 dist + 后端二进制 一起上传
-          source: "frontend/dist
+          source: "frontend/dist"
           target: "/data/nginx/html/kairis/"  # 服务器存放路径
           strip_components: 2  # 关键：去掉 frontend/dist/ 两层目录
 
