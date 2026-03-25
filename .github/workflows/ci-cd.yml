@@ -79,7 +79,7 @@ jobs:
           username: ${{ secrets.TENCENT_USER }}
           key: ${{ secrets.TENCENT_SSH_KEY }}
           script: |
-            docker exec -it 01a nginx -s reload
+            docker exec  01a nginx -s reload
             cd /data/nginx/
             chmod +x kairis-backend
             # 杀死旧进程，启动新进程
