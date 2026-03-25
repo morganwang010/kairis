@@ -663,7 +663,7 @@ export const sendEmail = async (record: any, month: string, projectID: string) =
 export const getSystemConfigs = async () => {
   const response = await apiClient.get('/system-configs');
   console.log('获取系统配置成功:', response.data);
-  return response.data.data;
+  return response.data;
 };
 
 export const getSystemConfigByName = async (name: string) => {

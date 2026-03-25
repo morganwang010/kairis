@@ -174,7 +174,12 @@
     "rememberMe": "Remember me",
     "login": "Login",
     "importAll": "Import All",
-    "deleteAll": "Delete All"
+    "deleteAll": "Delete All",
+    "system": "System",
+    "user": "User",
+    "role": "Role",
+    "permission": "Permission",
+    "menu": "Menu"
 
 
 

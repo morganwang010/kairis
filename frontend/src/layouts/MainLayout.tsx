@@ -73,7 +73,7 @@ const MainLayout = () => {
         }}
       >
         <div style={{ height: 64, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: collapsed ? 16 : 20, fontWeight: 'bold' }}>
-          {collapsed ? 'K' : 'Kairis'}
+          {collapsed ? 'H' : 'HRMS'}
         </div>
         
       </Sider>

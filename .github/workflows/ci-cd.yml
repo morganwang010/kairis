@@ -1,0 +1,71 @@
+name: React + Golang 部署到腾讯云
+
+on:
+  push:
+    branches: [ main ]  # 推送到 main 分支自动部署
+  workflow_dispatch:    # 支持手动点击部署
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 拉取代码
+        uses: actions/checkout@v4
+
+      # ====================
+      # 1. 构建 React 前端
+      # ====================
+      - name: 设置 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.17.0
+
+      - name: 安装前端依赖 + 编译
+        working-directory: ./frontend
+        run: |
+          npm install
+          npm run build
+
+      # ====================
+      # 2. 构建 Golang 后端
+      # ====================
+      - name: 设置 Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.23.4
+
+      - name: 编译 Golang (Linux 版本)
+        working-directory: ./backend
+        run: |
+          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o kairis-backend cmd/main.go
+
+      # ====================
+      # 3. 上传到腾讯云服务器
+      # ====================
+      - name: 部署文件到服务器
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.TENCENT_HOST }}
+          username: ${{ secrets.TENCENT_USER }}
+          key: ${{ secrets.TENCENT_SSH_KEY }}
+          # 前端 dist + 后端二进制 一起上传
+          source: "frontend/dist/,backend/kairis-backend"
+          target: "/data/nginx/html/kairis/"  # 服务器存放路径
+
+      # ====================
+      # 4. 远程重启服务
+      # ====================
+      - name: 重启后端服务
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.TENCENT_HOST }}
+          username: ${{ secrets.TENCENT_USER }}
+          key: ${{ secrets.TENCENT_SSH_KEY }}
+          script: |
+            docker exec -it 01a nginx -s reload
+            cd /data/nginx/html/kairis/
+            chmod +x kairis-backend
+            # 杀死旧进程，启动新进程
+            pkill -f kairis-backend || true
+            nohup ./kairis-backend > server.log 2>&1 &  
+            echo "部署完成！"

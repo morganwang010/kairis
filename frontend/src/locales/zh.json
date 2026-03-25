@@ -160,7 +160,12 @@
     "pleaseActivateLicenseToContinue": "请先激活授权以继续使用系统",
     "testLicenseValidFor7Days": "测试授权有效期为7天",
     "importAll": "全部导入",
-    "deleteAll": "全部删除"
+    "deleteAll": "全部删除",
+    "system": "系统",
+    "user": "用户",
+    "role": "角色",
+    "permission": "权限",
+    "menu": "菜单"
   },
   "importManagementPage": {
     "title": "导入管理",
