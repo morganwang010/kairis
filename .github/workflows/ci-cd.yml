@@ -83,6 +83,6 @@ jobs:
             cd /data/nginx/
             chmod +x kairis-backend
             # 杀死旧进程，启动新进程
-            pkill -f kairis-backend || true
+            pkill -f kairis-backend 2>/dev/null || true
             nohup ./kairis-backend > server.log 2>&1 &  
             echo "部署完成！"
