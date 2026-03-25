@@ -87,4 +87,4 @@ jobs:
             nohup ./kairis-backend > server.log 2>&1 &  
             echo "部署完成！"
             # 重启 nginx 服务
-            nohup docker exec  01a nginx -s reload  2>/dev/null & || true
+            docker exec 01a nginx -s reload  2>/dev/null  || true
