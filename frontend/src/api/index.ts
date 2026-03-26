@@ -298,9 +298,9 @@ export const updateSalaryCalculateStatus = async (id: number, checked: number) =
 
 
 // 删除项目
-export const deleteProjects = async (ids: string[]) => {
+export const deleteProjects = async (id: string) => {
   try {
-    const response = await apiClient.delete('/projects', { data: { ids } });
+    const response = await apiClient.delete(`/projects/${id}`);
     return response.data;
   } catch (error) {
     console.error('删除项目失败:', error);
@@ -739,7 +739,8 @@ export const createProject = async (data: any) => {
       end_time: data.endTime || '',
       manager: data.responsiblePerson || '',
       project_desc: data.description || '',
-      status: data.status || 'active'
+      status: data.status || 'active',
+      askes_alw: data.askesAlwByNation || '1',
     };
     
     const response = await apiClient.post('/projects', queryParams);
@@ -753,10 +754,12 @@ export const createProject = async (data: any) => {
 export const updateProject = async (data: any) => {
   try {
     // 转换为HashMap格式，只传递存在的参数
-    const queryParams: Record<string, string> = {
+    const queryParams: Record<string, string | number> = {
       project_id: data.id,
       project_name: data.projectName,
-      project_abbr: data.projectShortName
+      project_abbr: data.projectShortName,
+      askes_alw: data.askesAlwByNation,
+      
     };
     
     // 只传递存在的可选参数
@@ -767,6 +770,7 @@ export const updateProject = async (data: any) => {
     if (data.clientCompanyName) queryParams.party_a_company = data.clientCompanyName;
     if (data.contactPhone) queryParams.contact_phone = data.contactPhone;
     if (data.description) queryParams.project_desc = data.description;
+    if (data.askesAlwByNation !== undefined) queryParams.askes_alw = data.askesAlwByNation || '';
     
     console.log("project_id {}",data.id)
     const response = await apiClient.put(`/projects/${data.id}`, queryParams);

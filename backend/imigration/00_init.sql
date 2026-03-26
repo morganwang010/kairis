@@ -232,6 +232,7 @@ CREATE TABLE projects (
     start_time DATE NULL,
     end_time DATE NULL,
     manager TEXT NULL,
+    description TEXT NULL,
     contact_phone TEXT NULL,
     project_desc TEXT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

@@ -60,14 +60,14 @@ type Menu struct {
 }
 
 type Project struct {
-	ID          int            `gorm:"primaryKey;type:integer;default:nextval('project_id_seq')" json:"id"`
-	ProjectName string         `gorm:"not null" json:"project_name"`
-	ProjectAbbr string         `gorm:"not null" json:"project_abbr"`
-	Description string         `json:"description"`
-	CreatedAt   time.Time      `json:"created_at"`
-	UpdatedAt   time.Time      `json:"updated_at"`
-	DeletedAt   gorm.DeletedAt `gorm:"index" json:"-"`
-	AskesAlw    int            `json:"askes_alw"`
+	ID          int    `gorm:"primaryKey;type:integer;default:nextval('project_id_seq')" json:"id"`
+	ProjectName string `gorm:"not null" json:"project_name"`
+	ProjectAbbr string `gorm:"not null" json:"project_abbr"`
+	// Description string         `json:"description"`
+	CreatedAt time.Time `json:"created_at"`
+	// UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
+	AskesAlw  int            `json:"askes_alw"`
 }
 
 type License struct {

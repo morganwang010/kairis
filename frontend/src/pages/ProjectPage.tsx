@@ -18,7 +18,7 @@ interface Project {
   clientProjectManager: string;
   clientCompanyName: string;
   contactPhone: string;
-  description: string;
+  // description: string;
   status: string;
   askesAlwByNation: number;
 }
@@ -33,7 +33,7 @@ interface ProjectFormValues {
   clientProjectManager: string;
   clientCompanyName: string;
   contactPhone: string;
-  description: string;
+  // description: string;
   status: string;
   askesAlwByNation: number;
 }
@@ -77,7 +77,7 @@ const ProjectPage: React.FC = () => {
         clientCompanyName: item.party_a_company,
         contactPhone: item.contact_phone,
         status: item.status,
-        description: item.project_desc || '',
+        // description: item.project_desc || '',
         askesAlwByNation: item.askes_alw,
       }));
       setProjects(formattedProjects);
@@ -198,7 +198,8 @@ const ProjectPage: React.FC = () => {
       clientProjectManager: project.clientProjectManager,
       clientCompanyName: project.clientCompanyName,
       contactPhone: project.contactPhone,
-      description: project.description,
+      askesAlwByNation: project.askesAlwByNation,
+      // description: project.description,
     });
     setIsModalVisible(true);
   };
@@ -215,7 +216,7 @@ const ProjectPage: React.FC = () => {
         try {
           // 调用删除项目API
           console.log(t('common.startDeleteProject'), id);
-          deleteProjects([id]).then(() => {
+          deleteProjects(id).then(() => {
             // 刷新项目列表
              console.log(t('common.endDeleteProject'), id);
             loadProjects();
@@ -241,6 +242,7 @@ const ProjectPage: React.FC = () => {
           // id: values.id,
           projectName: values.projectName,
           projectShortName: values.projectShortName,
+          askesAlwByNation: values.askesAlwByNation,
           // startTime: values.startTime?.format('YYYY-MM-DD') || '',
           // endTime: values.endTime?.format('YYYY-MM-DD') || '',
           // responsiblePerson: values.responsiblePerson,
@@ -274,7 +276,7 @@ const ProjectPage: React.FC = () => {
           clientProjectManager: values.clientProjectManager,
           clientCompanyName: values.clientCompanyName,
           contactPhone: values.contactPhone,
-          description: values.description,
+          // description: values.description,
           status: 'active'
         };
         
@@ -355,7 +357,13 @@ const ProjectPage: React.FC = () => {
           >
             <Input placeholder={t('projectPage.projectShortNamePlaceholder')} />
           </Form.Item>
-
+          <Form.Item
+            label={t('projectPage.askesBpjsAlw')}
+            name="askesAlwByNation"
+              rules={[{ required: true, message: t('projectPage.askesAlwByNationRequired') }]}
+          >
+            <Input type="number" placeholder={t('projectPage.askesAlwPlaceholder')} />
+          </Form.Item>
           {/* <div style={{ display: 'flex', gap: 16 }}>
             <Form.Item
               label={t('projectPage.startTime')}
