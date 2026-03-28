@@ -46,9 +46,9 @@ const RootRedirect = () => {
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return (
     <AuthProvider>
-      <LicenseProvider>
+      {/* <LicenseProvider> */}
         {children}
-      </LicenseProvider>
+      {/* </LicenseProvider> */}
     </AuthProvider>
   )
 }
