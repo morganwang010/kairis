@@ -1,8 +1,11 @@
 package service
 
 import (
+	"fmt"
 	"kairis/backend/internal/model"
 	"kairis/backend/internal/repository"
+	"log/slog"
+	"time"
 )
 
 type EmployeeService struct {
@@ -33,6 +36,21 @@ func (s *EmployeeService) Delete(id uint) error {
 	return s.employeeRepo.Delete(id)
 }
 
+// GetByEmployeeID 根据员工ID查询
+func (s *EmployeeService) GetByEmployeeID(employeeID string) ([]model.Employee, error) {
+	return s.employeeRepo.GetByEmployeeID(employeeID)
+}
+
+// GetByEmployeeName 根据员工姓名查询
+func (s *EmployeeService) GetByEmployeeName(employeeName string) ([]model.Employee, error) {
+	return s.employeeRepo.GetByEmployeeName(employeeName)
+}
+
+// GetByLocationName 根据地点名称查询
+func (s *EmployeeService) GetByLocationName(locationName string) ([]model.Employee, error) {
+	return s.employeeRepo.GetByLocationName(locationName)
+}
+
 type ImportEmployeeRequest struct {
 	Employees []ImportEmployeeItem `json:"employees"`
 }
@@ -43,15 +61,13 @@ type ImportEmployeeItem struct {
 	EmployeeName    string  `json:"employee_name"`
 	Department      string  `json:"department"`
 	Position        string  `json:"position"`
-	HireDate        string  `json:"hire_date"`
-	LeaveDate       string  `json:"leave_date"`
 	Salary          float64 `json:"salary"`
-	IdCard          string  `json:"id_card"`
+	IdCard          string  `json:"idcard_number"`
 	Npwp            string  `json:"npwp"`
 	HierarchyID     string  `json:"hierarchy_id"`
 	HierarchyName   string  `json:"hierarchy_name"`
-	JoinDate        string  `json:"join_date"`
-	ResignDate      string  `json:"resign_date"`
+	JoinDate        string  `json:"join"`
+	ResignDate      string  `json:"resign"`
 	Email           string  `json:"email"`
 	Phone           string  `json:"phone"`
 	BasicSalary     float64 `json:"basic_salary"`
@@ -63,23 +79,47 @@ type ImportEmployeeItem struct {
 	TranspAlwDay    float64 `json:"transp_alw_day"`
 	PulsaAlwDay     float64 `json:"pulsa_alw_day"`
 	AttAlwDay       float64 `json:"att_alw_day"`
-	TaxType         string  `json:"tax_type"`
+	TaxType         string  `json:"tax_status"`
 	LocationName    string  `json:"location_name"`
 	PulsaAlwMonth   float64 `json:"pulsa_alw_month"`
 	HousingAlwTetap float64 `json:"housing_alw_tetap"`
 	DeleteFlag      int     `json:"delete_flag"`
 }
 
+func DMYToYMD(dmy string) string {
+	t, _ := time.Parse("02/01/2006", dmy)
+	return t.Format("2006-01-02")
+}
+
 func (s *EmployeeService) ImportEmployee(req ImportEmployeeRequest) error {
 	for _, employee := range req.Employees {
+		// 解析日期字符串为 time.Time 类型
+		var joinDate, resignDate time.Time
+		var err error
+		slog.Info("JoinDate222", "join_date", employee.JoinDate)
+		if employee.JoinDate != "" {
+			slog.Info("JoinDate", "join_date", employee.JoinDate)
+			joinDate, err = time.Parse("2006-01-02", DMYToYMD(employee.JoinDate))
+			if err != nil {
+				return fmt.Errorf("invalid join_date format: %v", err)
+			}
+		}
+
+		if employee.ResignDate != "" {
+			resignDate, err = time.Parse("2006-01-02", DMYToYMD(employee.ResignDate))
+			if err != nil {
+				return fmt.Errorf("invalid resign_date format: %v", err)
+			}
+		}
+
 		employeeModel := &model.Employee{
 			EmployeeID:      employee.EmployeeID,
 			ProjectID:       employee.ProjectID,
 			EmployeeName:    employee.EmployeeName,
 			Department:      employee.Department,
 			Position:        employee.Position,
-			HireDate:        employee.HireDate,
-			LeaveDate:       employee.LeaveDate,
+			JoinDate:        joinDate,
+			ResignDate:      resignDate,
 			Salary:          employee.Salary,
 			IdCard:          employee.IdCard,
 			Npwp:            employee.Npwp,
@@ -104,7 +144,7 @@ func (s *EmployeeService) ImportEmployee(req ImportEmployeeRequest) error {
 
 		existingEmployee, err := s.employeeRepo.GetByEmployeeID(employee.EmployeeID)
 		if err == nil && existingEmployee != nil {
-			employeeModel.ID = existingEmployee.ID
+			employeeModel.ID = existingEmployee[0].ID
 			if err := s.employeeRepo.Update(employeeModel); err != nil {
 				return err
 			}

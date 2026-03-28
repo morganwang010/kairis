@@ -174,7 +174,7 @@ func main() {
 		employees.Use(middleware.Auth())
 		{
 			employees.GET("", employeeHandler.List)
-			employees.GET("/:id", employeeHandler.Get)
+			employees.GET("/get", employeeHandler.Get) // 改为查询参数方式
 			employees.POST("", employeeHandler.Create)
 			employees.PUT("/:id", employeeHandler.Update)
 			employees.DELETE("/:id", employeeHandler.Delete)

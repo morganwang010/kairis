@@ -819,7 +819,7 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
                             <Form.Item name="name" label={t('employeePage.employeeName')}>
                               <Input placeholder={t('employeePage.enterEmployeeName')} />
                             </Form.Item>
-                            <Form.Item name="month" label={t('attendancePage.month')} initialValue={dayjs(currentMonth)}>
+                            <Form.Item name="month" label={t('newAttendancePage.month')} initialValue={dayjs(currentMonth)}>
                               <DatePicker
                                 picker="month"
                                 onChange={(date) => {

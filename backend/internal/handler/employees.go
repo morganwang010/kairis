@@ -3,6 +3,7 @@ package handler
 import (
 	"kairis/backend/internal/model"
 	"kairis/backend/internal/service"
+	"log/slog"
 	"net/http"
 	"strconv"
 
@@ -24,8 +25,6 @@ func (h *EmployeeHandler) Create(c *gin.Context) {
 		EmployeeName    string  `json:"employee_name"`
 		Department      string  `json:"department"`
 		Position        string  `json:"position"`
-		HireDate        string  `json:"hire_date"`
-		LeaveDate       string  `json:"leave_date"`
 		Salary          float64 `json:"salary"`
 		TaxStatus       float64 `json:"tax_status"`
 		IdCard          string  `json:"id_card"`
@@ -75,8 +74,6 @@ func (h *EmployeeHandler) Create(c *gin.Context) {
 		EmployeeName: req.EmployeeName,
 		Department:   req.Department,
 		Position:     req.Position,
-		HireDate:     req.HireDate,
-		LeaveDate:    req.LeaveDate,
 		// Salary:          req.Salary,
 		TaxStatus:     req.TaxStatus,
 		IdCard:        req.IdCard,
@@ -109,29 +106,104 @@ func (h *EmployeeHandler) Create(c *gin.Context) {
 }
 
 func (h *EmployeeHandler) Get(c *gin.Context) {
-	idStr := c.Param("id")
-	id, err := strconv.ParseUint(idStr, 10, 32)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": "Invalid ID"})
-		return
-	}
-	employee, err := h.employeeService.Get(uint(id))
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
-		return
-	}
+	// 获取三个查询参数
+	employeeID := c.Query("employee_id")
+	employeeName := c.Query("employee_name")
+	locationName := c.Query("location_name")
+	slog.Info("111Get employee by employee_id", "employee_id", employeeID)
+	var employee *model.Employee
+	var employees []model.Employee
+	var err error
 
-	c.JSON(http.StatusOK, gin.H{"code": 200, "data": employee})
+	// 检查哪个参数不为空，然后使用该参数进行查询
+	slog.Info("Get employee by query params", "employee_id", employeeID, "employee_name", employeeName, "location_name", locationName)
+	if employeeID != "" {
+		// 如果 employee_id 不为空，使用它进行查询
+		slog.Info("Get employee by employee_id", "employee_id", employeeID)
+		employees, err = h.employeeService.GetByEmployeeID(employeeID)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"code": 200, "data": employees})
+		return
+	} else if employeeName != "" {
+		// 如果 employee_name 不为空，使用它进行查询
+		employees, err = h.employeeService.GetByEmployeeName(employeeName)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"code": 200, "data": employee})
+		return
+	} else if locationName != "" {
+		// 如果 location_name 不为空，使用它进行查询
+		employees, err = h.employeeService.GetByLocationName(locationName)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"code": 200, "data": employee})
+		return
+	} else {
+		// 如果所有参数都为空，查询所有员工
+		employees, err = h.employeeService.List()
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"code": 200, "data": employees})
+		return
+	}
 }
 
 func (h *EmployeeHandler) List(c *gin.Context) {
-	employees, err := h.employeeService.List()
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
+	employeeID := c.Query("employee_id")
+	employeeName := c.Query("employee_name")
+	locationName := c.Query("location_name")
+	slog.Info("666Get employee by employee_id", "employee_id", employeeID)
+	var employee *model.Employee
+	var employees []model.Employee
+	var err error
+	if employeeID != "" {
+		// 如果 employee_id 不为空，使用它进行查询
+		slog.Info("Get employee by employee_id", "employee_id", employeeID)
+		employees, err = h.employeeService.GetByEmployeeID(employeeID)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"code": 200, "data": employees})
+		return
+	} else if employeeName != "" {
+		// 如果 employee_name 不为空，使用它进行查询
+		employees, err = h.employeeService.GetByEmployeeName(employeeName)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"code": 200, "data": employees})
+		return
+	} else if locationName != "" {
+		// 如果 location_name 不为空，使用它进行查询
+		employees, err = h.employeeService.GetByLocationName(locationName)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"code": 200, "data": employee})
+		return
+	} else {
+		// 如果所有参数都为空，查询所有员工
+		employees, err = h.employeeService.List()
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"code": 200, "data": employees})
 		return
 	}
-
-	c.JSON(http.StatusOK, gin.H{"code": 200, "data": employees})
+	// c.JSON(http.StatusOK, gin.H{"code": 200, "data": employees})
 }
 
 func (h *EmployeeHandler) Update(c *gin.Context) {
@@ -147,8 +219,6 @@ func (h *EmployeeHandler) Update(c *gin.Context) {
 		EmployeeName    string  `json:"employee_name"`
 		Department      string  `json:"department"`
 		Position        string  `json:"position"`
-		HireDate        string  `json:"hire_date"`
-		LeaveDate       string  `json:"leave_date"`
 		Salary          float64 `json:"salary"`
 		TaxStatus       float64 `json:"tax_status"`
 		IdCard          string  `json:"id_card"`
@@ -199,8 +269,6 @@ func (h *EmployeeHandler) Update(c *gin.Context) {
 		EmployeeName:  req.EmployeeName,
 		Department:    req.Department,
 		Position:      req.Position,
-		HireDate:      req.HireDate,
-		LeaveDate:     req.LeaveDate,
 		Salary:        req.Salary,
 		TaxStatus:     req.TaxStatus,
 		IdCard:        req.IdCard,
@@ -255,16 +323,13 @@ func (h *EmployeeHandler) Import(c *gin.Context) {
 			Name          string `json:"employee_name"`
 			Department    string `json:"department"`
 			Position      string `json:"position"`
-			HireDate      string `json:"hire_date"`
-			LeaveDate     string `json:"leave_date"`
 			Salary        string `json:"salary"`
-			TaxStatus     string `json:"tax_status"`
-			IdCard        string `json:"id_card"`
+			IdCard        string `json:"idcard_number"`
 			Npwp          string `json:"npwp"`
 			HierarchyID   string `json:"hierarchy_id"`
 			HierarchyName string `json:"hierarchy_name"`
-			JoinDate      string `json:"join_date"`
-			ResignDate    string `json:"resign_date"`
+			JoinDate      string `json:"join"`
+			ResignDate    string `json:"resign"`
 			Email         string `json:"email"`
 			BasicSalary   string `json:"basic_salary"`
 			HousingAlw    string `json:"housing_alw"`
@@ -275,7 +340,7 @@ func (h *EmployeeHandler) Import(c *gin.Context) {
 			TranspAlwDay    string `json:"transp_alw/day"`
 			PulsaAlwDay     string `json:"pulsa_alw/day"`
 			AttAlwDay       string `json:"att_alw/day"`
-			TaxType         string `json:"tax_type"`
+			TaxType         string `json:"tax_status"`
 			LocationName    string `json:"location_name"`
 			PulsaAlwMonth   string `json:"pulsa_alw/month"`
 			HousingAlwTetap string `json:"housing_alw/TJ_Tidak_Tetap"`
@@ -376,8 +441,8 @@ func (h *EmployeeHandler) Import(c *gin.Context) {
 			EmployeeName: item.Name,
 			Department:   item.Department,
 			Position:     item.Position,
-			HireDate:     item.HireDate,
-			LeaveDate:    item.LeaveDate,
+			// HireDate:     item.HireDate,
+			// LeaveDate:    item.LeaveDate,
 			// Salary:          salary,
 			IdCard:        item.IdCard,
 			Npwp:          item.Npwp,

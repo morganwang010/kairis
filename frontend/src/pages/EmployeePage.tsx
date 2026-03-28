@@ -206,6 +206,7 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId, projectName }) => {
         ...values,
         location: values.location_name // 使用location_name字段作为location筛选条件
       }
+      console.log("formattedValues:", formattedValues)
       setFilterValues(formattedValues)
       setCurrentPage(1) // 筛选时回到第一页
       loadEmployees(formattedValues)
@@ -638,8 +639,8 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId, projectName }) => {
     { title: t('employeePage.hierarchyId'), dataIndex: 'hierarchy_id', key: 'hierarchy_id', width: 120 },
     { title: t('employeePage.hierarchyName'), dataIndex: 'hierarchy_name', key: 'hierarchy_name', width: 150 },
     { title: t('employeePage.workLocation'), dataIndex: 'location_name', key: 'location_name', width: 150 },
-    { title: t('employeePage.hireDate'), dataIndex: 'join_date', key: 'join_date', width: 120 },
-    { title: t('employeePage.resignDate'), dataIndex: 'resign_date', key: 'resign_date', width: 120, render: (text: string) => text !== "-" ? dayjs(text,'DD-MM-YYYY').format('YYYY-MM-DD') : '-' },
+    { title: t('employeePage.hireDate'), dataIndex: 'join_date', key: 'join_date', width: 120, render: (text: string) => text !== "-" ? dayjs(text,'YYYY-MM-DD').format('YYYY-MM-DD') : '-' },
+    { title: t('employeePage.resignDate'), dataIndex: 'resign_date', key: 'resign_date', width: 120, render: (text: string) => text !== "0001-01-01T00:00:00Z" ? dayjs(text,'YYYY-MM-DD').format('YYYY-MM-DD') : '-' },
     { title: t('employeePage.position'), dataIndex: 'position', key: 'position', width: 120 },
     { title: t('employeePage.email'), dataIndex: 'email', key: 'email', width: 180 },
     { title: t('employeePage.basicSalary'), dataIndex: 'basic_salary', key: 'basic_salary', width: 120, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
@@ -723,12 +724,14 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId, projectName }) => {
             <Form.Item name="employee_id" label={t('employeePage.employeeId')}>
               <Input placeholder={t('employeePage.enterEmployeeId')} />
             </Form.Item>
-            <Form.Item name="name" label={t('employeePage.employeeName')}>
+            <Form.Item name="employee_name" label={t('employeePage.employeeName')}>
               <Input placeholder={t('employeePage.enterEmployeeName')} />
             </Form.Item>
-            <Form.Item name="project_name" label={t('employeePage.projectName')}>
+          {/**
+           * <Form.Item name="project_name" label={t('employeePage.projectName')}>
               <Input placeholder={t('employeePage.enterProjectName')} />
             </Form.Item>
+           */} 
             <Form.Item name="location_name" label={t('employeePage.workLocation')}>
               <Input placeholder={t('employeePage.enterWorkLocation')} />
             </Form.Item>
@@ -806,7 +809,7 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId, projectName }) => {
             <Form.Item labelCol={{ span: 8 }} label={t('employeePage.projectId')} name="project_id" hidden>
               <Input />
             </Form.Item>
-            <Form.Item labelCol={{ span: 8 }} label={t('employeePage.employeeName')} name="name" rules={[{ required: true, message: t('employeePage.enterEmployeeName') }]}>
+            <Form.Item labelCol={{ span: 8 }} label={t('employeePage.employeeName')} name="employee_name" rules={[{ required: true, message: t('employeePage.enterEmployeeName') }]}>
               <Input />
             </Form.Item>
             <Form.Item labelCol={{ span: 8 }} label={t('employeePage.employeeId')} name="employee_id" rules={[{ required: true, message: t('employeePage.enterEmployeeId') }]}>

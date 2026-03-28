@@ -253,9 +253,7 @@ type Employee struct {
 	ProjectID       int       `gorm:"column:project_id;default:0" json:"project_id"`                                // INTEGER default 0
 	EmployeeName    string    `gorm:"column:employee_name;not null" json:"employee_name"`                           // TEXT NOT NULL
 	Department      string    `gorm:"column:department" json:"department"`                                          // TEXT
-	Position        string    `gorm:"column:position" json:"position"`                                              // TEXT
-	HireDate        string    `gorm:"column:hire_date" json:"hire_date"`                                            // TEXT
-	LeaveDate       string    `gorm:"column:leave_date" json:"leave_date"`                                          // TEXT
+	Position        string    `gorm:"column:position" json:"position"`                                              // TEXT                                     // TEXT
 	Salary          float64   `gorm:"column:salary;default:0.00" json:"salary"`                                     // NUMERIC default 0.00
 	TaxStatus       float64   `gorm:"column:tax_status;default:0.00" json:"tax_status"`                             // NUMERIC default 0.00
 	IdCard          string    `gorm:"column:id_card;default:'000000000000000000'" json:"id_card"`                   // TEXT default
