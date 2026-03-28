@@ -14,7 +14,7 @@ import AboutPage from '../pages/AboutPage'
 import LicensePage from '../pages/LicensePage'
 import LoginPage from '../pages/LoginPage'
 import AuthProvider from '../components/AuthProvider'
-import LicenseProvider from '../components/LicenseProvider'
+// import LicenseProvider from '../components/LicenseProvider'
 
 // 包装lazy组件，返回一个组件
 // const WithSuspense = (Component: React.LazyExoticComponent<ComponentType<any>>) => {
