@@ -3,9 +3,11 @@ package handler
 import (
 	"net/http"
 	"strconv"
+	"strings"
+
+	"log/slog"
 
 	"github.com/gin-gonic/gin"
-	"log/slog"
 )
 
 // StringToInt converts a string to an integer, returns an error if conversion fails
@@ -21,6 +23,9 @@ func StringToInt(c *gin.Context, value string, fieldName string) (int, bool) {
 
 // StringToFloat64 converts a string to a float64, returns an error if conversion fails
 func StringToFloat64(c *gin.Context, value string, fieldName string) (float64, bool) {
+	if strings.Contains(value, ",") {
+		value = strings.ReplaceAll(value, ",", "")
+	}
 	floatValue, err := strconv.ParseFloat(value, 64)
 	if err != nil {
 		slog.Error("Failed to convert string to float64", "error", err, "field", fieldName, "value", value)

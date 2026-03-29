@@ -1148,7 +1148,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
             danger
             icon={<DeleteOutlined />}
             onClick={handleDeleteAll}
-            disabled={selectedRowKeys.length === 0}
+            // disabled={selectedRowKeys.length === 0}
             style={{ marginRight: 8 }}
           >
             {t('common.deleteAll')} 
