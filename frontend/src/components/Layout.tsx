@@ -1,7 +1,7 @@
 import { Layout, Menu, Select,  Dropdown, Avatar, Space } from 'antd'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useState, useEffect, useCallback } from 'react'
-import {  SettingOutlined, AppstoreOutlined,  UserOutlined, LogoutOutlined, DashboardOutlined, FolderOutlined } from '@ant-design/icons';
+import {   AppstoreOutlined,  UserOutlined, LogoutOutlined, DashboardOutlined, FolderOutlined } from '@ant-design/icons';
 // import { HomeOutlined, SettingOutlined, AppstoreOutlined, PieChartOutlined, AccountBookOutlined, InfoCircleOutlined, LockOutlined, MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, LogoutOutlined, DashboardOutlined, FolderOutlined } from '@ant-design/icons';
 
 import { useTranslation } from 'react-i18next'

@@ -7,7 +7,7 @@ import type { ColumnsType } from 'antd/es/table'
 import type { UploadProps } from 'antd'
 import dayjs from 'dayjs'
 
-import { getAttendanceRecords, addAttendanceRecord, updateAttendanceRecord, deleteAttendanceRecord, importAttendanceRecords, importSingleAttendanceRecord ,deleteAllAttendanceRecord} from '../api'
+import { getAttendanceRecords, addAttendanceRecord, updateAttendanceRecord, deleteAttendanceRecord, importAttendanceRecords, importSingleAttendanceRecord } from '../api'
 interface AttendancePageProps {
   projectId?: string
   projectName?: string
@@ -156,22 +156,22 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
   }
 
   // 批量删除
-  const handleDeleteAll = () => {
-    modal.confirm({
-      title: '确认删除',
-      content: `确定要删除当前月的记录吗？`,
-      onOk: async () => {
-        try {
-          await deleteAllAttendanceRecord(projectId,currentMonth)  
+  // const handleDeleteAll = () => {
+  //   modal.confirm({
+  //     title: '确认删除',
+  //     content: `确定要删除当前月的记录吗？`,
+  //     onOk: async () => {
+  //       try {
+  //         await deleteAllAttendanceRecord(projectId,currentMonth)  
 
-          messageApi.success('当前月全部删除成功')
-        } catch (error) {
-          console.error('当前月删除考勤记录失败:', error)
-          messageApi.error('删除失败，请稍后重试')
-        }
-      },
-    })
-  }
+  //         messageApi.success('当前月全部删除成功')
+  //       } catch (error) {
+  //         console.error('当前月删除考勤记录失败:', error)
+  //         messageApi.error('删除失败，请稍后重试')
+  //       }
+  //     },
+  //   })
+  // }
   
   // 处理导入成功后的刷新
   const handleImportSuccess = () => {

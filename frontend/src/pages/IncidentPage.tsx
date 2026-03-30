@@ -144,22 +144,22 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
   }
 
   // 批量删除
-    const handleDeleteAll = () => {
-      modal.confirm({
-        title: 'Delete All Records for Current Month',
-        content: `Are you sure you want to delete all records for ${currentMonth}?`,
-        onOk: async () => {
-          try {
-            await deleteAllIncidentRecords(projectId,currentMonth)  
+    // const handleDeleteAll = () => {
+    //   modal.confirm({
+    //     title: 'Delete All Records for Current Month',
+    //     content: `Are you sure you want to delete all records for ${currentMonth}?`,
+    //     onOk: async () => {
+    //       try {
+    //         await deleteAllIncidentRecords(projectId,currentMonth)  
   
-            messageApi.success('All records for current month deleted successfully')
-          } catch (error) {
-            console.error('Delete all incident records for current month failed:', error) 
-            messageApi.error('Delete failed, please try again later')
-          }
-        },
-      })
-    }
+    //         messageApi.success('All records for current month deleted successfully')
+    //       } catch (error) {
+    //         console.error('Delete all incident records for current month failed:', error) 
+    //         messageApi.error('Delete failed, please try again later')
+    //       }
+    //     },
+    //   })
+    // }
 
 
   // 加载员工列表
