@@ -39,7 +39,7 @@ import AuthProvider from '../components/AuthProvider'
 const RootRedirect = () => {
   const savedUser = sessionStorage.getItem('user')
   console.log('first check token:', savedUser)
-  return <Navigate to={savedUser ? '/app' : '/app/license'} replace />
+  return <Navigate to={savedUser ? '/app' : '/login'} replace />
 } 
 
 // 创建一个包装组件，用于包装所有需要认证和授权的路由
