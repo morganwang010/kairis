@@ -8,7 +8,7 @@ import type { UploadProps } from 'antd'
 import * as XLSX from 'xlsx'
 import dayjs from 'dayjs'
 // const { MonthPicker } = DatePicker;
-import { getIncidentRecords, addIncident, updateIncident, deleteIncident, importIncidentRecords, importSingleIncidentRecord,deleteAllIncidentRecords } from '../api/index'
+import { getIncidentRecords, addIncident, updateIncident, deleteIncident, importIncidentRecords, importSingleIncidentRecord } from '../api/index'
 import { getEmployees } from '../api/index'
 
 interface IncidentPageProps {
