@@ -37,7 +37,7 @@ import AuthProvider from '../components/AuthProvider'
 
 // 根路径重定向组件
 const RootRedirect = () => {
-  const savedUser = sessionStorage.getItem('savedUser1')
+  const savedUser = sessionStorage.getItem('user')
   console.log('first check token:', savedUser)
   return <Navigate to={savedUser ? '/app' : '/app/license'} replace />
 } 
