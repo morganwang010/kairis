@@ -195,39 +195,39 @@ const LayoutComponent = () => {
                       icon: <AppstoreOutlined />,
                       onClick: () => navigate('/app/settings'),
                     },
-                    {
-                      key: 'license',
-                      label: t('common.license'),
-                      icon: <AppstoreOutlined />,
-                      onClick: () => navigate('/app/license'),
-                    },
-                    {
-                      key: 'system',
-                      label: t('common.system'),
-                      icon: <SettingOutlined />,
-                      children: [
-                        {
-                          key: 'user',
-                          label: t('common.user'),
-                          onClick: () => navigate('/system/user'),
-                        },
-                        {
-                          key: 'role',
-                          label: t('common.role'),
-                          onClick: () => navigate('/system/role'),
-                        },
-                        {
-                          key: 'permission',
-                          label: t('common.permission'),
-                          onClick: () => navigate('/system/permission'),
-                        },
-                        {
-                          key: 'menu',
-                          label: t('common.menu'),
-                          onClick: () => navigate('/system/menu'),
-                        },
-                      ],
-                    },
+                    // {
+                    //   key: 'license',
+                    //   label: t('common.license'),
+                    //   icon: <AppstoreOutlined />,
+                    //   onClick: () => navigate('/app/license'),
+                    // },
+                    // {
+                    //   key: 'system',
+                    //   label: t('common.system'),
+                    //   icon: <SettingOutlined />,
+                    //   children: [
+                    //     {
+                    //       key: 'user',
+                    //       label: t('common.user'),
+                    //       onClick: () => navigate('/system/user'),
+                    //     },
+                    //     {
+                    //       key: 'role',
+                    //       label: t('common.role'),
+                    //       onClick: () => navigate('/system/role'),
+                    //     },
+                    //     {
+                    //       key: 'permission',
+                    //       label: t('common.permission'),
+                    //       onClick: () => navigate('/system/permission'),
+                    //     },
+                    //     {
+                    //       key: 'menu',
+                    //       label: t('common.menu'),
+                    //       onClick: () => navigate('/system/menu'),
+                    //     },
+                    //   ],
+                    // },
                   ]}
                 />
               </Sider>

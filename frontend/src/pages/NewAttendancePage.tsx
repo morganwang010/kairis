@@ -1142,7 +1142,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
           >
             {t('employeePage.batchDelete')} ({selectedRowKeys.length})
           </Button>
-
+{/* 
           <Button
             type="primary"
             danger
@@ -1152,7 +1152,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
             style={{ marginRight: 8 }}
           >
             {t('common.deleteAll')} 
-          </Button>
+          </Button> */}
         </div>
         
         <Table

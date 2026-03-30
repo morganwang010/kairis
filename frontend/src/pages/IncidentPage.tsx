@@ -889,16 +889,16 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
                   >
                     {t('employeePage.batchDelete')} ({selectedRowKeys.length})
                   </Button>
-                  <Button
+                  {/* <Button
                     type="primary"
                     danger
                     icon={<DeleteOutlined />}
                     onClick={handleDeleteAll}
-                    disabled={selectedRowKeys.length === 0}
+                    // disabled={selectedRowKeys.length === 0}
                     style={{ marginRight: 8 }}
                   >
                     {t('common.deleteAll')} 
-                  </Button>
+                  </Button> */}
                 </div>
         <Table 
           columns={columns} 
