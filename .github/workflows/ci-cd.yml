@@ -82,9 +82,9 @@ jobs:
             cd /data/nginx/
             chmod +x kairis-backend
             # 杀死旧进程，启动新进程
-            ps -ef | grep kairis-backend | grep -v grep | awk '{print $2}' | xargs kill -9 2>/dev/null || true
-            cd /data/nginx/ && nohup ./kairis-backend > server.log 2>&1 &  disown
-            echo "部署完成！"
+            #ps -ef | grep kairis-backend | grep -v grep | awk '{print $2}' | xargs kill -9 2>/dev/null || true
+            #cd /data/nginx/ && nohup ./kairis-backend > server.log 2>&1 &  disown
+            #echo "部署完成！"
             # 重启 nginx 服务
             cd /data/nginx/ && bash 1.sh  || true
             echo "重启nginx服务完成！"
