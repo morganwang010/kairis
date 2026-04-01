@@ -106,6 +106,11 @@ func (h *EmployeeHandler) Create(c *gin.Context) {
 }
 
 func (h *EmployeeHandler) Get(c *gin.Context) {
+	// 获取ProjectID
+	projectID, ok := StringToInt(c, c.Query("project_id"), "project_id")
+	if !ok {
+		return
+	}
 	// 获取三个查询参数
 	employeeID := c.Query("employee_id")
 	employeeName := c.Query("employee_name")
@@ -147,7 +152,7 @@ func (h *EmployeeHandler) Get(c *gin.Context) {
 		return
 	} else {
 		// 如果所有参数都为空，查询所有员工
-		employees, err = h.employeeService.List()
+		employees, err = h.employeeService.List(uint(projectID))
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
 			return
@@ -158,10 +163,15 @@ func (h *EmployeeHandler) Get(c *gin.Context) {
 }
 
 func (h *EmployeeHandler) List(c *gin.Context) {
+	// 获取ProjectID
+	projectID, ok := StringToInt(c, c.Query("project_id"), "project_id")
+	if !ok {
+		return
+	}
 	employeeID := c.Query("employee_id")
 	employeeName := c.Query("employee_name")
 	locationName := c.Query("location_name")
-	slog.Info("666Get employee by employee_id", "employee_id", employeeID)
+	slog.Info("666Get employee by project_id", "project_id", projectID)
 	var employee *model.Employee
 	var employees []model.Employee
 	var err error
@@ -195,7 +205,8 @@ func (h *EmployeeHandler) List(c *gin.Context) {
 		return
 	} else {
 		// 如果所有参数都为空，查询所有员工
-		employees, err = h.employeeService.List()
+		slog.Info("9999999999Get employee by project_id", "project_id", projectID)
+		employees, err = h.employeeService.List(uint(projectID))
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
 			return

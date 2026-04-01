@@ -2,6 +2,7 @@ package repository
 
 import (
 	"kairis/backend/internal/model"
+	"log/slog"
 
 	"gorm.io/gorm"
 )
@@ -26,9 +27,10 @@ func (r *EmployeeRepository) Get(id uint) (*model.Employee, error) {
 	return &employee, nil
 }
 
-func (r *EmployeeRepository) List() ([]model.Employee, error) {
+func (r *EmployeeRepository) List(projectID uint) ([]model.Employee, error) {
 	var employees []model.Employee
-	if err := r.db.Find(&employees).Error; err != nil {
+	slog.Info("5555 employee by project_id", "project_id", projectID)
+	if err := r.db.Where("project_id = ?", projectID).Find(&employees).Error; err != nil {
 		return nil, err
 	}
 	return employees, nil

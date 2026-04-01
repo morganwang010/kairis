@@ -3,6 +3,7 @@ package repository
 import (
 	"kairis/backend/internal/model"
 	"log/slog"
+	"strings"
 	"time"
 
 	"gorm.io/gorm"
@@ -256,6 +257,8 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 		if totalAcceptNoTax > 0 {
 			// 从税率表查询区间
 			var taxRates []model.TaxRates
+			// 将record.TaxType去掉空格
+			record.TaxType = strings.TrimSpace(record.TaxType)
 			if record.TaxType == "K/3" {
 				if err := r.db.Where("grade = ?", record.TaxType).Order("salary_min").Find(&taxRates).Error; err != nil {
 					return err
@@ -274,6 +277,9 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 					break
 				}
 			}
+			slog.Info("taxRates", "taxRates", taxRates)
+			slog.Info("taxRate", "taxRate", record.TaxType)
+			slog.Info("totalAcceptNoTax", "totalAcceptNoTax", totalAcceptNoTax)
 			slog.Info("tax rate", "rate", rate)
 			// 迭代计算税额
 			maxIterations := 100

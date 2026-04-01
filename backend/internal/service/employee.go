@@ -24,8 +24,8 @@ func (s *EmployeeService) Get(id uint) (*model.Employee, error) {
 	return s.employeeRepo.Get(id)
 }
 
-func (s *EmployeeService) List() ([]model.Employee, error) {
-	return s.employeeRepo.List()
+func (s *EmployeeService) List(projectID uint) ([]model.Employee, error) {
+	return s.employeeRepo.List(projectID)
 }
 
 func (s *EmployeeService) Update(employee *model.Employee) error {

@@ -49,10 +49,10 @@ const apiClient = request;
 // 员工相关API
 export const getEmployees = async (params?: {
   department?: string;
+  project_id?: string;
   position?: string;
   name?: string;
   employee_id?: string;
-  project_name?: string;
   location?: string;
   page?: number;
   page_size?: number;

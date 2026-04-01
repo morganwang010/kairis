@@ -912,12 +912,14 @@ const loadData = async () => {
     {
       title: t('newSalaryPage.joinDate'),
       dataIndex: 'join_date',
-      key: 'join_date'
+      key: 'join_date',
+     render: (text: string) => text !== "-" ? dayjs(text,'YYYY-MM-DD').format('YYYY-MM-DD') : '-'
     },
     {
       title: t('newSalaryPage.resignDate'),
       dataIndex: 'resign_date',
-      key: 'resign_date'
+      key: 'resign_date',
+     render: (text: string) => text !== "" ? dayjs(text,'YYYY-MM-DD').format('YYYY-MM-DD') : '-'
     },
     {
       title: t('newSalaryPage.position'),
