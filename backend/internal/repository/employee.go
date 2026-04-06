@@ -44,9 +44,9 @@ func (r *EmployeeRepository) Delete(id uint) error {
 	return r.db.Delete(&model.Employee{}, id).Error
 }
 
-func (r *EmployeeRepository) GetByEmployeeID(employeeID string) ([]model.Employee, error) {
+func (r *EmployeeRepository) GetByEmployeeID(employeeID string, projectID uint) ([]model.Employee, error) {
 	var employees []model.Employee
-	if err := r.db.Where("employee_id = ?", employeeID).Find(&employees).Error; err != nil {
+	if err := r.db.Where("employee_id = ? and project_id = ?", employeeID).Find(&employees).Error; err != nil {
 		return nil, err
 	}
 	return employees, nil

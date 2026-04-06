@@ -142,13 +142,16 @@ func (s *EmployeeService) ImportEmployee(req ImportEmployeeRequest) error {
 			DeleteFlag:      employee.DeleteFlag,
 		}
 
-		existingEmployee, err := s.employeeRepo.GetByEmployeeID(employee.EmployeeID)
+		existingEmployee, err := s.employeeRepo.GetByEmployeeID(employee.EmployeeID, uint(employee.ProjectID))
 		if err == nil && existingEmployee != nil {
 			employeeModel.ID = existingEmployee[0].ID
 			if err := s.employeeRepo.Update(employeeModel); err != nil {
 				return err
 			}
+			slog.Info("Update employee", "employee_id", employee.EmployeeID)
+			continue
 		} else {
+			slog.Info("Create employee", "employee_id", employee.EmployeeID)
 			if err := s.employeeRepo.Create(employeeModel); err != nil {
 				return err
 			}
