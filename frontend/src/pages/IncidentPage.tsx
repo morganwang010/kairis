@@ -9,7 +9,7 @@ import * as XLSX from 'xlsx'
 import dayjs from 'dayjs'
 // const { MonthPicker } = DatePicker;
 import { getIncidentRecords, addIncident, updateIncident, deleteIncident, importIncidentRecords, importSingleIncidentRecord } from '../api/index'
-import { getEmployees } from '../api/index'
+// import { getEmployees } from '../api/index'
 
 interface IncidentPageProps {
   projectId?: string
@@ -72,7 +72,7 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
   const [activeTabKey, setActiveTabKey] = useState('')
   const [importLoading, setImportLoading] = useState(false)
   const [singleImportLoading, setSingleImportLoading] = useState<{[key: string]: boolean}>({})
-  const [employees, setEmployees] = useState<{id: number; name: string}[]>([])
+  // const [employees, setEmployees] = useState<{id: number; name: string}[]>([])
   const [currentMonth, setCurrentMonth] = useState(dayjs().format('YYYY-MM'))
   const [modal, contextHolder] = Modal.useModal()
   const [messageApi, messageContextHolder] = message.useMessage();
@@ -163,31 +163,31 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
 
 
   // 加载员工列表
-  const loadEmployees = async () => {
-    try {
-      const empData = await getEmployees();
-      // 确保empData是一个数组
-      if (Array.isArray(empData)) {
-        setEmployees(empData.map((emp: any) => ({ id: emp.employee_id || emp.id, name: emp.name })));
-      } else if (empData && Array.isArray(empData.data)) {
-        // 如果empData是一个对象，且包含data数组
-        setEmployees(empData.data.map((emp: any) => ({ id: emp.employee_id || emp.id, name: emp.name })));
-      } else if (empData && Array.isArray(empData.list)) {
-        // 如果empData是一个对象，且包含list数组
-        setEmployees(empData.list.map((emp: any) => ({ id: emp.employee_id || emp.id, name: emp.name })));
-      } else {
-        console.error('Invalid employee data format:', empData);
-        setEmployees([]);
-      }
-      employees.forEach(emp => {
-        form.setFieldValue(`employee_name_${emp.id}`, emp.name)
-      })
-    } catch (error) {
-      console.error(t('incidentPage.loadEmployeesError'), error);
-      messageApi.error(t('incidentPage.loadEmployeesError'));
-      setEmployees([]);
-    }
-  }
+  // const loadEmployees = async () => {
+  //   try {
+  //     const empData = await getEmployees();
+  //     // 确保empData是一个数组
+  //     if (Array.isArray(empData)) {
+  //       setEmployees(empData.map((emp: any) => ({ id: emp.employee_id || emp.id, name: emp.name })));
+  //     } else if (empData && Array.isArray(empData.data)) {
+  //       // 如果empData是一个对象，且包含data数组
+  //       setEmployees(empData.data.map((emp: any) => ({ id: emp.employee_id || emp.id, name: emp.name })));
+  //     } else if (empData && Array.isArray(empData.list)) {
+  //       // 如果empData是一个对象，且包含list数组
+  //       setEmployees(empData.list.map((emp: any) => ({ id: emp.employee_id || emp.id, name: emp.name })));
+  //     } else {
+  //       console.error('Invalid employee data format:', empData);
+  //       setEmployees([]);
+  //     }
+  //     employees.forEach(emp => {
+  //       form.setFieldValue(`employee_name_${emp.id}`, emp.name)
+  //     })
+  //   } catch (error) {
+  //     console.error(t('incidentPage.loadEmployeesError'), error);
+  //     messageApi.error(t('incidentPage.loadEmployeesError'));
+  //     setEmployees([]);
+  //   }
+  // }
 
   // 加载偶发事件数据
   const loadIncidents = async () => {
@@ -247,7 +247,7 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
 
   // 根据projectId加载数据
   useEffect(() => {
-    loadEmployees();
+    // loadEmployees();
     loadIncidents();
   }, [projectId, currentMonth, currentPage, pageSize, filterValues])
 
