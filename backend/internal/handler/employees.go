@@ -125,7 +125,7 @@ func (h *EmployeeHandler) Get(c *gin.Context) {
 	if employeeID != "" {
 		// 如果 employee_id 不为空，使用它进行查询
 		slog.Info("Get employee by employee_id", "employee_id", employeeID)
-		employees, err = h.employeeService.GetByEmployeeID(employeeID)
+		employees, err = h.employeeService.GetByEmployeeID(employeeID, uint(projectID))
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
 			return
@@ -178,7 +178,7 @@ func (h *EmployeeHandler) List(c *gin.Context) {
 	if employeeID != "" {
 		// 如果 employee_id 不为空，使用它进行查询
 		slog.Info("Get employee by employee_id", "employee_id", employeeID)
-		employees, err = h.employeeService.GetByEmployeeID(employeeID)
+		employees, err = h.employeeService.GetByEmployeeID(employeeID, uint(projectID))
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
 			return

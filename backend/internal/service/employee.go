@@ -37,8 +37,8 @@ func (s *EmployeeService) Delete(id uint) error {
 }
 
 // GetByEmployeeID 根据员工ID查询
-func (s *EmployeeService) GetByEmployeeID(employeeID string) ([]model.Employee, error) {
-	return s.employeeRepo.GetByEmployeeID(employeeID)
+func (s *EmployeeService) GetByEmployeeID(employeeID string, projectID uint) ([]model.Employee, error) {
+	return s.employeeRepo.GetByEmployeeID(employeeID, projectID)
 }
 
 // GetByEmployeeName 根据员工姓名查询
