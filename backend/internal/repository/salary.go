@@ -32,6 +32,8 @@ type AttendanceWithEmployee struct {
 	FixAlw          float64 `gorm:"column:fix_alw"`
 	MealAlwDay      float64 `gorm:"column:meal_alw_day" json:"meal_alw_day"`
 	TranspAlwDay    float64 `gorm:"column:transp_alw_day" json:"transp_alw_day"`
+	MealAlwMonth    float64 `gorm:"column:meal_alw_month" json:"meal_alw_month"`
+	TranspAlwMonth  float64 `gorm:"column:transp_alw_month" json:"transp_alw_month"`
 	PulsaAlwDay     float64 `gorm:"column:pulsa_alw_day" json:"pulsa_alw_day"`
 	AttAlwDay       float64 `gorm:"column:att_alw_day" json:"att_alw_day"`
 	TaxType         string  `gorm:"column:tax_type" json:"tax_type"`
@@ -146,7 +148,7 @@ func (r *SalaryRepository) List(offset, limit int, month string, projectID int) 
 	}
 	slog.Info("List salaries", "offset", offset, "limit", limit, "total", total)
 	if err := r.db.Table("salaries as s").
-		Select(`s.*, e.employee_name, e.basic_salary, e.department, e.field_alw, e.housing_alw, e.position_alw, e.fix_alw, e.meal_alw_day, e.transp_alw_day, e.pulsa_alw_day, e.att_alw_day, e.tax_type, e.npwp, e.location_name, e.join_date, e.pulsa_alw_month, e.housing_alw_tetap, ir.leave_comp, ir.med_alw, ir.others, ir.religious_alw, ir.rapel_basic_salary, ir.rapel_jmstk_alw, ir.incentive_alw, ir.acting, ir.performance_alw, ir.trip_alw, ir.ot2_wages, ir.ot3_wages, ir.comp_phk, ir.tax_alw_phk, ir.absent_ded2, ir.incentive_ded, ir.loan_ded, ir.tax_ded_phk, ir.correct_add, ir.correct_sub, ir.mandah_alw, a.work, a.off, a.ot1, a.ew1, a.ew2, a.ew3, a.ew, a.unpresent,a.sick,a.standby,a.leave_replc,e.id_card,e.hierarchy_id,e.hierarchy_name,e.position,e.email,a.permission`).
+		Select(`s.*, e.employee_name, e.basic_salary, e.department, e.field_alw, e.housing_alw, e.position_alw, e.fix_alw, e.meal_alw_day, e.transp_alw_day, e.pulsa_alw_day, e.att_alw_day, e.tax_type, e.npwp, e.location_name, e.join_date, e.pulsa_alw_month, e.housing_alw_tetap, ir.leave_comp, ir.med_alw, ir.others, ir.religious_alw, ir.rapel_basic_salary, ir.rapel_jmstk_alw, ir.incentive_alw, ir.acting, ir.performance_alw, ir.trip_alw, ir.ot2_wages, ir.ot3_wages, ir.comp_phk, ir.tax_alw_phk, ir.absent_ded2, ir.incentive_ded, ir.loan_ded, ir.tax_ded_phk, ir.correct_add, ir.correct_sub, ir.mandah_alw, a.work, a.off, a.ot1, a.ew1, a.ew2, a.ew3, a.ew, a.unpresent,a.sick,a.standby,a.leave_replc,e.id_card,e.hierarchy_id,e.hierarchy_name,e.position,e.email,a.permission,e.meal_alw_month,e.transp_alw_month`).
 		Joins("LEFT JOIN attendances as a ON s.employee_id = a.employee_id AND s.month = a.month").
 		Joins("LEFT JOIN employees as e ON s.employee_id = e.employee_id").
 		Joins("LEFT JOIN incidents as ir ON s.employee_id = ir.employee_id AND s.month = ir.month").
@@ -250,7 +252,7 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 		absentDed1 := record.Unpresent / 30.0 * record.BasicSalary
 
 		// 计算税前总收入
-		totalAcceptNoTax := totalNetWages + record.HousingAlwTetap + record.PulsaAlwMonth + jmstkAlw + pensionAlw + ot1Wages + ew1Wages + ew2Wages + ew3Wages + mealAlw + transpAlw + askesBpjsAlw + pulsaAlw + attAlw + record.LeaveComp + record.MedAlw + record.Others + record.ReligiousAlw + record.RapelBasicSalary + record.RapelJmstkAlw + record.Acting + record.PerformanceAlw + record.TripAlw + record.MandahAlw + record.IncentiveAlw + record.Ot2Wages + record.Ot3Wages + record.CompPhk + record.TaxAlwPhk + record.CorrectAdd - record.CorrectSub - absentDed1 - record.AbsentDed2 - record.IncentiveDed - record.LoanDed - record.TaxDedPhk
+		totalAcceptNoTax := totalNetWages + record.HousingAlwTetap + record.PulsaAlwMonth + jmstkAlw + pensionAlw + ot1Wages + ew1Wages + ew2Wages + ew3Wages + mealAlw + transpAlw + askesBpjsAlw + pulsaAlw + attAlw + record.LeaveComp + record.MedAlw + record.Others + record.ReligiousAlw + record.RapelBasicSalary + record.RapelJmstkAlw + record.Acting + record.PerformanceAlw + record.TripAlw + record.MandahAlw + record.IncentiveAlw + record.Ot2Wages + record.Ot3Wages + record.CompPhk + record.TaxAlwPhk + record.CorrectAdd - record.CorrectSub - absentDed1 - record.AbsentDed2 - record.IncentiveDed - record.LoanDed - record.TaxDedPhk + record.MealAlwMonth + record.TranspAlwMonth
 
 		// 计算税额
 		taxAlwSalary := 0.0

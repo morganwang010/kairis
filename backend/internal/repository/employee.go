@@ -46,7 +46,7 @@ func (r *EmployeeRepository) Delete(id uint) error {
 
 func (r *EmployeeRepository) GetByEmployeeID(employeeID string, projectID uint) ([]model.Employee, error) {
 	var employees []model.Employee
-	if err := r.db.Where("employee_id = ? and project_id = ?", employeeID).Find(&employees).Error; err != nil {
+	if err := r.db.Where("employee_id = ? and project_id = ?", employeeID, projectID).Find(&employees).Error; err != nil {
 		return nil, err
 	}
 	return employees, nil

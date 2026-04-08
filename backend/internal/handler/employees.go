@@ -347,8 +347,11 @@ func (h *EmployeeHandler) Import(c *gin.Context) {
 			PositionAlw   string `json:"position_alw"`
 			FieldAlw      string `json:"field_alw"`
 			// FixAlw          string `json:"fix_alw"`
-			MealAlwDay      string `json:"meal_alw/day"`
-			TranspAlwDay    string `json:"transp_alw/day"`
+			MealAlwDay     string `json:"meal_alw/day"`
+			TranspAlwDay   string `json:"transp_alw/day"`
+			MealAlwMonth   string `json:"meal_alw/month"`
+			TranspAlwMonth string `json:"transp_alw/month"`
+
 			PulsaAlwDay     string `json:"pulsa_alw/day"`
 			AttAlwDay       string `json:"att_alw/day"`
 			TaxType         string `json:"tax_status"`
@@ -425,6 +428,16 @@ func (h *EmployeeHandler) Import(c *gin.Context) {
 		if !ok {
 			return
 		}
+		// 转换MealAlwMonth为float64类型
+		mealAlwMonth, ok := StringToFloat64(c, item.MealAlwMonth, "meal_alw_month")
+		if !ok {
+			return
+		}
+		// 转换TranspAlwMonth为float64类型
+		transpAlwMonth, ok := StringToFloat64(c, item.TranspAlwMonth, "transp_alw_month")
+		if !ok {
+			return
+		}
 		// 转换PulsaAlwDay为float64类型
 		pulsaAlwDay, ok := StringToFloat64(c, item.PulsaAlwDay, "pulsa_alw/day")
 		if !ok {
@@ -469,6 +482,8 @@ func (h *EmployeeHandler) Import(c *gin.Context) {
 			// FixAlw:          fixAlw,
 			MealAlwDay:      mealAlwDay,
 			TranspAlwDay:    transpAlwDay,
+			MealAlwMonth:    mealAlwMonth,
+			TranspAlwMonth:  transpAlwMonth,
 			PulsaAlwDay:     pulsaAlwDay,
 			AttAlwDay:       attAlwDay,
 			TaxType:         item.TaxType,

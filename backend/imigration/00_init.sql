@@ -147,6 +147,8 @@ CREATE TABLE IF NOT EXISTS employees (
     field_alw NUMERIC DEFAULT 0.00,
     fix_alw NUMERIC DEFAULT 0.00,
     meal_alw_day NUMERIC DEFAULT 0.00,
+    meal_alw_month NUMERIC DEFAULT 0.00,
+    transp_alw_month NUMERIC DEFAULT 0.00,
     transp_alw_day NUMERIC DEFAULT 0.00,
     pulsa_alw_day NUMERIC DEFAULT 0.00,
     att_alw_day NUMERIC DEFAULT 0.00,

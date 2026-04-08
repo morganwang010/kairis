@@ -1100,15 +1100,27 @@ const loadData = async () => {
       render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
     },
        {
-      title: t('newSalaryPage.mealAllowance'),
+      title: t('newSalaryPage.mealAllowanceDay'),
       dataIndex: 'meal_alw',
       key: 'meal_alw',
       render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
     },
     {
-      title: t('newSalaryPage.transportAllowance'),
+      title: t('newSalaryPage.transportAllowanceDay'),
       dataIndex: 'transp_alw',
       key: 'transp_alw',
+      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+    },
+    {
+      title: t('newSalaryPage.mealAllowanceMonth'),
+      dataIndex: 'meal_alw_month',
+      key: 'meal_alw_month',
+      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+    },
+    {
+      title: t('newSalaryPage.transportAllowanceMonth'),
+      dataIndex: 'transp_alw_month',
+      key: 'transp_alw_month',
       render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
     },
     {

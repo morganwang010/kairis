@@ -77,6 +77,8 @@ type ImportEmployeeItem struct {
 	FixAlw          float64 `json:"fix_alw"`
 	MealAlwDay      float64 `json:"meal_alw_day"`
 	TranspAlwDay    float64 `json:"transp_alw_day"`
+	MealAlwMonth    float64 `json:"meal_alw_month"`
+	TranspAlwMonth  float64 `json:"transp_alw_month"`
 	PulsaAlwDay     float64 `json:"pulsa_alw_day"`
 	AttAlwDay       float64 `json:"att_alw_day"`
 	TaxType         string  `json:"tax_status"`
@@ -133,6 +135,8 @@ func (s *EmployeeService) ImportEmployee(req ImportEmployeeRequest) error {
 			FixAlw:          employee.FixAlw,
 			MealAlwDay:      employee.MealAlwDay,
 			TranspAlwDay:    employee.TranspAlwDay,
+			MealAlwMonth:    employee.MealAlwMonth,
+			TranspAlwMonth:  employee.TranspAlwMonth,
 			PulsaAlwDay:     employee.PulsaAlwDay,
 			AttAlwDay:       employee.AttAlwDay,
 			TaxType:         employee.TaxType,
