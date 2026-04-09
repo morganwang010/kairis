@@ -351,7 +351,11 @@
     "enterLoanDeduction": "Enter loan deduction",
     "enterNetIncome": "Enter net income",
     "isCalculate": "Calculate",
-    "exportToExcel": "Export to Excel"
+    "exportToExcel": "Export to Excel",
+    "otHours": "OT_Hours",
+    "otWages": "OT_Wages",
+    "ewHours": "EW_Hours",
+    "ewWages": "EW_Wages"
   },
   "homePage": {
     "dashboard": "Dashboard",
@@ -548,7 +552,10 @@
     "dragFile": "Drag file here, or",
     "mandahAlw": "Mandah_Alw",
     "taxDedPhk": "Tax_Ded_Phk",
-    "exportToExcel": "Export to Excel"
+    "exportToExcel": "Export to Excel",
+    "mealAlwAdd": "Meal_Alw/Add",
+    "transpAlwAdd": "Transp_Alw/Add",
+    "ewDrv": "EW_Drv"
   },
   "employeePage": {
     "title": "Employee Management",
@@ -653,7 +660,8 @@
     "taxStatus": "Tax Status",
     "batchDelete": "Batch Delete",
     "confirmBatchDelete": "Are you sure to delete selected employees?",
-    "batchDeleteSuccess": "Batch Delete Success"
+    "batchDeleteSuccess": "Batch Delete Success",
+    "idStatus": "ID_Status"
   },
   "settingsPage": {
     "title": "System Settings",
@@ -795,7 +803,9 @@
     "confirmDeleteContent": "Are you sure delete this record?",
     "exportToExcel": "Export to Excel",
     "editFailed": "Edit failed",
-    "loadRecordsError": "Failed to load attendance records"
+    "loadRecordsError": "Failed to load attendance records",
+    "ot1Hours": "OT1_Hours",
+    "ewHours": "EW_Hours"
   },
   "salaryUploadPage": {
     "title": "Salary Import",

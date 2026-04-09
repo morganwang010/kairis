@@ -359,6 +359,7 @@ func (h *EmployeeHandler) Import(c *gin.Context) {
 			PulsaAlwMonth   string `json:"pulsa_alw/month"`
 			HousingAlwTetap string `json:"housing_alw/TJ_Tidak_Tetap"`
 			DeleteFlag      string `json:"delete_flag"`
+			IdStatus        string `json:"id_status"`
 		} `json:"records"`
 	}
 	// slog.Info("Before binding", "req", &req)

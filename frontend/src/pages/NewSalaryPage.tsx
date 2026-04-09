@@ -922,6 +922,11 @@ const loadData = async () => {
      render: (text: string) => text !== "" ? dayjs(text,'YYYY-MM-DD').format('YYYY-MM-DD') : '-'
     },
     {
+      title: t('employeePage.idStatus'),
+      dataIndex: 'id_status',
+      key: 'id_status'
+    },    
+    {
       title: t('newSalaryPage.position'),
       dataIndex: 'position',
       key: 'position'
@@ -972,26 +977,26 @@ const loadData = async () => {
       dataIndex: 'leave_replc',
       key: 'leave_replc'
     },
-          {
-      title: t('newSalaryPage.OT1'),
-      dataIndex: 'ot1',
-      key: 'ot1'
+    {
+      title: t('newAttendancePage.ot1Hours'),
+      dataIndex: 'ot1_hours',
+      key: 'ot1_hours'
     },
           {
-      title: t('newSalaryPage.EW1'),
-      dataIndex: 'ew1',
-      key: 'ew1'
+      title: t('newAttendancePage.ewHours'),
+      dataIndex: 'ew_hours',
+      key: 'ew_hours'
     },    
-    {
-      title: t('newSalaryPage.EW2'),
-      dataIndex: 'ew2',
-      key: 'ew2'
-    },    
-    {
-      title: t('newSalaryPage.EW3'),
-      dataIndex: 'ew3',
-      key: 'ew3'
-    },      
+    // {
+    //   title: t('newSalaryPage.EW2'),
+    //   dataIndex: 'ew2',
+    //   key: 'ew2'
+    // },    
+    // {
+    //   title: t('newSalaryPage.EW3'),
+    //   dataIndex: 'ew3',
+    //   key: 'ew3'
+    // },      
     {
       title: t('newSalaryPage.basicSalary'),
       dataIndex: 'basic_salary',
@@ -1053,52 +1058,52 @@ const loadData = async () => {
       render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
     },
  
-   {      title: t('newSalaryPage.overtimeHours'),      dataIndex: 'ot1_hour',      key: 'ot1_hour',      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+   {      title: t('newSalaryPage.otHours'),      dataIndex: 'ot_hours',      key: 'ot_hours',      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
     },
         {
-      title: t('newSalaryPage.overtimeWages'),
-      dataIndex: 'ot1_wages',
-      key: 'ot1_wages',
+      title: t('newSalaryPage.otWages'),
+      dataIndex: 'ot_wages',
+      key: 'ot_wages',
       render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
     },
-    {
-      title: t('newSalaryPage.extraWorkHours'),
-      dataIndex: 'ew1_hour',
-      key: 'ew1_hour',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
+    // {
+    //   title: t('newSalaryPage.extraWorkHours'),
+    //   dataIndex: 'ew1_hour',
+    //   key: 'ew1_hour',
+    //   render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+    // },
 
     {
-      title: t('newSalaryPage.extraWages'),
-      dataIndex: 'ew1_wages',
-      key: 'ew1_wages',
+      title: t('newSalaryPage.ewWages'),
+      dataIndex: 'ew_wages',
+      key: 'ew_wages',
       render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
     },
-       {
-      title: t('newSalaryPage.extraWorkHours2'),
-      dataIndex: 'ew2_hour',
-      key: 'ew2_hour',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('newSalaryPage.extraWages2'),
-      dataIndex: 'ew2_wages',
-      key: 'ew2_wages',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-       {
-      title: t('newSalaryPage.extraWorkHours3'),
-      dataIndex: 'ew3_hour',
-      key: 'ew3_hour',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
+    //    {
+    //   title: t('newSalaryPage.extraWorkHours2'),
+    //   dataIndex: 'ew2_hour',
+    //   key: 'ew2_hour',
+    //   render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+    // },
+    // {
+    //   title: t('newSalaryPage.extraWages2'),
+    //   dataIndex: 'ew2_wages',
+    //   key: 'ew2_wages',
+    //   render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+    // },
+    //    {
+    //   title: t('newSalaryPage.extraWorkHours3'),
+    //   dataIndex: 'ew3_hour',
+    //   key: 'ew3_hour',
+    //   render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+    // },
 
-    {
-      title: t('newSalaryPage.extraWages3'),
-      dataIndex: 'ew3_wages',
-      key: 'ew3_wages',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
+    // {
+    //   title: t('newSalaryPage.extraWages3'),
+    //   dataIndex: 'ew3_wages',
+    //   key: 'ew3_wages',
+    //   render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+    // },
        {
       title: t('newSalaryPage.mealAllowanceDay'),
       dataIndex: 'meal_alw',
@@ -1111,18 +1116,22 @@ const loadData = async () => {
       key: 'transp_alw',
       render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
     },
+     
     {
       title: t('newSalaryPage.mealAllowanceMonth'),
       dataIndex: 'meal_alw_month',
       key: 'meal_alw_month',
+      width: 120,
       render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
     },
     {
       title: t('newSalaryPage.transportAllowanceMonth'),
       dataIndex: 'transp_alw_month',
       key: 'transp_alw_month',
+      width: 120,
       render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
     },
+ 
     {
       title: t('newSalaryPage.taxAllowanceSalary'),
       dataIndex: 'tax_alw_salary',
@@ -1153,6 +1162,12 @@ const loadData = async () => {
       key: 'absent_ded',
       render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
     },
+    {
+      title: t('incidentPage.ewDrv'),
+      dataIndex: 'ew_drv',
+      key: 'ew_drv',
+      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+    },    
     {
       title: t('newSalaryPage.leaveCompensation'),
       dataIndex: 'leave_comp',
@@ -1220,17 +1235,29 @@ const loadData = async () => {
       render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
     },
     {
-      title: t('newSalaryPage.overtimeWages2'),
-      dataIndex: 'ot2_wages',
-      key: 'ot2_wages',
+      title: t('incidentPage.mealAlwAdd'),
+      dataIndex: 'meal_alw_add',
+      key: 'meal_alw_add',
       render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
     },
     {
-      title: t('newSalaryPage.overtimeWages3'),
-      dataIndex: 'ot3_wages',
-      key: 'ot3_wages',
+      title: t('incidentPage.transpAlwAdd'),
+      dataIndex: 'transp_alw_add',
+      key: 'transp_alw_add',
       render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
+    },        
+    // {
+    //   title: t('newSalaryPage.overtimeWages2'),
+    //   dataIndex: 'ot2_wages',
+    //   key: 'ot2_wages',
+    //   render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+    // },
+    // {
+    //   title: t('newSalaryPage.overtimeWages3'),
+    //   dataIndex: 'ot3_wages',
+    //   key: 'ot3_wages',
+    //   render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+    // },
     {
       title: t('newSalaryPage.phkCompensation'),
       dataIndex: 'comp_phk',

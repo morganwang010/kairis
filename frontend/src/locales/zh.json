@@ -349,7 +349,11 @@
     "employeeCount": "员工总数",
     "projectCount": "项目总数",
     "salaryOverview": "薪资概览",
-    "systemUsage": "系统使用情况"
+    "systemUsage": "系统使用情况",
+    "otHours": "加班时数",
+    "otWages": "加班工资",
+    "ewHours": "加班时数",
+    "ewWages": "加班工资"
   },
   "salarySlipPage": {
     "title": "工资条管理",
@@ -534,7 +538,10 @@
     "correctionSection": "修正部分",
     "projectName": "项目名称",
     "confirmDelete": "确定要删除这条记录吗？",
-    "exportToExcel": "导出到Excel"
+    "exportToExcel": "导出到Excel",
+    "mealAlwAdd": "伙食津贴/新增",
+    "transpAlwAdd": "交通津贴/新增",
+    "ewDrv": "司机补贴"
   },
   "employeeUploadPage": {
     "title": "员工信息导入",
@@ -683,7 +690,8 @@
     "batchDelete": "批量删除",
     "confirmBatchDelete": "确定删除选中的员工吗？",
     "batchDeleteSuccess": "批量删除成功",
-    "housingAllowanceTetap": "固定住房补助"
+    "housingAllowanceTetap": "固定住房补助",
+    "idStatus": "用工形式"
   },
   "settingsPage": {
     "title": "系统设置",
@@ -823,7 +831,9 @@
     "editAttendance": "编辑考勤",
     "addAttendance": "添加考勤",
     "editFailed": "编辑考勤失败",
-    "loadRecordsError": "加载考勤记录失败，请稍后重试"
+    "loadRecordsError": "加载考勤记录失败，请稍后重试",
+    "ot1Hours": "OT1时长",
+    "ewHours": "EW时长"
   },
   "salaryUploadPage": {
     "title": "薪资导入",

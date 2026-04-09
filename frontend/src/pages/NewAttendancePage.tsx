@@ -607,7 +607,9 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
           ew3: record.ew3 || 0,
           month: record.month,
           days: record.days || {} ,// 确保days字段存在
-          permission: record.permission || 0
+          permission: record.permission || 0,
+          ot1_hours: record.ot1_hours || 0,
+          ew_hours: record.ew_hours || 0,
         }))
         console.log('formattedAttendanceRecords', formattedRecords)
          setData(formattedRecords)
@@ -731,29 +733,41 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
         width: 100,
       },
       {
-        title: t('newAttendancePage.ot1'),
-        dataIndex: 'ot1',
-        key: 'ot1',
-        width: 100,
-      },
-       {
-        title: t('newAttendancePage.ew1'),
-        dataIndex: 'ew1',
-        key: 'ew1',
+        title: t('newAttendancePage.ot1Hours'),
+        dataIndex: 'ot1_hours',
+        key: 'ot1_hours',
         width: 100,
       },
       {
-        title: t('newAttendancePage.ew2'),
-        dataIndex: 'ew2',
-        key: 'ew2',
+        title: t('newAttendancePage.ewHours'),
+        dataIndex: 'ew_hours',
+        key: 'ew_hours',
         width: 100,
       },
-      {
-        title: t('newAttendancePage.ew3'),
-        dataIndex: 'ew3',
-        key: 'ew3',
-        width: 100,
-      },                 
+      // {
+      //   title: t('newAttendancePage.ot1'),
+      //   dataIndex: 'ot1',
+      //   key: 'ot1',
+      //   width: 100,
+      // },
+      //  {
+      //   title: t('newAttendancePage.ew1'),
+      //   dataIndex: 'ew1',
+      //   key: 'ew1',
+      //   width: 100,
+      // },
+      // {
+      //   title: t('newAttendancePage.ew2'),
+      //   dataIndex: 'ew2',
+      //   key: 'ew2',
+      //   width: 100,
+      // },
+      // {
+      //   title: t('newAttendancePage.ew3'),
+      //   dataIndex: 'ew3',
+      //   key: 'ew3',
+      //   width: 100,
+      // },                 
     ]
 
     

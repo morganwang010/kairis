@@ -140,6 +140,7 @@ CREATE TABLE IF NOT EXISTS employees (
     hierarchy_name TEXT,
     join_date TIMESTAMP ,
     resign_date TIMESTAMP ,
+    id_status TEXT default '',
     email TEXT default '123@123.com',
     basic_salary NUMERIC DEFAULT 0.00,
     housing_alw NUMERIC DEFAULT 0.00,
@@ -224,6 +225,9 @@ CREATE TABLE IF NOT EXISTS salaries (
   mandah_alw NUMERIC DEFAULT 0.00,
   is_calculate INTEGER DEFAULT 1,
   delete_flag INTEGER DEFAULT 0,
+  ot_hours NUMERIC DEFAULT 0,
+  ot_wages NUMERIC DEFAULT 0.00,
+  ew_wages NUMERIC DEFAULT 0.00,
   UNIQUE (project_id, employee_id, month)
 );
 
@@ -303,6 +307,8 @@ CREATE TABLE attendances (
     leave_replc NUMERIC DEFAULT 0,
     unpresent NUMERIC DEFAULT 0,
     total_days INTEGER DEFAULT 0,
+    ot1_hours NUMERIC DEFAULT 0,
+    ew_hours NUMERIC DEFAULT 0,
     UNIQUE (employee_id, month, project_id)
 );
 
@@ -395,6 +401,9 @@ CREATE TABLE incidents (
     update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     tax_ded_phk NUMERIC DEFAULT 0.00,
     mandah_alw NUMERIC default 0.00,
+    meal_alw_add NUMERIC default 0.00,
+    transp_alw_add NUMERIC default 0.00,
+    ew_drv NUMERIC default 0.00,
     UNIQUE (employee_id, project_id, month)
 );
 

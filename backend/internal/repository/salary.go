@@ -43,6 +43,7 @@ type AttendanceWithEmployee struct {
 	PulsaAlwMonth   float64 `gorm:"column:pulsa_alw_month" json:"pulsa_alw_month"`
 	HousingAlwTetap float64 `gorm:"column:housing_alw_tetap" json:"housing_alw_tetap"`
 	LeaveComp       float64 `gorm:"column:leave_comp" json:"leave_comp"`
+	IdStatus        string  `gorm:"column:id_status" json:"id_status"`
 }
 
 type AttendanceWithEmployeeAndIncident struct {
@@ -117,6 +118,13 @@ type AttendanceWithEmployeeAndIncident struct {
 	TotalNetWages    float64   `gorm:"column:total_net_wages;default:0.00" json:"total_net_wages"`
 	SalarySlipStatus string    `gorm:"column:salary_slip_status;default:'0'" json:"salary_slip_status"`
 	IsCalculate      int       `gorm:"column:is_calculate;default:1" json:"is_calculate"`
+	MealAlwAdd       float64   `gorm:"column:meal_alw_add;default:0.00" json:"meal_alw_add"`
+	TranspAlwAdd     float64   `gorm:"column:transp_alw_add;default:0.00" json:"transp_alw_add"`
+	EwDrv            float64   `gorm:"column:ew_drv_add;default:0.00" json:"ew_drv"`
+	Ot1Hours         float64   `gorm:"column:ot1_hours;default:0.00" json:"ot1_hours"`
+	OtHours          float64   `gorm:"column:ot_hours;default:0.00" json:"ot_hours"`
+	OtWages          float64   `gorm:"column:ot_wages;default:0.00" json:"ot_wages"`
+	EwWages          float64   `gorm:"column:ew_wages;default:0.00" json:"ew_wages"`
 }
 
 func NewSalaryRepository(db *gorm.DB) *SalaryRepository {
@@ -148,7 +156,7 @@ func (r *SalaryRepository) List(offset, limit int, month string, projectID int) 
 	}
 	slog.Info("List salaries", "offset", offset, "limit", limit, "total", total)
 	if err := r.db.Table("salaries as s").
-		Select(`s.*, e.employee_name, e.basic_salary, e.department, e.field_alw, e.housing_alw, e.position_alw, e.fix_alw, e.meal_alw_day, e.transp_alw_day, e.pulsa_alw_day, e.att_alw_day, e.tax_type, e.npwp, e.location_name, e.join_date, e.pulsa_alw_month, e.housing_alw_tetap, ir.leave_comp, ir.med_alw, ir.others, ir.religious_alw, ir.rapel_basic_salary, ir.rapel_jmstk_alw, ir.incentive_alw, ir.acting, ir.performance_alw, ir.trip_alw, ir.ot2_wages, ir.ot3_wages, ir.comp_phk, ir.tax_alw_phk, ir.absent_ded2, ir.incentive_ded, ir.loan_ded, ir.tax_ded_phk, ir.correct_add, ir.correct_sub, ir.mandah_alw, a.work, a.off, a.ot1, a.ew1, a.ew2, a.ew3, a.ew, a.unpresent,a.sick,a.standby,a.leave_replc,e.id_card,e.hierarchy_id,e.hierarchy_name,e.position,e.email,a.permission,e.meal_alw_month,e.transp_alw_month`).
+		Select(`s.*, e.employee_name, e.basic_salary, e.department, e.field_alw, e.housing_alw, e.position_alw, e.fix_alw, e.meal_alw_day, e.transp_alw_day, e.pulsa_alw_day, e.att_alw_day, e.tax_type, e.npwp, e.location_name, e.join_date, e.pulsa_alw_month, e.housing_alw_tetap, ir.leave_comp, ir.med_alw, ir.others, ir.religious_alw, ir.rapel_basic_salary, ir.rapel_jmstk_alw, ir.incentive_alw, ir.acting, ir.performance_alw, ir.trip_alw, ir.ot2_wages, ir.ot3_wages, ir.comp_phk, ir.tax_alw_phk, ir.absent_ded2, ir.incentive_ded, ir.loan_ded, ir.tax_ded_phk, ir.correct_add, ir.correct_sub, ir.mandah_alw, a.work, a.off, a.ot1, a.ew1, a.ew2, a.ew3, a.ew, a.unpresent,a.sick,a.standby,a.leave_replc,e.id_card,e.hierarchy_id,e.hierarchy_name,e.position,e.email,a.permission,e.meal_alw_month,e.transp_alw_month,e.id_status,ir.meal_alw_add,ir.transp_alw_add,a.ot1_hours,a.ew_hours`).
 		Joins("LEFT JOIN attendances as a ON s.employee_id = a.employee_id AND s.month = a.month").
 		Joins("LEFT JOIN employees as e ON s.employee_id = e.employee_id").
 		Joins("LEFT JOIN incidents as ir ON s.employee_id = ir.employee_id AND s.month = ir.month").
@@ -187,7 +195,7 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 
 	var attendanceRecords []AttendanceWithEmployeeAndIncident
 	if err := r.db.Table("attendances as a").
-		Select(`a.*, e.employee_name, e.basic_salary, e.department, e.field_alw, e.housing_alw, e.position_alw, e.fix_alw, e.meal_alw_day, e.transp_alw_day, e.pulsa_alw_day, e.att_alw_day, e.tax_type, e.npwp, e.location_name, e.join_date, e.pulsa_alw_month, e.housing_alw_tetap, ir.leave_comp, ir.med_alw, ir.others, ir.religious_alw, ir.rapel_basic_salary, ir.rapel_jmstk_alw, ir.incentive_alw, ir.acting, ir.performance_alw, ir.trip_alw, ir.ot2_wages, ir.ot3_wages, ir.comp_phk, ir.tax_alw_phk, ir.absent_ded2, ir.incentive_ded, ir.loan_ded, ir.tax_ded_phk, ir.correct_add, ir.correct_sub, ir.mandah_alw`).
+		Select(`a.*, e.employee_name, e.basic_salary, e.department, e.field_alw, e.housing_alw, e.position_alw, e.fix_alw, e.meal_alw_day, e.transp_alw_day, e.pulsa_alw_day, e.att_alw_day, e.tax_type, e.npwp, e.location_name, e.join_date, e.pulsa_alw_month, e.housing_alw_tetap, ir.leave_comp, ir.med_alw, ir.others, ir.religious_alw, ir.rapel_basic_salary, ir.rapel_jmstk_alw, ir.incentive_alw, ir.acting, ir.performance_alw, ir.trip_alw, ir.ot2_wages, ir.ot3_wages, ir.comp_phk, ir.tax_alw_phk, ir.absent_ded2, ir.incentive_ded, ir.loan_ded, ir.tax_ded_phk, ir.correct_add, ir.correct_sub, ir.mandah_alw,e.meal_alw_month,e.transp_alw_month,ir.meal_alw_add,ir.transp_alw_add,ir.ew_drv`).
 		Joins("LEFT JOIN employees as e ON a.employee_id = e.employee_id").
 		Joins("LEFT JOIN incidents as ir ON a.employee_id = ir.employee_id AND a.month = ir.month").
 		Where("a.month = ? AND a.project_id = ?", month, projectID).
@@ -227,19 +235,27 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 		}
 
 		// 计算加班时长和工资
-		ot1Hour := record.Ot1 * coefficient.COtHour1
-		ot1Wages := (ot1Hour / coefficient.COtWages1) * totalNetWages
+		otHours := float64(record.Work)*7.5 + record.Ot1Hours
+		// ot1Hour := record.Ot1 * coefficient.COtHour1
+		// ot1Wages := (ot1Hour / coefficient.COtWages1) * totalNetWages
 
-		ew1Hour := record.Ew1 * coefficient.CEwHour1
-		ew1Wages := (ew1Hour / coefficient.CEwWages1) * totalNetWages
+		// ew1Hour := record.Ew1 * coefficient.CEwHour1
+		// ew1Wages := (ew1Hour / coefficient.CEwWages1) * totalNetWages
 
-		ew2Hour := record.Ew2 * coefficient.CEwHour2
-		ew2Wages := (ew2Hour / coefficient.CEwWages2 / coefficient.CEwHour2) * totalNetWages
+		// ew2Hour := record.Ew2 * coefficient.CEwHour2
+		// ew2Wages := (ew2Hour / coefficient.CEwWages2 / coefficient.CEwHour2) * totalNetWages
 
-		ew3Hour := record.Ew3 * coefficient.CEwHour3
-		ew3Wages := (ew3Hour / coefficient.CEwWages3 / coefficient.CEwHour2) * totalNetWages
+		// ew3Hour := record.Ew3 * coefficient.CEwHour3
+		// ew3Wages := (ew3Hour / coefficient.CEwWages3 / coefficient.CEwHour2) * totalNetWages
+		otWages := otHours / coefficient.CEwWages1 * totalNetWages
+		//
+		ewWages := 0.0
+		if record.IdStatus == "nst" {
+			ewWages = record.EwHours / coefficient.CEwWages1 * totalNetWages
+		} else {
+			ewWages = (record.EwHours / coefficient.CEwWages2 / coefficient.CEwHour2) * totalNetWages
+		}
 
-		// 计算工作日数
 		workDays := float64(record.Work) + record.Ew
 
 		// 计算各项补助
@@ -252,7 +268,7 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 		absentDed1 := record.Unpresent / 30.0 * record.BasicSalary
 
 		// 计算税前总收入
-		totalAcceptNoTax := totalNetWages + record.HousingAlwTetap + record.PulsaAlwMonth + jmstkAlw + pensionAlw + ot1Wages + ew1Wages + ew2Wages + ew3Wages + mealAlw + transpAlw + askesBpjsAlw + pulsaAlw + attAlw + record.LeaveComp + record.MedAlw + record.Others + record.ReligiousAlw + record.RapelBasicSalary + record.RapelJmstkAlw + record.Acting + record.PerformanceAlw + record.TripAlw + record.MandahAlw + record.IncentiveAlw + record.Ot2Wages + record.Ot3Wages + record.CompPhk + record.TaxAlwPhk + record.CorrectAdd - record.CorrectSub - absentDed1 - record.AbsentDed2 - record.IncentiveDed - record.LoanDed - record.TaxDedPhk + record.MealAlwMonth + record.TranspAlwMonth
+		totalAcceptNoTax := totalNetWages + record.HousingAlwTetap + record.PulsaAlwMonth + jmstkAlw + pensionAlw + otWages + ewWages + mealAlw + transpAlw + askesBpjsAlw + pulsaAlw + attAlw + record.LeaveComp + record.MedAlw + record.Others + record.ReligiousAlw + record.RapelBasicSalary + record.RapelJmstkAlw + record.Acting + record.PerformanceAlw + record.TripAlw + record.MandahAlw + record.IncentiveAlw + record.MealAlwAdd + record.TranspAlwAdd + record.CompPhk + record.TaxAlwPhk + record.CorrectAdd + record.EwDrv - record.CorrectSub - absentDed1 - record.AbsentDed2 - record.IncentiveDed - record.LoanDed - record.TaxDedPhk + record.MealAlwMonth + record.TranspAlwMonth
 
 		// 计算税额
 		taxAlwSalary := 0.0
@@ -350,7 +366,7 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 
 		// 5. 插入或更新薪资记录
 		var existingSalary model.Salaries
-		result := r.db.Where("employee_id = ? AND month = ? AND is_calculate = 1", record.EmployeeID, month).First(&existingSalary)
+		result := r.db.Where("employee_id = ? AND month = ? AND project_id = ? AND is_calculate = 1", record.EmployeeID, month, record.ProjectID).First(&existingSalary)
 
 		if result.Error == nil {
 			// 更新现有记录
@@ -358,7 +374,7 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 			existingSalary.JmstkAlw = jmstkAlw
 			existingSalary.PensionAlw = pensionAlw
 			existingSalary.AskesBpjsAlw = askesBpjsAlw
-			existingSalary.Ot1Wages = ot1Wages
+			existingSalary.OtWages = otWages
 			existingSalary.MealAlw = mealAlw
 			existingSalary.TranspAlw = transpAlw
 			existingSalary.PulsaAlw = pulsaAlw
@@ -386,13 +402,13 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 			existingSalary.CorrectAdd = record.CorrectAdd
 			existingSalary.CorrectSub = record.CorrectSub
 			existingSalary.MandahAlw = record.MandahAlw
-			existingSalary.Ot1Hour = ot1Hour
-			existingSalary.Ew1Hour = ew1Hour
-			existingSalary.Ew1Wages = ew1Wages
-			existingSalary.Ew2Hour = ew2Hour
-			existingSalary.Ew2Wages = ew2Wages
-			existingSalary.Ew3Hour = ew3Hour
-			existingSalary.Ew3Wages = ew3Wages
+			existingSalary.OtHours = otHours
+			// existingSalary.Ew1Hour = ew1Hour
+			// existingSalary.Ew1Wages = ew1Wages
+			// existingSalary.Ew2Hour = ew2Hour
+			// existingSalary.Ew2Wages = ew2Wages
+			// existingSalary.Ew3Hour = ew3Hour
+			// existingSalary.Ew3Wages = ew3Wages
 			existingSalary.ReligiousAlw = record.ReligiousAlw
 			existingSalary.RapelBasicSalary = record.RapelBasicSalary
 			existingSalary.Acting = record.Acting
@@ -413,6 +429,7 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 			existingSalary.PensionDed = pensionDed
 			existingSalary.TaxDedSalary = taxDedSalary
 			existingSalary.AskesBpjsDed = askesBpjsDed
+			existingSalary.EwWages = ewWages
 			// existingSalary.LeaveComp = record.LeaveComp
 
 			if err := r.db.Save(&existingSalary).Error; err != nil {
@@ -421,14 +438,15 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 		} else {
 			// 插入新记录
 			newSalary := model.Salaries{
-				Month:            month,
-				ProjectID:        projectID,
-				EmployeeID:       record.EmployeeID,
-				BasicSalary:      record.BasicSalary,
-				JmstkAlw:         jmstkAlw,
-				PensionAlw:       pensionAlw,
-				AskesBpjsAlw:     askesBpjsAlw,
-				Ot1Wages:         ot1Wages,
+				Month:        month,
+				ProjectID:    projectID,
+				EmployeeID:   record.EmployeeID,
+				BasicSalary:  record.BasicSalary,
+				JmstkAlw:     jmstkAlw,
+				PensionAlw:   pensionAlw,
+				AskesBpjsAlw: askesBpjsAlw,
+				OtWages:      otWages,
+				// EwWages:          ewWages,
 				MealAlw:          mealAlw,
 				TranspAlw:        transpAlw,
 				PulsaAlw:         pulsaAlw,
@@ -456,13 +474,14 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 				CorrectAdd:       record.CorrectAdd,
 				CorrectSub:       record.CorrectSub,
 				MandahAlw:        record.MandahAlw,
-				Ew1Wages:         ew1Wages,
-				Ew2Wages:         ew2Wages,
-				Ew3Wages:         ew3Wages,
-				Ot1Hour:          ot1Hour,
-				Ew1Hour:          ew1Hour,
-				Ew2Hour:          ew2Hour,
-				Ew3Hour:          ew3Hour,
+				OtHours:          otHours,
+				// Ew1Wages:         ew1Wages,
+				// Ew2Wages:         ew2Wages,
+				// Ew3Wages:         ew3Wages,
+				// Ot1Hour:          ot1Hour,
+				// Ew1Hour:          ew1Hour,
+				// Ew2Hour:          ew2Hour,
+				// Ew3Hour:          ew3Hour,
 				ReligiousAlw:     record.ReligiousAlw,
 				RapelBasicSalary: record.RapelBasicSalary,
 				Acting:           record.Acting,
@@ -478,6 +497,7 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 				HousingAlwTetap:  record.HousingAlwTetap,
 				RapelJmstkAlw:    record.RapelJmstkAlw,
 				// LeaveComp:        record.LeaveComp,
+				EwWages: ewWages,
 			}
 
 			if err := r.db.Create(&newSalary).Error; err != nil {

@@ -644,6 +644,7 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId, projectName }) => {
     { title: t('employeePage.workLocation'), dataIndex: 'location_name', key: 'location_name', width: 150 },
     { title: t('employeePage.hireDate'), dataIndex: 'join_date', key: 'join_date', width: 120, render: (text: string) => text !== "-" ? dayjs(text,'YYYY-MM-DD').format('YYYY-MM-DD') : '-' },
     { title: t('employeePage.resignDate'), dataIndex: 'resign_date', key: 'resign_date', width: 120, render: (text: string) => text !== "0001-01-01T00:00:00Z" ? dayjs(text,'YYYY-MM-DD').format('YYYY-MM-DD') : '-' },
+    { title: t('employeePage.idStatus'), dataIndex: 'id_status', key: 'id_status', width: 120 },
     { title: t('employeePage.position'), dataIndex: 'position', key: 'position', width: 120 },
     { title: t('employeePage.email'), dataIndex: 'email', key: 'email', width: 180 },
     { title: t('employeePage.basicSalary'), dataIndex: 'basic_salary', key: 'basic_salary', width: 120, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
