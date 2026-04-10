@@ -478,10 +478,6 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId, projectName }) => {
           item[key] = item[key].toString();
         });
       });
-      // 使用importEmployeeRecords API函数替代直接的fetch调用
-      // importData.push({
-      //   project_id: projectId
-      // });
       try {
         await importEmployeeRecords(importData);
         messageApi.success(t('employeePage.importAllSuccess', { count: importData.length }));

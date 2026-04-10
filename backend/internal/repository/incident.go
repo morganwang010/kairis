@@ -2,6 +2,7 @@ package repository
 
 import (
 	"kairis/backend/internal/model"
+	"log/slog"
 
 	"gorm.io/gorm"
 )
@@ -58,8 +59,20 @@ func (r *IncidentRepository) List(offset, limit int, projectID, month string) ([
 
 func (r *IncidentRepository) Update(incident *model.Incidents) error {
 	return r.db.Save(incident).Error
+
 }
 
 func (r *IncidentRepository) Delete(id uint) error {
 	return r.db.Delete(&model.Incidents{}, id).Error
+}
+func (r *IncidentRepository) GetByEmployeeIDAndMonth(employeeID, month string, projectID int) (*model.Incidents, error) {
+	var incident model.Incidents
+	slog.Info("Searching for incident", "employee_id", employeeID, "project_id", projectID, "month", month)
+	err := r.db.Where("employee_id = ? AND month = ? AND project_id = ?", employeeID, month, projectID).First(&incident).Error
+	if err != nil {
+		incident = model.Incidents{}
+		slog.Error("Failed to find incident", "error", err, "employee_id", employeeID, "project_id", projectID, "month", month)
+		return &incident, nil
+	}
+	return &incident, nil
 }

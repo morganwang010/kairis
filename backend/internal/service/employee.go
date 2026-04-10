@@ -86,6 +86,7 @@ type ImportEmployeeItem struct {
 	PulsaAlwMonth   float64 `json:"pulsa_alw_month"`
 	HousingAlwTetap float64 `json:"housing_alw_tetap"`
 	DeleteFlag      int     `json:"delete_flag"`
+	IdStatus        string  `json:"id_status"`
 }
 
 func DMYToYMD(dmy string) string {
@@ -98,9 +99,9 @@ func (s *EmployeeService) ImportEmployee(req ImportEmployeeRequest) error {
 		// 解析日期字符串为 time.Time 类型
 		var joinDate, resignDate time.Time
 		var err error
-		slog.Info("JoinDate222", "join_date", employee.JoinDate)
+		// slog.Info("JoinDate222", "join_date", employee.JoinDate)
 		if employee.JoinDate != "" {
-			slog.Info("JoinDate", "join_date", employee.JoinDate)
+			// slog.Info("JoinDate", "join_date", employee.JoinDate)
 			joinDate, err = time.Parse("2006-01-02", DMYToYMD(employee.JoinDate))
 			if err != nil {
 				return fmt.Errorf("invalid join_date format: %v", err)
@@ -113,6 +114,7 @@ func (s *EmployeeService) ImportEmployee(req ImportEmployeeRequest) error {
 				return fmt.Errorf("invalid resign_date format: %v", err)
 			}
 		}
+		slog.Info("Import employee", "id_status", employee.IdStatus)
 
 		employeeModel := &model.Employee{
 			EmployeeID:      employee.EmployeeID,
@@ -144,6 +146,7 @@ func (s *EmployeeService) ImportEmployee(req ImportEmployeeRequest) error {
 			PulsaAlwMonth:   employee.PulsaAlwMonth,
 			HousingAlwTetap: employee.HousingAlwTetap,
 			DeleteFlag:      employee.DeleteFlag,
+			IdStatus:        employee.IdStatus,
 		}
 
 		existingEmployee, err := s.employeeRepo.GetByEmployeeID(employee.EmployeeID, uint(employee.ProjectID))

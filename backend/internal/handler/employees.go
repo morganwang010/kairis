@@ -492,6 +492,7 @@ func (h *EmployeeHandler) Import(c *gin.Context) {
 			PulsaAlwMonth:   pulsaAlwMonth,
 			HousingAlwTetap: housingAlwTetap,
 			DeleteFlag:      deleteFlag,
+			IdStatus:        item.IdStatus,
 		}
 	}
 

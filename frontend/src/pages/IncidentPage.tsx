@@ -435,7 +435,10 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
           correct_add: trimmedRecord['Correct_Add'] || trimmedRecord['correct_add'] || "0",
           correct_sub: trimmedRecord['Correct_Sub'] || trimmedRecord['correct_sub'] || "0",
           tax_ded_phk: trimmedRecord['Tax_Ded_Phk'] || trimmedRecord['tax_ded_phk'] || "0",
-          mandah_alw: trimmedRecord['Mandah_Alw'] || trimmedRecord['mandah_alw'] || "0"
+          mandah_alw: trimmedRecord['Mandah_Alw'] || trimmedRecord['mandah_alw'] || "0",
+          meal_alw_add: trimmedRecord['Meal_Alw/Add'] || trimmedRecord['meal_alw_add'] || "0",
+          transp_alw_add: trimmedRecord['Transp_Alw/Add'] || trimmedRecord['transp_alw_add'] || "0",
+          ew_drv: trimmedRecord['Ew_Drv'] || trimmedRecord['ew_drv'] || "0",
         }
       }).filter(record => record.employee_id)
       

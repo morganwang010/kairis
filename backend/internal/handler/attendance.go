@@ -343,7 +343,7 @@ func (h *AttendanceHandler) Import(c *gin.Context) {
 	}
 
 	// 记录请求体内容
-	slog.Info("Received request body", "body", string(body))
+	// slog.Info("Received request body", "body", string(body))
 
 	// 重置请求体，以便后续的ShouldBindJSON可以读取
 	c.Request.Body = io.NopCloser(bytes.NewBuffer(body))
@@ -400,10 +400,12 @@ func (h *AttendanceHandler) Import(c *gin.Context) {
 			LeaveReplc string `json:"leave_replc"`
 			Unpresent  string `json:"unpresent"`
 			TotalDays  string `json:"total_days"`
+			Ot1Hours   string `json:"ot1_hours"`
+			EwHours    string `json:"ew_hours"`
 		} `json:"records"`
 	}
 
-	slog.Info("Before binding", "req", &req)
+	// slog.Info("Before binding", "req", &req)
 	if err := c.ShouldBindJSON(&req); err != nil {
 		slog.Error("Failed to bind JSON", "error", err)
 		c.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": err.Error()})
@@ -502,6 +504,14 @@ func (h *AttendanceHandler) Import(c *gin.Context) {
 		if !ok {
 			return
 		}
+		ot1Hours, ok := StringToFloat64(c, item.Ot1Hours, "ot1_hours")
+		if !ok {
+			return
+		}
+		ewHours, ok := StringToFloat64(c, item.EwHours, "ew_hours")
+		if !ok {
+			return
+		}
 
 		importReq.Attendances[i] = service.ImportAttendanceItem{
 			EmployeeID: item.EmployeeID,
@@ -553,6 +563,8 @@ func (h *AttendanceHandler) Import(c *gin.Context) {
 			Ot3:        ot3,
 			LeaveReplc: leaveReplc,
 			Unpresent:  unpresent,
+			Ot1Hours:   ot1Hours,
+			EwHours:    ewHours,
 			// TotalDays:  item.TotalDays,
 		}
 	}

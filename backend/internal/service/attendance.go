@@ -61,6 +61,8 @@ type ImportAttendanceItem struct {
 	LeaveReplc float64 `json:"leave_replc"`
 	Unpresent  float64 `json:"unpresent"`
 	TotalDays  int     `json:"total_days"`
+	Ot1Hours   float64 `json:"ot1_hours"`
+	EwHours    float64 `json:"ew_hours"`
 }
 
 type AttendanceService struct {
@@ -98,15 +100,16 @@ func (s *AttendanceService) DeleteAttendance(id uint) error {
 }
 
 func (s *AttendanceService) ImportAttendance(req ImportAttendanceRequest) error {
-	slog.Info("Importing attendances", "count", len(req.Attendances))
+	// slog.Info("Importing attendances", "count", len(req.Attendances))
 	for _, attendance := range req.Attendances {
-		slog.Info("Importing attendance", "employee_id", attendance.EmployeeID, "project_id", attendance.ProjectID, "month", attendance.Month)
-
+		// slog.Info("Importing attendance", "employee_id", attendance.EmployeeID, "project_id", attendance.ProjectID, "month", attendance.Month)
 		// 检查记录是否已存在
+		slog.Info("Checking for existing attendance", "ot1Hours", attendance.Ot1Hours, "project_id", attendance.ProjectID, "month", attendance.Month)
 		existingAttendance, err := s.attendanceRepo.GetByEmployeeIDAndMonth(attendance.EmployeeID, attendance.Month, attendance.ProjectID)
+
 		if err == nil && existingAttendance != nil {
 			// 记录存在，执行更新
-			slog.Info("Updating existing attendance", "employee_id", attendance.EmployeeID, "project_id", attendance.ProjectID, "month", attendance.Month)
+			// slog.Info("Updating existing attendance", "employee_id", attendance.EmployeeID, "project_id", attendance.ProjectID, "month", attendance.Month)
 			existingAttendance.Day1 = attendance.Day1
 			existingAttendance.Day2 = attendance.Day2
 			existingAttendance.Day3 = attendance.Day3
@@ -156,6 +159,8 @@ func (s *AttendanceService) ImportAttendance(req ImportAttendanceRequest) error 
 			existingAttendance.LeaveReplc = attendance.LeaveReplc
 			existingAttendance.Unpresent = attendance.Unpresent
 			existingAttendance.TotalDays = attendance.TotalDays
+			existingAttendance.Ot1Hours = attendance.Ot1Hours
+			existingAttendance.EwHours = attendance.EwHours
 
 			if err := s.attendanceRepo.Update(existingAttendance); err != nil {
 				slog.Error("Failed to update attendance", "error", err, "employee_id", attendance.EmployeeID)
@@ -215,6 +220,8 @@ func (s *AttendanceService) ImportAttendance(req ImportAttendanceRequest) error 
 				LeaveReplc: attendance.LeaveReplc,
 				Unpresent:  attendance.Unpresent,
 				TotalDays:  attendance.TotalDays,
+				Ot1Hours:   attendance.Ot1Hours,
+				EwHours:    attendance.EwHours,
 			}
 			if err := s.attendanceRepo.Create(attendanceModel); err != nil {
 				slog.Error("Failed to create attendance", "error", err, "employee_id", attendance.EmployeeID)

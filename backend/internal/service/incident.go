@@ -3,6 +3,7 @@ package service
 import (
 	"kairis/backend/internal/model"
 	"kairis/backend/internal/repository"
+	"log/slog"
 )
 
 type ImportIncidentRequest struct {
@@ -35,6 +36,9 @@ type ImportIncidentItem struct {
 	LoanDed          float64 `json:"loan_ded"`
 	TaxDedPhk        float64 `json:"tax_ded_phk"`
 	MandahAlw        float64 `json:"mandah_alw"`
+	MealAlwAdd       float64 `json:"meal_alw_add"`
+	TranspAlwAdd     float64 `json:"transp_alw_add"`
+	EwDrv            float64 `json:"ew_drv"`
 }
 
 type IncidentService struct {
@@ -95,10 +99,31 @@ func (s *IncidentService) ImportIncident(req ImportIncidentRequest) error {
 			LoanDed:          incident.LoanDed,
 			TaxDedPhk:        incident.TaxDedPhk,
 			MandahAlw:        incident.MandahAlw,
+			MealAlwAdd:       incident.MealAlwAdd,
+			TranspAlwAdd:     incident.TranspAlwAdd,
+			EwDrv:            incident.EwDrv,
 		}
-		if err := s.incidentRepo.Create(incidentModel); err != nil {
-			return err
+		existingIncident, err := s.incidentRepo.GetByEmployeeIDAndMonth(incident.EmployeeID, incident.Month, incident.ProjectID)
+		if err == nil && existingIncident != nil {
+			// 记录存在，执行更新
+			slog.Info("Updating existing incident", "employee_id", incident.EmployeeID, "project_id", incident.ProjectID, "month", incident.Month)
+			incidentModel.ID = existingIncident.ID
+			if err := s.incidentRepo.Update(incidentModel); err != nil {
+				slog.Error("Failed to update incident", "error", err, "employee_id", incident.EmployeeID)
+				return err
+			}
+		} else {
+			// 记录不存在，创建新记录
+			slog.Info("Creating new incident", "employee_id", incident.EmployeeID, "project_id", incident.ProjectID, "month", incident.Month)
+
+			if err := s.incidentRepo.Create(incidentModel); err != nil {
+				slog.Error("Failed to create incident", "error", err, "employee_id", incident.EmployeeID)
+				return err
+			}
 		}
+		// if err := s.incidentRepo.Create(incidentModel); err != nil {
+		// 	return err
+		// }
 	}
 	return nil
 }

@@ -179,7 +179,7 @@ type Attendances struct {
 	LeaveReplc float64 `gorm:"column:leave_replc;default:0" json:"leave_replc"`
 	Unpresent  float64 `gorm:"column:unpresent;default:0" json:"unpresent"`
 	TotalDays  int     `gorm:"column:total_days;default:0" json:"total_days"`
-	Ot1Hours   float64 `gorm:"column:ot_hours;default:0" json:"ot1_hours"`
+	Ot1Hours   float64 `gorm:"column:ot1_hours;default:0" json:"ot1_hours"`
 	EwHours    float64 `gorm:"column:ew_hours;default:0" json:"ew_hours"`
 }
 

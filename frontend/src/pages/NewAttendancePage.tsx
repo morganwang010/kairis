@@ -294,6 +294,8 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
         ew1: trimmedRecord['EW1'] || trimmedRecord['ExtraWork1'] || "0",
         ew2: trimmedRecord['EW2'] || trimmedRecord['ExtraWork2'] || "0",
         ew3: trimmedRecord['EW3'] || trimmedRecord['ExtraWork3'] || "0",
+        ot1_hours: trimmedRecord['OT1_Hours'] || trimmedRecord['OT1Hours'] || "0",
+        ew_hours: trimmedRecord['EW_Hours'] || trimmedRecord['EWHours'] || "0",
         days: {}
         }
       }).filter(record => record.employee_id)
