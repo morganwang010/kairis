@@ -150,7 +150,7 @@ func (s *EmployeeService) ImportEmployee(req ImportEmployeeRequest) error {
 		}
 
 		existingEmployee, err := s.employeeRepo.GetByEmployeeID(employee.EmployeeID, uint(employee.ProjectID))
-		if err == nil && existingEmployee != nil {
+		if err == nil && len(existingEmployee) > 0 {
 			employeeModel.ID = existingEmployee[0].ID
 			if err := s.employeeRepo.Update(employeeModel); err != nil {
 				return err

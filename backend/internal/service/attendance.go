@@ -83,7 +83,7 @@ func (s *AttendanceService) GetAttendanceByID(id uint) (*model.Attendances, erro
 	return s.attendanceRepo.GetByID(id)
 }
 
-func (s *AttendanceService) GetAttendanceByEmployeeIDAndMonth(employeeID, month string, projectID int) (*model.Attendances, error) {
+func (s *AttendanceService) GetAttendanceByEmployeeIDAndMonth(employeeID, month string, projectID int) ([]model.Attendances, error) {
 	return s.attendanceRepo.GetByEmployeeIDAndMonth(employeeID, month, projectID)
 }
 
@@ -104,65 +104,69 @@ func (s *AttendanceService) ImportAttendance(req ImportAttendanceRequest) error 
 	for _, attendance := range req.Attendances {
 		// slog.Info("Importing attendance", "employee_id", attendance.EmployeeID, "project_id", attendance.ProjectID, "month", attendance.Month)
 		// 检查记录是否已存在
-		slog.Info("Checking for existing attendance", "ot1Hours", attendance.Ot1Hours, "project_id", attendance.ProjectID, "month", attendance.Month)
+		// slog.Info("Checking for existing attendance", "ot1Hours", attendance.Ot1Hours, "project_id", attendance.ProjectID, "month", attendance.Month)
+		attendanceModel := &model.Attendances{
+			EmployeeID: attendance.EmployeeID,
+			ProjectID:  attendance.ProjectID,
+			Month:      attendance.Month,
+			Day1:       attendance.Day1,
+			Day2:       attendance.Day2,
+			Day3:       attendance.Day3,
+			Day4:       attendance.Day4,
+			Day5:       attendance.Day5,
+			Day6:       attendance.Day6,
+			Day7:       attendance.Day7,
+			Day8:       attendance.Day8,
+			Day9:       attendance.Day9,
+			Day10:      attendance.Day10,
+			Day11:      attendance.Day11,
+			Day12:      attendance.Day12,
+			Day13:      attendance.Day13,
+			Day14:      attendance.Day14,
+			Day15:      attendance.Day15,
+			Day16:      attendance.Day16,
+			Day17:      attendance.Day17,
+			Day18:      attendance.Day18,
+			Day19:      attendance.Day19,
+			Day20:      attendance.Day20,
+			Day21:      attendance.Day21,
+			Day22:      attendance.Day22,
+			Day23:      attendance.Day23,
+			Day24:      attendance.Day24,
+			Day25:      attendance.Day25,
+			Day26:      attendance.Day26,
+			Day27:      attendance.Day27,
+			Day28:      attendance.Day28,
+			Day29:      attendance.Day29,
+			Day30:      attendance.Day30,
+			Day31:      attendance.Day31,
+			Work:       attendance.Work,
+			Permission: attendance.Permission,
+			Off:        attendance.Off,
+			Absent:     attendance.Absent,
+			Sick:       attendance.Sick,
+			Standby:    attendance.Standby,
+			Ew:         attendance.Ew,
+			Ot1:        attendance.Ot1,
+			Ew1:        attendance.Ew1,
+			Ew2:        attendance.Ew2,
+			Ew3:        attendance.Ew3,
+			Ot2:        attendance.Ot2,
+			Ot3:        attendance.Ot3,
+			LeaveReplc: attendance.LeaveReplc,
+			Unpresent:  attendance.Unpresent,
+			TotalDays:  attendance.TotalDays,
+			Ot1Hours:   attendance.Ot1Hours,
+			EwHours:    attendance.EwHours,
+		}
 		existingAttendance, err := s.attendanceRepo.GetByEmployeeIDAndMonth(attendance.EmployeeID, attendance.Month, attendance.ProjectID)
 
-		if err == nil && existingAttendance != nil {
+		if err == nil && len(existingAttendance) > 0 {
 			// 记录存在，执行更新
 			// slog.Info("Updating existing attendance", "employee_id", attendance.EmployeeID, "project_id", attendance.ProjectID, "month", attendance.Month)
-			existingAttendance.Day1 = attendance.Day1
-			existingAttendance.Day2 = attendance.Day2
-			existingAttendance.Day3 = attendance.Day3
-			existingAttendance.Day4 = attendance.Day4
-			existingAttendance.Day5 = attendance.Day5
-			existingAttendance.Day6 = attendance.Day6
-			existingAttendance.Day7 = attendance.Day7
-			existingAttendance.Day8 = attendance.Day8
-			existingAttendance.Day9 = attendance.Day9
-			existingAttendance.Day10 = attendance.Day10
-			existingAttendance.Day11 = attendance.Day11
-			existingAttendance.Day12 = attendance.Day12
-			existingAttendance.Day13 = attendance.Day13
-			existingAttendance.Day14 = attendance.Day14
-			existingAttendance.Day15 = attendance.Day15
-			existingAttendance.Day16 = attendance.Day16
-			existingAttendance.Day17 = attendance.Day17
-			existingAttendance.Day18 = attendance.Day18
-			existingAttendance.Day19 = attendance.Day19
-			existingAttendance.Day20 = attendance.Day20
-			existingAttendance.Day21 = attendance.Day21
-			existingAttendance.Day22 = attendance.Day22
-			existingAttendance.Day23 = attendance.Day23
-			existingAttendance.Day24 = attendance.Day24
-			existingAttendance.Day25 = attendance.Day25
-			existingAttendance.Day26 = attendance.Day26
-			existingAttendance.Day27 = attendance.Day27
-			existingAttendance.Day28 = attendance.Day28
-			existingAttendance.Day29 = attendance.Day29
-			existingAttendance.Day30 = attendance.Day30
-			existingAttendance.Day31 = attendance.Day31
-			existingAttendance.Work = attendance.Work
-			existingAttendance.ProjectID = attendance.ProjectID
-			existingAttendance.Permission = attendance.Permission
-			existingAttendance.Off = attendance.Off
-			existingAttendance.Absent = attendance.Absent
-			existingAttendance.Sick = attendance.Sick
-			existingAttendance.Standby = attendance.Standby
-			existingAttendance.Ew = attendance.Ew
-			existingAttendance.Month = attendance.Month
-			existingAttendance.Ot1 = attendance.Ot1
-			existingAttendance.Ew1 = attendance.Ew1
-			existingAttendance.Ew2 = attendance.Ew2
-			existingAttendance.Ew3 = attendance.Ew3
-			existingAttendance.Ot2 = attendance.Ot2
-			existingAttendance.Ot3 = attendance.Ot3
-			existingAttendance.LeaveReplc = attendance.LeaveReplc
-			existingAttendance.Unpresent = attendance.Unpresent
-			existingAttendance.TotalDays = attendance.TotalDays
-			existingAttendance.Ot1Hours = attendance.Ot1Hours
-			existingAttendance.EwHours = attendance.EwHours
+			attendanceModel.ID = existingAttendance[0].ID
 
-			if err := s.attendanceRepo.Update(existingAttendance); err != nil {
+			if err := s.attendanceRepo.Update(attendanceModel); err != nil {
 				slog.Error("Failed to update attendance", "error", err, "employee_id", attendance.EmployeeID)
 				return err
 			}
