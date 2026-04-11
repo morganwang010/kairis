@@ -273,7 +273,7 @@ func (h *IncidentHandler) Get(c *gin.Context) {
 }
 
 func (h *IncidentHandler) List(c *gin.Context) {
-	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+	page, _ := strconv.Atoi(c.DefaultQuery("currentPage", "1"))
 	pageSize, _ := strconv.Atoi(c.DefaultQuery("pageSize", "10"))
 	projectID := c.Query("projectId")
 	month := c.Query("month")

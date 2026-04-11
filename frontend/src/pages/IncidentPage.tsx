@@ -202,7 +202,7 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
         }
  
         console.log('加载偶发事件数据参数:', params)
-        const response = await getIncidentRecords(projectId, currentMonth)
+        const response = await getIncidentRecords(projectId, currentMonth,pageSize,currentPage)
         console.log('加载偶发事件数据响应:', response)
         
         // 确保response是一个对象
@@ -780,7 +780,7 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
         console.log('加载偶发事件数据参数:', params)
         
         // 直接调用getIncidentRecords，使用新的参数
-        getIncidentRecords(projectId, currentMonth.toString()).then(response => {
+        getIncidentRecords(projectId, currentMonth.toString(),pageSize,currentPage).then(response => {
           console.log('加载偶发事件数据响应:', response)
           setIncidentsData((response as any).data)
           setTotalRecords((response as any).total)

@@ -49,6 +49,7 @@ func (r *IncidentRepository) List(offset, limit int, projectID, month string) ([
 		Select(`a.*, e.employee_name,e.position`).
 		Joins("LEFT JOIN employees as e ON a.employee_id = e.employee_id").
 		Where("a.month = ? AND a.project_id = ?", month, projectID).
+		Order("a.employee_id DESC").
 		Offset(offset).
 		Limit(limit).
 		Find(&incidents).Error; err != nil {

@@ -54,8 +54,8 @@ export const getEmployees = async (params?: {
   name?: string;
   employee_id?: string;
   location?: string;
-  page?: number;
-  page_size?: number;
+  currentPage?: number;
+  pageSize?: number;
 }) => {
   try {
     const response = await apiClient.get('/employees', { params });
@@ -402,9 +402,9 @@ export const deleteAllAttendanceRecord = async (projectId: string, month: string
 };
 // 偶发事件相关API
 // 获取偶发事件记录
-export const getIncidentRecords = async (projectId: string, month: string) => {
+export const getIncidentRecords = async (projectId: string, month: string,pageSize:number,currentPage:number) => {
   try {
-    const response = await apiClient.get('/incidents', { params: { projectId, month } });
+    const response = await apiClient.get('/incidents', { params: { projectId, month,pageSize,currentPage } });
     console.log('获取偶发事件记录成功:', response.data);
     return response;
   } catch (error) {

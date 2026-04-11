@@ -115,16 +115,19 @@ func (h *EmployeeHandler) Get(c *gin.Context) {
 	employeeID := c.Query("employee_id")
 	employeeName := c.Query("employee_name")
 	locationName := c.Query("location_name")
+	page, _ := strconv.Atoi(c.DefaultQuery("currentPage", "1"))
+	pageSize, _ := strconv.Atoi(c.DefaultQuery("pageSize", "10"))
+	offset := (page - 1) * pageSize
 	slog.Info("111Get employee by employee_id", "employee_id", employeeID)
 	var employee *model.Employee
 	var employees []model.Employee
 	var err error
 
 	// 检查哪个参数不为空，然后使用该参数进行查询
-	slog.Info("Get employee by query params", "employee_id", employeeID, "employee_name", employeeName, "location_name", locationName)
+	// slog.Info("Get employee by query params", "employee_id", employeeID, "employee_name", employeeName, "location_name", locationName)
 	if employeeID != "" {
 		// 如果 employee_id 不为空，使用它进行查询
-		slog.Info("Get employee by employee_id", "employee_id", employeeID)
+		// slog.Info("Get employee by employee_id", "employee_id", employeeID)
 		employees, err = h.employeeService.GetByEmployeeID(employeeID, uint(projectID))
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
@@ -152,12 +155,12 @@ func (h *EmployeeHandler) Get(c *gin.Context) {
 		return
 	} else {
 		// 如果所有参数都为空，查询所有员工
-		employees, err = h.employeeService.List(uint(projectID))
+		employees, count, _ := h.employeeService.List(offset, pageSize, uint(projectID))
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"code": 200, "data": employees})
+		c.JSON(http.StatusOK, gin.H{"code": 200, "data": employees, "total": count})
 		return
 	}
 }
@@ -168,16 +171,20 @@ func (h *EmployeeHandler) List(c *gin.Context) {
 	if !ok {
 		return
 	}
+	// offset, _ := strconv.Atoi(c.DefaultQuery("offset", "0"))
+	pageSize, _ := strconv.Atoi(c.DefaultQuery("pageSize", "10"))
+	page, _ := strconv.Atoi(c.DefaultQuery("currentPage", "1"))
+	offset := (page - 1) * pageSize
 	employeeID := c.Query("employee_id")
 	employeeName := c.Query("employee_name")
 	locationName := c.Query("location_name")
-	slog.Info("666Get employee by project_id", "project_id", projectID)
+	// slog.Info("666Get employee by project_id", "project_id", projectID)
 	var employee *model.Employee
 	var employees []model.Employee
 	var err error
 	if employeeID != "" {
 		// 如果 employee_id 不为空，使用它进行查询
-		slog.Info("Get employee by employee_id", "employee_id", employeeID)
+		// slog.Info("Get employee by employee_id", "employee_id", employeeID)
 		employees, err = h.employeeService.GetByEmployeeID(employeeID, uint(projectID))
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
@@ -205,13 +212,13 @@ func (h *EmployeeHandler) List(c *gin.Context) {
 		return
 	} else {
 		// 如果所有参数都为空，查询所有员工
-		slog.Info("9999999999Get employee by project_id", "project_id", projectID)
-		employees, err = h.employeeService.List(uint(projectID))
+		// slog.Info("9999999999Get employee by project_id", "project_id", projectID)
+		employees, total, err := h.employeeService.List(offset, pageSize, uint(projectID))
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"code": 200, "data": employees, "total": len(employees)})
+		c.JSON(http.StatusOK, gin.H{"code": 200, "data": employees, "total": total})
 		return
 	}
 	// c.JSON(http.StatusOK, gin.H{"code": 200, "data": employees})

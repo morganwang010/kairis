@@ -154,8 +154,8 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId, projectName }) => {
         const result = await getEmployees( {
             ...filters,
             project_id: projectId,
-            page: currentPage.toString(),
-            page_size: pageSize.toString()
+            currentPage: currentPage.toString(),
+            pageSize: pageSize.toString()
         })
         const response = result as { data: any[]; total: number };
         console.log(response.data)
