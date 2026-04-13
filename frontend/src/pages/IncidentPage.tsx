@@ -782,8 +782,8 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
         // 直接调用getIncidentRecords，使用新的参数
         getIncidentRecords(projectId, currentMonth.toString(),pageSize,currentPage).then(response => {
           console.log('加载偶发事件数据响应:', response)
-          setIncidentsData((response as any).data)
-          setTotalRecords((response as any).total)
+          setIncidentsData((response as any).data.list)
+          setTotalRecords((response as any).data.total)
         }).catch(error => {
           console.error(t('incidentPage.loadIncidentsError'), error)
           messageApi.error(t('incidentPage.loadIncidentsError'))
