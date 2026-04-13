@@ -92,6 +92,8 @@ export const updateEmployee = async (id: string, projectId: string, data: any) =
 export const getSalaries = async (params?: {
   month?: string;
   project_id?: string;
+  page?: string;
+  pageSize?: string;
 }) => {
   try {
     const response = await apiClient.get('/salaries', { params });
