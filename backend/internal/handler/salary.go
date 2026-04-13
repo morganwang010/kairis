@@ -53,8 +53,8 @@ func (h *SalaryHandler) Get(c *gin.Context) {
 func (h *SalaryHandler) List(c *gin.Context) {
 	month := c.Query("month")
 	projectIDStr := c.Query("project_id")
-	offsetStr := c.Query("offset")
-	limitStr := c.Query("limit")
+	offsetStr := c.Query("page")
+	limitStr := c.Query("pageSize")
 
 	slog.Info("List salaries", "month", month, "project_id", projectIDStr)
 
@@ -80,6 +80,7 @@ func (h *SalaryHandler) List(c *gin.Context) {
 			return
 		}
 	}
+	offset = (offset - 1) * limit
 
 	salaries, total, err := h.salaryService.List(offset, limit, month, projectID)
 	if err != nil {

@@ -196,7 +196,7 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
         const params: any = {
           month: currentMonth,
           page: currentPage,
-          page_size: pageSize,
+          pageSize: pageSize,
           project_id: projectId,
           ...filterValues
         }
@@ -770,7 +770,7 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
       const params: any = {
         month: currentMonth.toString(),
         page: newCurrentPage,
-        page_size: pageSize,
+        pageSize: pageSize,
         project_id: projectId,
         ...formattedValues
       }

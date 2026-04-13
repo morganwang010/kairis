@@ -571,7 +571,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
       const params: any = {
         month: currentMonth.toString(),
         page: currentPage,
-        page_size: pageSize,
+        pageSize: pageSize,
         ...filterValues
       }
       // console.log('加载考勤数据参数:', projectId, currentMonth, currentPage, pageSize, filterValues)
@@ -991,7 +991,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
       const params: any = {
         month: currentMonth.toString(),
         page: newCurrentPage,
-        page_size: pageSize,
+        pageSize: pageSize,
         ...formattedValues
       }
       
@@ -1211,7 +1211,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
           <Pagination
           current={currentPage}
           pageSize={pageSize}
-          pageSizeOptions={['10', '20', '50', '100']}
+          pageSizeOptions={['10', '20', '50', '100','200']}
           showSizeChanger
           showTotal={(total) => t('common.totalRecords', { count: total })}
           total={total}

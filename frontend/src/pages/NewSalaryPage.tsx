@@ -131,7 +131,7 @@ const NewSalaryPage: React.FC<NewSalaryPageProps> = ({ projectId = 'all',  }) =>
         month: currentMonth,
         project_id: projectId,
         page: currentPage.toString(),
-        page_size: pageSize.toString(),
+        pageSize: pageSize.toString(),
         ...filterValues
       };
       const result = await getSalaries(params);
@@ -1436,7 +1436,7 @@ const loadData = async () => {
           month: currentMonth,
           project_id: projectId,
           page: newCurrentPage.toString(),
-          page_size: pageSize.toString(),
+          pageSize: pageSize.toString(),
           ...formattedValues
         };
         
