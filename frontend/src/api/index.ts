@@ -152,7 +152,7 @@ export const getSalarySlips = async (params: {
   try {
     console.log('工资条查询参数:', params);
     const response = await apiClient.get('/salary-slips', { params });
-    return response.data;
+    return response;
   } catch (error) {
     console.error('获取工资条列表失败:', error);
     throw error;
@@ -389,6 +389,18 @@ export const deleteAttendanceRecord = async (id: string) => {
   }
 };
 
+// 根据ID数据，批量删除考勤记录
+export const deleteAttendanceRecordByIds = async (ids: number[]) => {
+  try {
+    console.log('批量删除考勤记录请求:', ids);
+    const result = await apiClient.delete('/attendances/batch', { data: { ids } as any });
+    console.log('批量删除考勤记录成功:', result);
+    return result;
+  } catch (error) {
+    console.error('批量删除考勤记录失败:', error);
+    throw error;
+  }
+};
 
 // 删除所有考勤记录
 export const deleteAllAttendanceRecord = async (projectId: string, month: string) => {
@@ -447,6 +459,19 @@ export const deleteIncident = async (id: number) => {
     return response.data;
   } catch (error) {
     console.error('删除偶发事件记录失败:', error);
+    throw error;
+  }
+};
+
+// 根据ID数据，批量删除偶发事件记录
+export const deleteIncidentRecordByIds = async (ids: number[]) => {
+  try {
+    console.log('批量删除偶发事件记录请求:', ids);
+    const result = await apiClient.delete('/incidents/batch', { data: { ids } as any });
+    console.log('批量删除偶发事件记录成功:', result);
+    return result;
+  } catch (error) {
+    console.error('批量删除偶发事件记录失败:', error);
     throw error;
   }
 };

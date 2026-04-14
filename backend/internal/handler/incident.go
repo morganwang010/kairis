@@ -499,6 +499,31 @@ func (h *IncidentHandler) Delete(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"code": 200, "message": "Success"})
 }
 
+func (h *IncidentHandler) DeleteByIDs(c *gin.Context) {
+	var req struct {
+		IDs []uint `json:"ids"`
+	}
+
+	slog.Info("批量删除事件记录", "ids", req.IDs)
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": err.Error()})
+		return
+	}
+
+	if len(req.IDs) == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": "IDs cannot be empty"})
+		return
+	}
+
+	if err := h.incidentService.DeleteIncidentByIDs(req.IDs); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"code": 200, "message": "Success"})
+}
+
 func (h *IncidentHandler) Import(c *gin.Context) {
 	var req struct {
 		Records []struct {

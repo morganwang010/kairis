@@ -3,7 +3,6 @@ package handler
 import (
 	"kairis/backend/internal/model"
 	"kairis/backend/internal/service"
-	"log/slog"
 	"net/http"
 	"strconv"
 
@@ -53,10 +52,10 @@ func (h *SalarySlipHandler) Create(c *gin.Context) {
 func (h *SalarySlipHandler) List(c *gin.Context) {
 	month := c.Query("month")
 	projectIDStr := c.Query("project_id")
-	offsetStr := c.Query("offset")
-	limitStr := c.Query("limit")
+	offsetStr := c.Query("page")
+	limitStr := c.Query("pageSize")
 
-	slog.Info("List salary slips", "month", month, "project_id", projectIDStr)
+	// slog.Info("List salary slips", "month", month, "project_id", projectIDStr)
 
 	projectID := 0
 	if projectIDStr != "" {
@@ -84,7 +83,7 @@ func (h *SalarySlipHandler) List(c *gin.Context) {
 			return
 		}
 	}
-
+	offset = (offset - 1) * limit
 	salarySlips, total, err := h.salarySlipService.ListSalarySlips(offset, limit, month, projectID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})

@@ -333,6 +333,32 @@ func (h *AttendanceHandler) Delete(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"code": 200, "message": "Success"})
 }
 
+// 传入一个id的数组，进行批量删除
+func (h *AttendanceHandler) DeleteByIDs(c *gin.Context) {
+	var req struct {
+		IDs []uint `json:"ids"`
+	}
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": err.Error()})
+		return
+	}
+
+	if len(req.IDs) == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": "IDs cannot be empty"})
+		return
+	}
+
+	slog.Info("批量删除考勤记录", "ids", req.IDs)
+
+	if err := h.attendanceService.DeleteAttendanceByIDs(req.IDs); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"code": 200, "message": "Success"})
+}
+
 func (h *AttendanceHandler) Import(c *gin.Context) {
 	// 读取请求体
 	body, err := io.ReadAll(c.Request.Body)

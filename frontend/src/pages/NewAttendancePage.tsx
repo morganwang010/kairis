@@ -7,7 +7,7 @@ import type { ColumnsType } from 'antd/es/table'
 import type { UploadProps } from 'antd'
 import dayjs from 'dayjs'
 
-import { getAttendanceRecords, addAttendanceRecord, updateAttendanceRecord, deleteAttendanceRecord, importAttendanceRecords, importSingleAttendanceRecord } from '../api'
+import { getAttendanceRecords, addAttendanceRecord, updateAttendanceRecord, deleteAttendanceRecord, deleteAttendanceRecordByIds, importAttendanceRecords, importSingleAttendanceRecord } from '../api'
 interface AttendancePageProps {
   projectId?: string
   projectName?: string
@@ -72,7 +72,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
   const [highlightedRowId, setHighlightedRowId] = useState<string | null>(null)
   // 分页状态管理
   const [currentPage, setCurrentPage] = useState(1)
-  const [pageSize, setPageSize] = useState(10)
+  const [pageSize, setPageSize] = useState(50)
   const [total, setTotal] = useState(0)
   const [filterForm] = Form.useForm()
   const [filterValues, setFilterValues] = useState<{[key: string]: any}>({})
@@ -141,12 +141,13 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
       content: `确定要删除选中的 ${selectedRowKeys.length} 条记录吗？`,
       onOk: async () => {
         try {
-          for (const id of selectedRowKeys) {
-            await deleteAttendanceRecord(Number(id).toString())  
-          }
-          setData(data.filter(item => !selectedRowKeys.includes(item.id)))
+          // for (const id of selectedRowKeys) {
+          await deleteAttendanceRecordByIds(selectedRowKeys.map(id => Number(id)))  
+          // }
+          // setData(data.filter(item => !selectedRowKeys.includes(item.id)))
           setSelectedRowKeys([])
           messageApi.success('批量删除成功')
+          loadAttendanceData()
         } catch (error) {
           console.error('批量删除考勤记录失败:', error)
           messageApi.error('删除失败，请稍后重试')
@@ -1211,7 +1212,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
           <Pagination
           current={currentPage}
           pageSize={pageSize}
-          pageSizeOptions={['10', '20', '50', '100','200']}
+          pageSizeOptions={['50', '100','200']}
           showSizeChanger
           showTotal={(total) => t('common.totalRecords', { count: total })}
           total={total}
@@ -1400,7 +1401,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
                       columns={sheet.columns}
                       dataSource={sheet.data}
                       rowKey={(_, index) => `row-${index}`}
-                      pagination={{ pageSize: 10 }}
+                      pagination={{ pageSize: 50 }}
                       scroll={{ x: 'max-content' }}
                       locale={{
                         emptyText: t('common.noData')

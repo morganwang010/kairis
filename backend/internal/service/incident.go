@@ -71,6 +71,10 @@ func (s *IncidentService) DeleteIncident(id uint) error {
 	return s.incidentRepo.Delete(id)
 }
 
+func (s *IncidentService) DeleteIncidentByIDs(ids []uint) error {
+	return s.incidentRepo.DeleteByIDs(ids)
+}
+
 func (s *IncidentService) ImportIncident(req ImportIncidentRequest) error {
 	for _, incident := range req.Incidents {
 		incidentModel := &model.Incidents{

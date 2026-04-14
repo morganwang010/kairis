@@ -66,6 +66,14 @@ func (r *IncidentRepository) Update(incident *model.Incidents) error {
 func (r *IncidentRepository) Delete(id uint) error {
 	return r.db.Delete(&model.Incidents{}, id).Error
 }
+
+func (r *IncidentRepository) DeleteByIDs(ids []uint) error {
+	if len(ids) == 0 {
+		return nil
+	}
+	return r.db.Where("id IN ?", ids).Delete(&model.Incidents{}).Error
+}
+
 func (r *IncidentRepository) GetByEmployeeIDAndMonth(employeeID, month string, projectID int) (*model.Incidents, error) {
 	var incident model.Incidents
 	slog.Info("Searching for incident", "employee_id", employeeID, "project_id", projectID, "month", month)

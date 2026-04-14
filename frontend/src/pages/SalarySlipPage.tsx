@@ -259,6 +259,8 @@ const SalarySlipPage: React.FC<SalarySlipPageProps> = ({  projectId = 'all' }) =
       unpresent: item.unpresent || 0,
       mandah_alw: item.mandah_alw || 0,
       absent_ded2: item.absent_ded2 || 0,
+      ot1_hours: item.ot1_hours || 0,
+      ew_wages: item.ew_wages || 0,
     }))
   }
 
@@ -271,7 +273,7 @@ const SalarySlipPage: React.FC<SalarySlipPageProps> = ({  projectId = 'all' }) =
         month: currentMonth,
         project_id: projectId,
         page: currentPage,
-        page_size: pageSize,
+        pageSize: pageSize,
         ...params
       }
       // console.log('Query params:', queryParams)
@@ -279,8 +281,8 @@ const SalarySlipPage: React.FC<SalarySlipPageProps> = ({  projectId = 'all' }) =
       const response = await getSalarySlips(queryParams)
       // console.log('Backend response:', response)
       // 假设后端返回格式为 { data: [...], total: number }
-      const backendData = response.data || response
-      const totalCount = response.total || backendData.length
+      const backendData = response.data 
+      const totalCount = response.total 
       // 转换数据格式
       const transformedData = transformBackendData(backendData)
       setFilteredData(transformedData)
@@ -311,7 +313,7 @@ const SalarySlipPage: React.FC<SalarySlipPageProps> = ({  projectId = 'all' }) =
       month: currentMonth,
       project_id: projectId,
       page: 1,
-      page_size: 10,
+      pageSize: 10,
     }
 
     // 只在employee_id存在且不为空时添加

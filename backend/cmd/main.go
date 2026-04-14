@@ -156,6 +156,7 @@ func main() {
 			attendances.POST("", attendanceHandler.Create)
 			attendances.PUT("/:id", attendanceHandler.Update)
 			attendances.DELETE("/:id", attendanceHandler.Delete)
+			attendances.DELETE("/batch", attendanceHandler.DeleteByIDs)
 			attendances.POST("/import", attendanceHandler.Import)
 		}
 
@@ -167,6 +168,7 @@ func main() {
 			incidents.POST("", incidentHandler.Create)
 			incidents.PUT("/:id", incidentHandler.Update)
 			incidents.DELETE("/:id", incidentHandler.Delete)
+			incidents.DELETE("/batch", incidentHandler.DeleteByIDs)
 			incidents.POST("/import", incidentHandler.Import)
 		}
 

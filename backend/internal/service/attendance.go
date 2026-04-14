@@ -99,6 +99,10 @@ func (s *AttendanceService) DeleteAttendance(id uint) error {
 	return s.attendanceRepo.Delete(id)
 }
 
+func (s *AttendanceService) DeleteAttendanceByIDs(ids []uint) error {
+	return s.attendanceRepo.DeleteByIDs(ids)
+}
+
 func (s *AttendanceService) ImportAttendance(req ImportAttendanceRequest) error {
 	// slog.Info("Importing attendances", "count", len(req.Attendances))
 	for _, attendance := range req.Attendances {

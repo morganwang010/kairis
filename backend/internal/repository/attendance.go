@@ -61,6 +61,14 @@ func (r *AttendanceRepository) Delete(id uint) error {
 	return r.db.Delete(&model.Attendances{}, id).Error
 }
 
+// DeleteByIDs 批量删除
+func (r *AttendanceRepository) DeleteByIDs(ids []uint) error {
+	if len(ids) == 0 {
+		return nil
+	}
+	return r.db.Where("id IN ?", ids).Delete(&model.Attendances{}).Error
+}
+
 func (r *AttendanceRepository) GetByEmployeeIDAndMonth(employeeID, month string, projectID int) ([]model.Attendances, error) {
 	var attendance []model.Attendances
 	err := r.db.Where("employee_id = ? AND month = ? AND project_id = ?", employeeID, month, projectID).First(&attendance).Error

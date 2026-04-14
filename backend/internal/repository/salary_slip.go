@@ -8,20 +8,20 @@ func (r *SalaryRepository) ListSalarySlips(offset, limit int, month string, proj
 	var salarySlips []model.Salaries
 	var total int64
 
-	query := r.db.Model(&model.Salaries{}).Where("delete_flag = 0")
+	query := r.db.Model(&model.Salaries{}).Where("delete_flag = 0 and month =? and project_id = ?", month, projectID)
 
-	if month != "" {
-		query = query.Where("month = ?", month)
-	}
-	if projectID > 0 {
-		query = query.Where("project_id = ?", projectID)
-	}
+	// if month != "" {
+	// 	query = query.Where("month = ?", month)
+	// }
+	// if projectID > 0 {
+	// 	query = query.Where("project_id = ?", projectID)
+	// }
 
 	if err := query.Count(&total).Error; err != nil {
 		return nil, 0, err
 	}
 
-	if err := query.Offset(offset).Limit(limit).Find(&salarySlips).Error; err != nil {
+	if err := query.Order("employee_id DESC").Offset(offset).Limit(limit).Find(&salarySlips).Error; err != nil {
 		return nil, 0, err
 	}
 

@@ -8,7 +8,7 @@ import type { UploadProps } from 'antd'
 import * as XLSX from 'xlsx'
 import dayjs from 'dayjs'
 // const { MonthPicker } = DatePicker;
-import { getIncidentRecords, addIncident, updateIncident, deleteIncident, importIncidentRecords, importSingleIncidentRecord } from '../api/index'
+import { getIncidentRecords, addIncident, updateIncident, deleteIncident, importIncidentRecords, importSingleIncidentRecord, deleteIncidentRecordByIds } from '../api/index'
 // import { getEmployees } from '../api/index'
 
 interface IncidentPageProps {
@@ -61,7 +61,7 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
   const [importModalVisible, setImportModalVisible] = useState(false)
   const [form] = Form.useForm()
   const [currentPage, setCurrentPage] = useState(1)
-  const [pageSize, setPageSize] = useState(10)
+  const [pageSize, setPageSize] = useState(50)
   
   const [editingIncident, setEditingIncident] = useState<IncidentRecord | null>(null)
   const [incidentsData, setIncidentsData] = useState<IncidentRecord[]>([])
@@ -129,11 +129,10 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
       content: `Are you sure you want to delete ${selectedRowKeys.length} selected records?`,
       onOk: async () => {
         try {
-          for (const id of selectedRowKeys) {
-            await deleteIncident(Number(id))  
-          }
+          await deleteIncidentRecordByIds(selectedRowKeys.map(id => Number(id)))
           setIncidentsData(incidentsData.filter(item => !selectedRowKeys.includes(item.id)))
           setSelectedRowKeys([])
+          loadIncidents()
           messageApi.success('Selected records deleted successfully')
         } catch (error) {
           console.error('Batch delete incident records failed:', error)
@@ -920,7 +919,7 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
         <Pagination
           current={currentPage}
           pageSize={pageSize}
-          pageSizeOptions={['10', '20', '50', '100']}
+          pageSizeOptions={['50', '100','200']}
           showSizeChanger
           showTotal={(total) => t('common.totalRecords', { count: total })}
           total={totalRecords}
