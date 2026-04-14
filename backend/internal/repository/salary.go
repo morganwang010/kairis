@@ -177,6 +177,13 @@ func (r *SalaryRepository) Delete(id uint) error {
 	return r.db.Delete(&model.Salaries{}, id).Error
 }
 
+func (r *SalaryRepository) DeleteByIDs(ids []uint) error {
+	if len(ids) == 0 {
+		return nil
+	}
+	return r.db.Where("id IN ?", ids).Delete(&model.Salaries{}).Error
+}
+
 func (r *SalaryRepository) Calculate(month string, projectID int) error {
 	// 1. 从salary_coefficient表获取计算系数
 	var coefficient model.SalaryCoefficient

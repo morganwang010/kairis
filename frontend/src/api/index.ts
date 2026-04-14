@@ -282,6 +282,19 @@ export const deleteSalaryRecord = async (id: number) => {
     throw error;
   }
 };
+
+// 根据ID数据，批量删除薪资记录
+export const deleteSalaryRecordByIds = async (ids: number[]) => {
+  try {
+    console.log('批量删除薪资记录请求:', ids);
+    const result = await apiClient.delete('/salaries/batch', { data: { ids } as any });
+    console.log('批量删除薪资记录成功:', result);
+    return result;
+  } catch (error) {
+    console.error('批量删除薪资记录失败:', error);
+    throw error;
+  }
+};
 // 更新薪资计算状态
 export const updateSalaryCalculateStatus = async (id: number, checked: number) => {
   try {

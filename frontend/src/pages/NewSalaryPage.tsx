@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Card, Table, Button, Space, Modal, Form, Input, DatePicker, InputNumber, message, Upload, Tabs,Pagination, Switch } from 'antd'
+import { Card, Table, Button, Space, Modal, Form, Input, DatePicker, InputNumber, message, Upload, Tabs,Pagination, Switch, Checkbox } from 'antd'
 import { PlusOutlined, EditOutlined, DeleteOutlined, UploadOutlined, SyncOutlined, InboxOutlined , FileExcelOutlined} from '@ant-design/icons'
 import ScientificNumberDisplay from '../components/ScientificNumberDisplay'
-import { calculateMonthlySalary, getSalaries, updateSalary , importSingleSalaryRecord, importSalaryRecords ,updateSalaryCalculateStatus, deleteSalaryRecord} from '../api';
+import { calculateMonthlySalary, getSalaries, updateSalary , importSingleSalaryRecord, importSalaryRecords ,updateSalaryCalculateStatus, deleteSalaryRecord, deleteSalaryRecordByIds} from '../api';
 import dayjs from 'dayjs'
 import * as XLSX from 'xlsx'
 import type { UploadProps } from 'antd'
@@ -122,7 +122,7 @@ const NewSalaryPage: React.FC<NewSalaryPageProps> = ({ projectId = 'all',  }) =>
   const [modal, contextHolder] = Modal.useModal()
   const [messageApi, messageContextHolder] = message.useMessage();
   const [currentPage, setCurrentPage] = useState(1)
-  const [pageSize, setPageSize] = useState(10)
+  const [pageSize, setPageSize] = useState(50)
   const [total, setTotal] = useState(0)
   // 从API获取薪资数据
   const fetchSalaryData = async () => {
@@ -169,6 +169,7 @@ const NewSalaryPage: React.FC<NewSalaryPageProps> = ({ projectId = 'all',  }) =>
   }
 
   const [salaryRecords, setSalaryRecords] = useState<SalaryRecord[]>([])
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   // 导入相关状态
   const [importModalVisible, setImportModalVisible] = useState(false)
   const [parsedSheets, setParsedSheets] = useState<ParsedSheet[]>([])
@@ -839,7 +840,7 @@ const loadData = async () => {
           columns={sheet.columns}
           dataSource={sheet.data}
           rowKey={(_, index) => `row-${index}`}
-          pagination={{ pageSize: 10 }}
+          pagination={{ pageSize: 50 }}
           scroll={{ x: 'max-content' }}
           locale={{
             emptyText: t('common.noData')
@@ -852,7 +853,35 @@ const loadData = async () => {
 
 
   const columns: ColumnsType<SalaryRecord> = [
-     {
+    {
+      title: (
+        <Checkbox
+          checked={selectedRowKeys.length === salaryRecords.length && salaryRecords.length > 0}
+          onChange={(e) => {
+            if (e.target.checked) {
+              setSelectedRowKeys(salaryRecords.map(r => r.id))
+            } else {
+              setSelectedRowKeys([])
+            }
+          }}
+        />
+      ),
+      key: 'selection',
+      width: 60,
+      render: (_, record: SalaryRecord) => (
+        <Checkbox
+          checked={selectedRowKeys.includes(record.id)}
+          onChange={(e) => {
+            if (e.target.checked) {
+              setSelectedRowKeys([...selectedRowKeys, record.id])
+            } else {
+              setSelectedRowKeys(selectedRowKeys.filter(k => k !== record.id))
+            }
+          }}
+        />
+      ),
+    },
+    {
       title: t('common.no'),
       key: 'serialNo',
       render: (_, __, index) => (currentPage - 1) * pageSize + index + 1,
@@ -1415,6 +1444,31 @@ const loadData = async () => {
     messageApi.success('Export Excel Sucess');
 
   }
+
+  // 批量删除薪资记录
+  const handleBatchDelete = () => {
+    if (selectedRowKeys.length === 0) {
+      messageApi.warning('请先选择要删除的记录');
+      return;
+    }
+
+    modal.confirm({
+      title: 'Delete Selected Records',
+      content: `Are you sure you want to delete ${selectedRowKeys.length} selected records?`,
+      onOk: async () => {
+        try {
+          await deleteSalaryRecordByIds(selectedRowKeys.map(id => Number(id)));
+          setSalaryRecords(salaryRecords.filter(item => !selectedRowKeys.includes(item.id)));
+          setSelectedRowKeys([]);
+          messageApi.success('Selected records deleted successfully');
+          await fetchSalaryData()
+        } catch (error) {
+          console.error('Batch delete salary records failed:', error);
+          messageApi.error('Delete failed, please try again later');
+        }
+      },
+    });
+  }
 // 处理筛选表单提交
   const handleFilterSubmit = () => {
     filterForm.validateFields().then(values => {
@@ -1499,53 +1553,50 @@ const loadData = async () => {
           `}
         </style>
         <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-          <div className="header-actions">
-            {/* 筛选表单 */}
-                      <div style={{ flex: 1 }}>
-                      <Form form={filterForm} layout="inline" style={{ marginBottom: 1 }}>
-                        <Form.Item name="employee_id" label={t('employeePage.employeeId')}>
-                          <Input placeholder={t('employeePage.enterEmployeeId')} />
-                        </Form.Item>
-                        <Form.Item name="name" label={t('employeePage.employeeName')}>
-                          <Input placeholder={t('employeePage.enterEmployeeName')} />
-                        </Form.Item>
-                        <Form.Item name="month" label={t('attendancePage.month')} initialValue={dayjs(currentMonth)}>
-                          <DatePicker
-                            picker="month"
-                            onChange={(date) => {
-                              if (date) {
-                                setCurrentMonth(date.format('YYYY-MM'))
-                              }
-                            }}
-                            className="month-picker"
-                          />
-                        </Form.Item>
-                         <Form.Item>
-                          <Button type="primary" onClick={handleFilterSubmit} style={{ marginRight: 8 }}>{t('common.search')}</Button>
-                          <Button onClick={handleFilterReset}>{t('common.reset')}</Button>
-                        </Form.Item>
-                      </Form>
-                      
-                      </div>
-{/*                        
-            <DatePicker
-              picker="month"
-              value={dayjs(currentMonth)}
-              onChange={(date) => {
-                if (date) {
-                  setCurrentMonth(date.format('YYYY-MM'))
-                }
-              }}
-              className="month-picker"
-            /> */}
-          </div>
-          <div style={{ display: 'flex', gap: 8 }}>
-          {/* 多个按钮放在 div 中，通过 gap 控制间距 */}
-          <Button size="small" type="primary" icon={<PlusOutlined />} onClick={handleCalculateMonthlySalary}>{t('newSalaryPage.calculateMonthlySalary')}</Button>
-          <Button size="small" type="primary" icon={<UploadOutlined />} onClick={() => setImportModalVisible(true)}>{t('newSalaryPage.importSalaryRecords')}</Button>
-          <Button size="small" type="primary" icon={<FileExcelOutlined />} onClick={handleExportToExcel}>{t('newSalaryPage.exportToExcel')}</Button>
-          </div>
-        </div> 
+          <div className="header-actions" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16 }}>
+              <Form form={filterForm} layout="inline" style={{ flex: 1 }}>
+                <Form.Item name="employee_id" label={t('employeePage.employeeId')}>
+                  <Input placeholder={t('employeePage.enterEmployeeId')} />
+                </Form.Item>
+                <Form.Item name="name" label={t('employeePage.employeeName')}>
+                  <Input placeholder={t('employeePage.enterEmployeeName')} />
+                </Form.Item>
+                <Form.Item name="month" label={t('attendancePage.month')} initialValue={dayjs(currentMonth)}>
+                  <DatePicker
+                    picker="month"
+                    onChange={(date) => {
+                      if (date) {
+                        setCurrentMonth(date.format('YYYY-MM'))
+                      }
+                    }}
+                    className="month-picker"
+                  />
+                </Form.Item>
+                <Form.Item>
+                  <Button type="primary" onClick={handleFilterSubmit} style={{ marginRight: 8 }}>{t('common.search')}</Button>
+                  <Button onClick={handleFilterReset}>{t('common.reset')}</Button>
+                </Form.Item>
+              </Form>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <Button size="small" type="primary" icon={<PlusOutlined />} onClick={handleCalculateMonthlySalary}>{t('newSalaryPage.calculateMonthlySalary')}</Button>
+                <Button size="small" type="primary" icon={<UploadOutlined />} onClick={() => setImportModalVisible(true)}>{t('newSalaryPage.importSalaryRecords')}</Button>
+                <Button size="small" type="primary" icon={<FileExcelOutlined />} onClick={handleExportToExcel}>{t('newSalaryPage.exportToExcel')}</Button>
+              </div>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+              <Button
+                size="small"
+                danger
+                icon={<DeleteOutlined />}
+                onClick={handleBatchDelete}
+                disabled={selectedRowKeys.length === 0}
+              >
+                {t('newSalaryPage.batchDelete')} ({selectedRowKeys.length})
+              </Button>
+            </div>
+          </div> 
+        </div>
         <div style={{ flex: 1, overflow: 'hidden' }}>
           <Table 
             columns={columns} 
@@ -1560,7 +1611,7 @@ const loadData = async () => {
          <Pagination
           current={currentPage}
           pageSize={pageSize}
-          pageSizeOptions={['10', '20', '50', '100']}
+          pageSizeOptions={[ '50', '100','200']}
           showSizeChanger
           showTotal={(total) => t('common.totalRecords', { count: total })}
           total={total}

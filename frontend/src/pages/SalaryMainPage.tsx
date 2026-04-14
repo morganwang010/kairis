@@ -41,7 +41,7 @@ const SalaryMainPage = () => {
   }, [params.projectId])
 
   const tabItems: TabsProps['items'] = [
-          {
+    {
       key: 'employees',
       label: t('common.employee'),
       children: <EmployeePage projectId={currentProject} projectName={projectName} />,
@@ -61,12 +61,11 @@ const SalaryMainPage = () => {
       label: t('common.salary'),
       children: <NewSalaryPage projectId={currentProject} projectName={projectName} />,
     },
-      {
+    {
       key: 'salarySlip',
       label: t('common.salarySlips'),
       children: <SalarySlipPage projectId={currentProject} projectName={projectName} />,
     },
-
   ]
 
   return (

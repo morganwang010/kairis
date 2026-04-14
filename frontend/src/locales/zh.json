@@ -341,7 +341,8 @@
     "totalAcceptance": "总收入",
     "netAcceptance": "净收入",
     "editAttendance": "编辑考勤",
-    "addAttendance": "添加考勤"
+    "addAttendance": "添加考勤",
+    "batchDelete":"批量删除"
   },
   "homePage": {
     "dashboard": "仪表盘",

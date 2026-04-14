@@ -33,6 +33,10 @@ func (s *SalaryService) Delete(id uint) error {
 	return s.salaryRepo.Delete(id)
 }
 
+func (s *SalaryService) DeleteSalaryByIDs(ids []uint) error {
+	return s.salaryRepo.DeleteByIDs(ids)
+}
+
 type ImportSalaryRequest struct {
 	Salaries []ImportSalaryItem `json:"salaries"`
 }

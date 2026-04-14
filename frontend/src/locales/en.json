@@ -355,7 +355,8 @@
     "otHours": "OT_Hours",
     "otWages": "OT_Wages",
     "ewHours": "EW_Hours",
-    "ewWages": "EW_Wages"
+    "ewWages": "EW_Wages",
+    "batchDelete":"Batch Delete"
   },
   "homePage": {
     "dashboard": "Dashboard",

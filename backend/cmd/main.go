@@ -194,6 +194,7 @@ func main() {
 			salaries.POST("", salaryHandler.Create)
 			salaries.PUT("/:id", salaryHandler.Update)
 			salaries.DELETE("/:id", salaryHandler.Delete)
+			salaries.DELETE("/batch", salaryHandler.DeleteByIDs)
 			salaries.POST("/import", salaryHandler.Import)
 			salaries.POST("/calculate", salaryHandler.Calculate)
 			salaries.GET("/total", salaryHandler.TotalSalary)
