@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, Space, message, Tag, Card } from 'antd';
+import { Table, Button, Modal, Form, Input, InputNumber, Space, message, Tag, Card } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
@@ -360,9 +360,9 @@ const ProjectPage: React.FC = () => {
           <Form.Item
             label={t('projectPage.askesBpjsAlw')}
             name="askesAlwByNation"
-              rules={[{ required: true, message: t('projectPage.askesAlwByNationRequired') }]}
+            rules={[{ required: true, message: t('projectPage.askesAlwByNationRequired') }]}
           >
-            <Input type="number" placeholder={t('projectPage.askesAlwPlaceholder')} />
+            <InputNumber min={0} max={1} placeholder={t('projectPage.askesAlwPlaceholder')} />
           </Form.Item>
           {/* <div style={{ display: 'flex', gap: 16 }}>
             <Form.Item

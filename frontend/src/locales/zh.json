@@ -904,7 +904,8 @@
     "edit": "编辑",
     "delete": "删除",
     "confirmDeleteTitle": "删除确认",
-    "askesBpjsAlw": "是否允许 BPJS 补贴"
+    "askesBpjsAlw": "是否允许 BPJS 补贴",
+    "askesAlwByNationRequired": "是否允许 BPJS 补贴是必填项"
    },
    "licensePage": {
     "title": "授权管理",
