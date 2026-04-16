@@ -542,7 +542,8 @@
     "exportToExcel": "导出到Excel",
     "mealAlwAdd": "伙食津贴/新增",
     "transpAlwAdd": "交通津贴/新增",
-    "ewDrv": "司机补贴"
+    "ewDrv": "司机补贴",
+    "otDrv": "司机加班补贴"
   },
   "employeeUploadPage": {
     "title": "员工信息导入",

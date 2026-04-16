@@ -556,7 +556,8 @@
     "exportToExcel": "Export to Excel",
     "mealAlwAdd": "Meal_Alw/Add",
     "transpAlwAdd": "Transp_Alw/Add",
-    "ewDrv": "EW_Drv"
+    "ewDrv": "EW_Drv",
+    "otDrv": "OT_Drv"
   },
   "employeePage": {
     "title": "Employee Management",

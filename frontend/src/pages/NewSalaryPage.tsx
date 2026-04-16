@@ -1196,7 +1196,13 @@ const loadData = async () => {
       dataIndex: 'ew_drv',
       key: 'ew_drv',
       render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },    
+    }, 
+    {
+      title: t('incidentPage.otDrv'),
+      dataIndex: 'ot_drv',
+      key: 'ot_drv',
+      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+    },     
     {
       title: t('newSalaryPage.leaveCompensation'),
       dataIndex: 'leave_comp',

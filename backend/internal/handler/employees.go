@@ -374,7 +374,7 @@ func (h *EmployeeHandler) Import(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": err.Error()})
 		return
 	}
-
+	slog.Info("meal_alw_month11", "meal_alw_month", req.Records[0].MealAlwMonth)
 	importReq := service.ImportEmployeeRequest{
 		Employees: make([]service.ImportEmployeeItem, len(req.Records)),
 	}
@@ -437,6 +437,8 @@ func (h *EmployeeHandler) Import(c *gin.Context) {
 			return
 		}
 		// 转换MealAlwMonth为float64类型
+		slog.Info("meal_alw_month", "meal_alw_month", item.MealAlwMonth)
+
 		mealAlwMonth, ok := StringToFloat64(c, item.MealAlwMonth, "meal_alw_month")
 		if !ok {
 			return
@@ -446,6 +448,7 @@ func (h *EmployeeHandler) Import(c *gin.Context) {
 		if !ok {
 			return
 		}
+
 		// 转换PulsaAlwDay为float64类型
 		pulsaAlwDay, ok := StringToFloat64(c, item.PulsaAlwDay, "pulsa_alw/day")
 		if !ok {

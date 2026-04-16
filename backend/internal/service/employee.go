@@ -86,6 +86,7 @@ type ImportEmployeeItem struct {
 	PulsaAlwMonth   float64 `json:"pulsa_alw_month"`
 	HousingAlwTetap float64 `json:"housing_alw_tetap"`
 	DeleteFlag      int     `json:"delete_flag"`
+	OtDrv           float64 `json:"ot_drv"`
 	IdStatus        string  `json:"id_status"`
 }
 
