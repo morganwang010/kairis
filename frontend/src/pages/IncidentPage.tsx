@@ -390,7 +390,10 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
         correct_sub: trimmedRecord['Correct_Sub'] || trimmedRecord['correct_sub'] || 0,
         tax_ded_phk: trimmedRecord['Tax_Ded_Phk'] || trimmedRecord['tax_ded_phk'] || 0,
         mandah_alw: trimmedRecord['Mandah_Alw'] || trimmedRecord['mandah_alw'] || 0,
-        ot_drv: trimmedRecord['Ot_Drv'] || trimmedRecord['ot_drv'] || 0
+        ot_drv: trimmedRecord['Ot_Drv'] || trimmedRecord['OT_Drv'] || 0,
+        ot_add: trimmedRecord['OT_Add'] || trimmedRecord['Ot_Add'] || 0,
+        ew_add: trimmedRecord['EW_Add'] || trimmedRecord['Ew_Add'] || 0,
+        ew_drv: trimmedRecord['EW_Drv'] || trimmedRecord['Ew_Drv'] || 0,
       }
       
       // 检查必要字段
@@ -454,8 +457,10 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
           mandah_alw: trimmedRecord['Mandah_Alw'] || trimmedRecord['mandah_alw'] || "0",
           meal_alw_add: trimmedRecord['Meal_Alw/Add'] || trimmedRecord['meal_alw_add'] || "0",
           transp_alw_add: trimmedRecord['Transp_Alw/Add'] || trimmedRecord['transp_alw_add'] || "0",
-          ew_drv: trimmedRecord['EW_Drv'] || trimmedRecord['ew_drv'] || "0",
-          ot_drv: trimmedRecord['OT_Drv'] || trimmedRecord['ot_drv'] || "0",
+          ew_drv: trimmedRecord['EW_Drv'] || trimmedRecord['Ew_Drv'] || "0",
+          ot_drv: trimmedRecord['OT_Drv'] || trimmedRecord['Ot_Drv'] || "0",
+          ot_add: trimmedRecord['OT_Add'] || trimmedRecord['Ot_Add'] || "0",
+          ew_add: trimmedRecord['EW_Add'] || trimmedRecord['Ew_Add'] || "0",
         }
       }).filter(record => record.employee_id)
       
@@ -691,6 +696,8 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
     
     { title: t('incidentPage.mealAlwAdd'), dataIndex: 'meal_alw_add', key: 'meal_alw_add', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
     { title: t('incidentPage.transpAlwAdd'), dataIndex: 'transp_alw_add', key: 'transp_alw_add', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    { title: t('incidentPage.otAdd'), dataIndex: 'ot_add', key: 'ot_add', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    { title: t('incidentPage.ewAdd'), dataIndex: 'ew_add', key: 'ew_add', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
     { title: t('incidentPage.ewDrv'), dataIndex: 'ew_drv', key: 'ew_drv', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
     { title: t('incidentPage.otDrv'), dataIndex: 'ot_drv', key: 'ot_drv', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
 

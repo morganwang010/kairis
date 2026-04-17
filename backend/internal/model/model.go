@@ -122,6 +122,8 @@ type Incidents struct {
 	TranspAlwAdd     float64 `gorm:"column:transp_alw_add;default:0.00" json:"transp_alw_add"`
 	EwDrv            float64 `gorm:"column:ew_drv;default:0.00" json:"ew_drv"`
 	OtDrv            float64 `gorm:"column:ot_drv;default:0.00" json:"ot_drv"`
+	OtAdd            float64 `gorm:"column:ot_add;default:0.00" json:"ot_add"`
+	EwAdd            float64 `gorm:"column:ew_add;default:0.00" json:"ew_add"`
 
 	// 时间字段
 	CreateTime time.Time `gorm:"column:create_time;default:CURRENT_TIMESTAMP" json:"create_time"`

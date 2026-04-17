@@ -1192,6 +1192,18 @@ const loadData = async () => {
       render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
     },
     {
+      title: t('incidentPage.ewAdd'),
+      dataIndex: 'ew_add',
+      key: 'ew_add',
+      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+    }, 
+    {
+      title: t('incidentPage.otAdd'),
+      dataIndex: 'ot_add',
+      key: 'ot_add',
+      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+    },
+    {
       title: t('incidentPage.ewDrv'),
       dataIndex: 'ew_drv',
       key: 'ew_drv',

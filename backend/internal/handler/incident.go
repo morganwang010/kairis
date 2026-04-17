@@ -556,6 +556,8 @@ func (h *IncidentHandler) Import(c *gin.Context) {
 			TranspAlwAdd     string `json:"transp_alw_add"`
 			EwDrv            string `json:"ew_drv"`
 			OtDrv            string `json:"ot_drv"`
+			OtAdd            string `json:"ot_add"`
+			EwAdd            string `json:"ew_add"`
 		} `json:"records"`
 	}
 	slog.Info("Before binding", "req", &req)
@@ -681,6 +683,14 @@ func (h *IncidentHandler) Import(c *gin.Context) {
 		if !ok {
 			return
 		}
+		otAdd, ok := StringToFloat64(c, item.OtAdd, "ot_add")
+		if !ok {
+			return
+		}
+		ewAdd, ok := StringToFloat64(c, item.EwAdd, "ew_add")
+		if !ok {
+			return
+		}
 
 		importReq.Incidents[i] = service.ImportIncidentItem{
 			EmployeeID:       item.EmployeeID,
@@ -712,6 +722,8 @@ func (h *IncidentHandler) Import(c *gin.Context) {
 			TranspAlwAdd:     transpAlwAdd,
 			EwDrv:            ewDrv,
 			OtDrv:            otDrv,
+			OtAdd:            otAdd,
+			EwAdd:            ewAdd,
 		}
 	}
 

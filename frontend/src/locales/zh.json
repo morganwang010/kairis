@@ -543,7 +543,9 @@
     "mealAlwAdd": "伙食津贴/新增",
     "transpAlwAdd": "交通津贴/新增",
     "ewDrv": "司机补贴",
-    "otDrv": "司机加班补贴"
+    "otDrv": "司机加班补贴",
+    "otAdd": "司机加班补贴新增",
+    "ewAdd": "司机加班补贴新增2"
   },
   "employeeUploadPage": {
     "title": "员工信息导入",

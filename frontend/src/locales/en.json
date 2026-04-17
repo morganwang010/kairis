@@ -557,7 +557,9 @@
     "mealAlwAdd": "Meal_Alw/Add",
     "transpAlwAdd": "Transp_Alw/Add",
     "ewDrv": "EW_Drv",
-    "otDrv": "OT_Drv"
+    "otDrv": "OT_Drv",
+    "otAdd": "OT_Add",
+    "ewAdd": "EW_Add"
   },
   "employeePage": {
     "title": "Employee Management",

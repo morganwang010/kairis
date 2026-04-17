@@ -405,6 +405,8 @@ CREATE TABLE incidents (
     transp_alw_add NUMERIC default 0.00,
     ew_drv NUMERIC default 0.00,
     ot_drv NUMERIC default 0.00,
+    ot_add NUMERIC default 0.00,
+    ew_add NUMERIC default 0.00,
     UNIQUE (employee_id, project_id, month)
 );
 
