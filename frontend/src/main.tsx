@@ -19,7 +19,7 @@ createRoot(document.getElementById('root')!).render(
     <App />
     </Provider>
 
-  </StrictMode>,
+  </StrictMode>
   </I18nextProvider>
  
 )

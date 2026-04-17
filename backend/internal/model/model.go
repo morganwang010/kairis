@@ -272,7 +272,7 @@ type Employee struct {
 	JoinDate        time.Time `gorm:"column:join_date;default:CURRENT_TIMESTAMP" json:"join_date"` // TIMESTAMP
 	ResignDate      time.Time `gorm:"column:resign_date;default:CURRENT_TIMESTAMP" json:"resign_date"`
 	IdStatus        string    `gorm:"column:id_status;default:''" json:"id_status"`         // TEXT default
-	Email           string    `gorm:"column:email;default:'123@123.com'" json:"email"`      // TEXT default
+	Email           string    `gorm:"column:email;default:''" json:"email"`                 // TEXT default
 	BasicSalary     float64   `gorm:"column:basic_salary;default:0.00" json:"basic_salary"` // NUMERIC default 0.00
 	HousingAlw      float64   `gorm:"column:housing_alw;default:0.00" json:"housing_alw"`   // NUMERIC default 0.00
 	PositionAlw     float64   `gorm:"column:position_alw;default:0.00" json:"position_alw"` // NUMERIC default 0.00
