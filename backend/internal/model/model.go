@@ -68,6 +68,8 @@ type Project struct {
 	// UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
 	AskesAlw  int            `json:"askes_alw"`
+	OtHoursOn int            `json:"ot_hours_on"`
+	EwHoursOn int            `json:"ew_hours_on"`
 }
 
 type License struct {

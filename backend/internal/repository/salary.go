@@ -194,12 +194,14 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 		return err
 	}
 
-	// 2. 从project表获取项目的askes_alw_by_nation系数
+	// 2. 从project表获取项目的askes_alw_by_nation系数和ot_hours_on、ew_hours_on系数
 	var project model.Project
 	if err := r.db.First(&project, projectID).Error; err != nil {
 		return err
 	}
 	askesAlwByNation := float64(project.AskesAlw)
+	otHoursOn := float64(project.OtHoursOn)
+	ewHoursOn := float64(project.EwHoursOn)
 
 	// 3. 获取考勤记录和员工信息
 
@@ -245,7 +247,12 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 		}
 
 		// 计算加班时长和工资
-		otHours := float64(record.Work)*7.5 + record.Ot1Hours
+		otHours := 0.0
+		if record.IdStatus == "nst" || record.IdStatus == "NST" || record.IdStatus == "Nst" {
+			otHours = float64(record.Work)*7.5 + record.Ot1Hours
+		} else {
+			otHours = record.Ot1Hours
+		}
 		// ot1Hour := record.Ot1 * coefficient.COtHour1
 		// ot1Wages := (ot1Hour / coefficient.COtWages1) * totalNetWages
 
@@ -257,13 +264,13 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 
 		// ew3Hour := record.Ew3 * coefficient.CEwHour3
 		// ew3Wages := (ew3Hour / coefficient.CEwWages3 / coefficient.CEwHour2) * totalNetWages
-		otWages := otHours / coefficient.CEwWages1 * totalNetWages
+		otWages := otHours / coefficient.CEwWages1 * totalNetWages * otHoursOn
 		//
 		ewWages := 0.0
-		if record.IdStatus == "nst" {
-			ewWages = record.EwHours / coefficient.CEwWages1 * totalNetWages
+		if record.IdStatus == "nst" || record.IdStatus == "NST" || record.IdStatus == "Nst" {
+			ewWages = record.EwHours / coefficient.CEwWages1 * totalNetWages * ewHoursOn
 		} else {
-			ewWages = (record.EwHours / coefficient.CEwWages2 / coefficient.CEwHour2) * totalNetWages
+			ewWages = (record.EwHours / coefficient.CEwWages2 / coefficient.CEwHour2) * totalNetWages * ewHoursOn
 		}
 
 		workDays := float64(record.Work) + record.Ew
@@ -278,7 +285,7 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 		absentDed1 := record.Unpresent / 30.0 * record.BasicSalary
 
 		// 计算税前总收入
-		totalAcceptNoTax := totalNetWages + record.HousingAlwTetap + record.PulsaAlwMonth + jmstkAlw + pensionAlw + otWages + ewWages + mealAlw + transpAlw + askesBpjsAlw + pulsaAlw + attAlw + record.LeaveComp + record.MedAlw + record.Others + record.ReligiousAlw + record.RapelBasicSalary + record.RapelJmstkAlw + record.Acting + record.PerformanceAlw + record.TripAlw + record.MandahAlw + record.IncentiveAlw + record.MealAlwAdd + record.TranspAlwAdd + record.CompPhk + record.TaxAlwPhk + record.CorrectAdd + record.EwDrv - record.CorrectSub - absentDed1 - record.AbsentDed2 - record.IncentiveDed - record.LoanDed - record.TaxDedPhk + record.MealAlwMonth + record.TranspAlwMonth + record.OtDrv + record.OtAdd + record.EwAdd
+		totalAcceptNoTax := totalNetWages + record.HousingAlwTetap + record.PulsaAlwMonth + jmstkAlw + pensionAlw + otWages + ewWages + mealAlw + transpAlw + askesBpjsAlw + pulsaAlw + attAlw + record.LeaveComp + record.MedAlw + record.Others + record.ReligiousAlw + record.RapelBasicSalary + record.RapelJmstkAlw + record.Acting + record.PerformanceAlw + record.TripAlw + record.MandahAlw + record.IncentiveAlw + record.MealAlwAdd + record.TranspAlwAdd + record.CompPhk + record.TaxAlwPhk + record.CorrectAdd + record.EwDrv - record.CorrectSub - absentDed1 - record.AbsentDed2 - record.IncentiveDed - record.LoanDed - record.TaxDedPhk + record.MealAlwMonth + record.TranspAlwMonth + record.OtDrv + record.OtAdd + record.EwAdd + record.EwDrv
 
 		// 计算税额
 		taxAlwSalary := 0.0
@@ -440,6 +447,7 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 			existingSalary.TaxDedSalary = taxDedSalary
 			existingSalary.AskesBpjsDed = askesBpjsDed
 			existingSalary.EwWages = ewWages
+			existingSalary.OtWages = record.OtWages
 			// existingSalary.LeaveComp = record.LeaveComp
 
 			if err := r.db.Save(&existingSalary).Error; err != nil {

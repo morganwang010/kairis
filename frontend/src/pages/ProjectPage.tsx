@@ -21,6 +21,8 @@ interface Project {
   // description: string;
   status: string;
   askesAlwByNation: number;
+  otHoursOn: number;
+  ewHoursOn: number;
 }
 
 // 表单值接口
@@ -36,6 +38,8 @@ interface ProjectFormValues {
   // description: string;
   status: string;
   askesAlwByNation: number;
+  otHoursOn: number;
+  ewHoursOn: number;
 }
 
 const ProjectPage: React.FC = () => {
@@ -79,6 +83,8 @@ const ProjectPage: React.FC = () => {
         status: item.status,
         // description: item.project_desc || '',
         askesAlwByNation: item.askes_alw,
+        otHoursOn: item.ot_hours_on,
+        ewHoursOn: item.ew_hours_on,
       }));
       setProjects(formattedProjects);
     } catch (error) {
@@ -129,6 +135,18 @@ const ProjectPage: React.FC = () => {
       width: 120,
     },
     {
+      title: t('projectPage.otHoursOn'),
+      dataIndex: 'otHoursOn',
+      key: 'otHoursOn',
+      width: 120,
+    },
+    {
+      title: t('projectPage.ewHoursOn'),
+      dataIndex: 'ewHoursOn',
+      key: 'ewHoursOn',
+      width: 120,
+    },
+    {
       title: t('projectPage.status'),
       dataIndex: 'status',
       key: 'status',
@@ -139,6 +157,7 @@ const ProjectPage: React.FC = () => {
         return <Tag color="gray">{status}</Tag>;
       }
     },
+    
     {
       title: t('common.action'),
       key: 'action',
@@ -199,6 +218,8 @@ const ProjectPage: React.FC = () => {
       clientCompanyName: project.clientCompanyName,
       contactPhone: project.contactPhone,
       askesAlwByNation: project.askesAlwByNation,
+      otHoursOn: project.otHoursOn,
+      ewHoursOn: project.ewHoursOn,
       // description: project.description,
     });
     setIsModalVisible(true);
@@ -242,6 +263,8 @@ const ProjectPage: React.FC = () => {
           // id: values.id,
           projectName: values.projectName,
           projectShortName: values.projectShortName,
+          otHoursOn: values.otHoursOn,
+          ewHoursOn: values.ewHoursOn,
           askesAlwByNation: values.askesAlwByNation,
           // startTime: values.startTime?.format('YYYY-MM-DD') || '',
           // endTime: values.endTime?.format('YYYY-MM-DD') || '',
@@ -276,6 +299,9 @@ const ProjectPage: React.FC = () => {
           clientProjectManager: values.clientProjectManager,
           clientCompanyName: values.clientCompanyName,
           contactPhone: values.contactPhone,
+          askesAlwByNation: values.askesAlwByNation,
+          otHoursOn: values.otHoursOn,
+          ewHoursOn: values.ewHoursOn,
           // description: values.description,
           status: 'active'
         };
@@ -363,6 +389,20 @@ const ProjectPage: React.FC = () => {
             rules={[{ required: true, message: t('projectPage.askesAlwByNationRequired') }]}
           >
             <InputNumber min={0} max={1} placeholder={t('projectPage.askesAlwPlaceholder')} />
+          </Form.Item>
+          <Form.Item
+            label={t('projectPage.otHoursOn')}
+            name="otHoursOn"
+            rules={[{ required: true, message: t('projectPage.otHoursOnRequired') }]}
+          >
+            <InputNumber min={0} max={1} placeholder={t('projectPage.otHoursOnPlaceholder')} />
+          </Form.Item>
+          <Form.Item
+            label={t('projectPage.ewHoursOn')}
+            name="ewHoursOn"
+            rules={[{ required: true, message: t('projectPage.ewHoursOnRequired') }]}
+          >
+            <InputNumber min={0} max={1} placeholder={t('projectPage.ewHoursHoursOnPlaceholder')} />
           </Form.Item>
           {/* <div style={{ display: 'flex', gap: 16 }}>
             <Form.Item

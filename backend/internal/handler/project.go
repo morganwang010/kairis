@@ -22,14 +22,18 @@ type CreateProjectRequest struct {
 	ProjectName string `json:"project_name" binding:"required"`
 	ProjectAbbr string `json:"project_abbr" binding:"required"`
 	// Description string `json:"description"`
-	AskesAlw string `json:"askes_alw"`
+	AskesAlw int `json:"askes_alw"`
+	OtHoursOn int `json:"ot_hours_on"`
+	EwHoursOn int `json:"ew_hours_on"`
 }
 
 type UpdateProjectRequest struct {
 	ProjectName string `json:"project_name" binding:"required"`
 	ProjectAbbr string `json:"project_abbr" binding:"required"`
 	// Description string `json:"description"`
-	AskesAlw string `json:"askes_alw"`
+	AskesAlw int `json:"askes_alw"`
+	OtHoursOn int `json:"ot_hours_on"`
+	EwHoursOn int `json:"ew_hours_on"`
 }
 
 func (h *ProjectHandler) Create(c *gin.Context) {
@@ -42,17 +46,11 @@ func (h *ProjectHandler) Create(c *gin.Context) {
 	project := &model.Project{
 		ProjectName: req.ProjectName,
 		ProjectAbbr: req.ProjectAbbr,
-		// Description: req.Description,
-		// AskesAlw: req.AskesAlw,
 	}
 
-	askesAlw, err := strconv.Atoi(req.AskesAlw)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": err.Error()})
-		return
-	}
-
-	project.AskesAlw = askesAlw
+	project.AskesAlw = req.AskesAlw
+	project.OtHoursOn = req.OtHoursOn
+	project.EwHoursOn = req.EwHoursOn
 
 	if err := h.projectService.CreateProject(project); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
@@ -114,15 +112,10 @@ func (h *ProjectHandler) Update(c *gin.Context) {
 	project.ProjectName = req.ProjectName
 	project.ProjectAbbr = req.ProjectAbbr
 	// project.Description = req.Description
-	// project.AskesAlw = req.AskesAlw
 
-	askesAlw, err := strconv.Atoi(req.AskesAlw)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": err.Error()})
-		return
-	}
-
-	project.AskesAlw = askesAlw
+	project.AskesAlw = req.AskesAlw
+	project.OtHoursOn = req.OtHoursOn
+	project.EwHoursOn = req.EwHoursOn
 
 	if err := h.projectService.UpdateProject(project); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})

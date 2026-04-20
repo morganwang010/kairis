@@ -772,7 +772,7 @@ export const deleteSystemConfig = async (id: number) => {
 export const createProject = async (data: any) => {
   try {
     // 构建查询参数
-    const queryParams: Record<string, string> = {
+    const queryParams: Record<string, string | number> = {
       project_name: data.projectName,
       project_abbr: data.projectShortName,
       start_time: data.startTime || '',
@@ -781,8 +781,10 @@ export const createProject = async (data: any) => {
       project_desc: data.description || '',
       status: data.status || 'active',
       askes_alw: data.askesAlwByNation || '1',
+      ot_hours_on: data.otHoursOn ?? 0,
+      ew_hours_on: data.ewHoursOn ?? 0,
     };
-    
+
     const response = await apiClient.post('/projects', queryParams);
     return response;
   } catch (error) {
@@ -798,10 +800,11 @@ export const updateProject = async (data: any) => {
       project_id: data.id,
       project_name: data.projectName,
       project_abbr: data.projectShortName,
-      askes_alw: data.askesAlwByNation,
-      
+      ot_hours_on: data.otHoursOn ?? 0,
+      ew_hours_on: data.ewHoursOn ?? 0,
+      askes_alw: data.askesAlwByNation ?? 0,
     };
-    
+
     // 只传递存在的可选参数
     if (data.startTime) queryParams.start_time = data.startTime;
     if (data.endTime) queryParams.end_time = data.endTime;
@@ -810,8 +813,7 @@ export const updateProject = async (data: any) => {
     if (data.clientCompanyName) queryParams.party_a_company = data.clientCompanyName;
     if (data.contactPhone) queryParams.contact_phone = data.contactPhone;
     if (data.description) queryParams.project_desc = data.description;
-    if (data.askesAlwByNation !== undefined) queryParams.askes_alw = data.askesAlwByNation || '';
-    
+
     console.log("project_id {}",data.id)
     const response = await apiClient.put(`/projects/${data.id}`, queryParams);
     return response;

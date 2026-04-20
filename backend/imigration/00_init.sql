@@ -243,6 +243,8 @@ CREATE TABLE projects (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP  DEFAULT NULL,
     askes_alw INTEGER DEFAULT 1,
+    ot_hours_on INTEGER DEFAULT 1,
+    ew_hours_on INTEGER DEFAULT 1,
     status TEXT NULL DEFAULT 'active'
 );
 

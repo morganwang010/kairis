@@ -444,7 +444,12 @@
     "askesBpjsDeduction": "社保扣除",
     "roundOffSalary": "工资取整",
     "exportPdf": "导出PDF",
-    "selectRecords": "请先选择记录"
+    "selectRecords": "请先选择记录",
+    "otWages": "加班工资",
+    "ewWages": "额外工作工资",
+    "joinDate": "入职日期"
+
+
   },
   "attendanceUploadPage": {
     "title": "考勤导入",
@@ -908,7 +913,11 @@
     "delete": "删除",
     "confirmDeleteTitle": "删除确认",
     "askesBpjsAlw": "是否允许 BPJS 补贴",
-    "askesAlwByNationRequired": "是否允许 BPJS 补贴是必填项"
+    "askesAlwByNationRequired": "是否允许 BPJS 补贴是必填项",
+    "otHoursOn": "OT时长是否允许",
+    "otHoursOnRequired": "是否允许 OT 时长是否是必填项",
+    "ewHoursOn": "EW时长是否允许",
+    "ewHoursOnRequired": "是否允许 EW 时长是否是必填项"
    },
    "licensePage": {
     "title": "授权管理",
