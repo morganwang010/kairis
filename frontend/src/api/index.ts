@@ -455,6 +455,7 @@ export const addIncident = async (record: any) => {
 // 更新偶发事件记录
 export const updateIncident = async (record: any) => {
   try {
+    // console.log('更新偶发事件记录请求:', record);
     const response = await apiClient.put(`/incidents/${record.id}`, record);
     console.log('更新偶发事件记录成功:', response.data);
     return response.data;

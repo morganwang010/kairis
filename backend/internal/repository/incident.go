@@ -59,6 +59,7 @@ func (r *IncidentRepository) List(offset, limit int, projectID, month string) ([
 }
 
 func (r *IncidentRepository) Update(incident *model.Incidents) error {
+	slog.Info("Updating incident", "incident", incident)
 	return r.db.Save(incident).Error
 
 }

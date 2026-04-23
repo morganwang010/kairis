@@ -47,28 +47,34 @@ type CreateIncidentRequest struct {
 }
 
 type UpdateIncidentRequest struct {
-	LeaveComp        string `json:"leave_comp"`
-	MedAlw           string `json:"med_alw"`
-	Others           string `json:"others"`
-	ReligiousAlw     string `json:"religious_alw"`
-	RapelBasicSalary string `json:"rapel_basic_salary"`
-	RapelJmstkAlw    string `json:"rapel_jmstk_alw"`
-	IncentiveAlw     string `json:"incentive_alw"`
-	Acting           string `json:"acting"`
-	PerformanceAlw   string `json:"performance_alw"`
-	TripAlw          string `json:"trip_alw"`
-	Ot2Wages         string `json:"ot2_wages"`
-	Ot3Wages         string `json:"ot3_wages"`
-	CompPhk          string `json:"comp_phk"`
-	TaxAlwPhk        string `json:"tax_alw_phk"`
-	AbsentDed        string `json:"absent_ded"`
-	AbsentDed2       string `json:"absent_ded2"`
-	CorrectAdd       string `json:"correct_add"`
-	CorrectSub       string `json:"correct_sub"`
-	IncentiveDed     string `json:"incentive_ded"`
-	LoanDed          string `json:"loan_ded"`
-	TaxDedPhk        string `json:"tax_ded_phk"`
-	MandahAlw        string `json:"mandah_alw"`
+	LeaveComp        float64 `json:"leave_comp"`
+	MedAlw           float64 `json:"med_alw"`
+	Others           float64 `json:"others"`
+	ReligiousAlw     float64 `json:"religious_alw"`
+	RapelBasicSalary float64 `json:"rapel_basic_salary"`
+	RapelJmstkAlw    float64 `json:"rapel_jmstk_alw"`
+	IncentiveAlw     float64 `json:"incentive_alw"`
+	Acting           float64 `json:"acting"`
+	PerformanceAlw   float64 `json:"performance_alw"`
+	TripAlw          float64 `json:"trip_alw"`
+	Ot2Wages         float64 `json:"ot2_wages"`
+	Ot3Wages         float64 `json:"ot3_wages"`
+	CompPhk          float64 `json:"comp_phk"`
+	TaxAlwPhk        float64 `json:"tax_alw_phk"`
+	AbsentDed        float64 `json:"absent_ded"`
+	AbsentDed2       float64 `json:"absent_ded2"`
+	CorrectAdd       float64 `json:"correct_add"`
+	CorrectSub       float64 `json:"correct_sub"`
+	IncentiveDed     float64 `json:"incentive_ded"`
+	LoanDed          float64 `json:"loan_ded"`
+	TaxDedPhk        float64 `json:"tax_ded_phk"`
+	MandahAlw        float64 `json:"mandah_alw"`
+	OtAdd            float64 `json:"ot_add"`
+	EwAdd            float64 `json:"ew_add"`
+	EwDrv            float64 `json:"ew_drv"`
+	OtDrv            float64 `json:"ot_drv"`
+	MealAlwAdd       float64 `json:"meal_alw_add"`
+	TranspAlwAdd     float64 `json:"transp_alw_add"`
 }
 
 func (h *IncidentHandler) Create(c *gin.Context) {
@@ -318,161 +324,66 @@ func (h *IncidentHandler) Update(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"code": 404, "message": "Incident not found"})
 		return
 	}
+	//将updateIncidentRequest的值赋值给incident
+	if req.LeaveComp > 0 {
+		incident.LeaveComp = req.LeaveComp
+	}
+	if req.MedAlw > 0 {
+		incident.MedAlw = req.MedAlw
+	}
+	if req.Others > 0 {
+		incident.Others = req.Others
+	}
+	if req.ReligiousAlw > 0 {
+		incident.ReligiousAlw = req.ReligiousAlw
+	}
+	if req.RapelBasicSalary > 0 {
+		incident.RapelBasicSalary = req.RapelBasicSalary
+	}
+	if req.RapelJmstkAlw > 0 {
+		incident.RapelJmstkAlw = req.RapelJmstkAlw
+	}
+	if req.IncentiveAlw > 0 {
+		incident.IncentiveAlw = req.IncentiveAlw
+	}
+	if req.IncentiveDed > 0 {
+		incident.IncentiveDed = req.IncentiveDed
+	}
 
-	// 将字符串转换为 float64
-	if req.LeaveComp != "" {
-		if val, ok := StringToFloat64(c, req.LeaveComp, "leave_comp"); ok {
-			incident.LeaveComp = val
-		} else {
-			return
-		}
+	if req.LoanDed > 0 {
+		incident.LoanDed = req.LoanDed
+
 	}
-	if req.MedAlw != "" {
-		if val, ok := StringToFloat64(c, req.MedAlw, "med_alw"); ok {
-			incident.MedAlw = val
-		} else {
-			return
-		}
+	if req.TaxDedPhk > 0 {
+		incident.TaxDedPhk = req.TaxDedPhk
 	}
-	if req.Others != "" {
-		if val, ok := StringToFloat64(c, req.Others, "others"); ok {
-			incident.Others = val
-		} else {
-			return
-		}
+
+	if req.MandahAlw > 0 {
+		incident.MandahAlw = req.MandahAlw
 	}
-	if req.ReligiousAlw != "" {
-		if val, ok := StringToFloat64(c, req.ReligiousAlw, "religious_alw"); ok {
-			incident.ReligiousAlw = val
-		} else {
-			return
-		}
+	if req.CorrectSub > 0 {
+		incident.CorrectSub = req.CorrectSub
 	}
-	if req.RapelBasicSalary != "" {
-		if val, ok := StringToFloat64(c, req.RapelBasicSalary, "rapel_basic_salary"); ok {
-			incident.RapelBasicSalary = val
-		} else {
-			return
-		}
+	if req.CorrectAdd > 0 {
+		incident.CorrectAdd = req.CorrectAdd
 	}
-	if req.RapelJmstkAlw != "" {
-		if val, ok := StringToFloat64(c, req.RapelJmstkAlw, "rapel_jmstk_alw"); ok {
-			incident.RapelJmstkAlw = val
-		} else {
-			return
-		}
+	if req.OtAdd > 0 {
+		incident.OtAdd = req.OtAdd
 	}
-	if req.IncentiveAlw != "" {
-		if val, ok := StringToFloat64(c, req.IncentiveAlw, "incentive_alw"); ok {
-			incident.IncentiveAlw = val
-		} else {
-			return
-		}
+	if req.EwAdd > 0 {
+		incident.EwAdd = req.EwAdd
 	}
-	if req.Acting != "" {
-		if val, ok := StringToFloat64(c, req.Acting, "acting"); ok {
-			incident.Acting = val
-		} else {
-			return
-		}
+	if req.EwDrv > 0 {
+		incident.EwDrv = req.EwDrv
 	}
-	if req.PerformanceAlw != "" {
-		if val, ok := StringToFloat64(c, req.PerformanceAlw, "performance_alw"); ok {
-			incident.PerformanceAlw = val
-		} else {
-			return
-		}
+	if req.OtDrv > 0 {
+		incident.OtDrv = req.OtDrv
 	}
-	if req.TripAlw != "" {
-		if val, ok := StringToFloat64(c, req.TripAlw, "trip_alw"); ok {
-			incident.TripAlw = val
-		} else {
-			return
-		}
+	if req.MealAlwAdd > 0 {
+		incident.MealAlwAdd = req.MealAlwAdd
 	}
-	if req.Ot2Wages != "" {
-		if val, ok := StringToFloat64(c, req.Ot2Wages, "ot2_wages"); ok {
-			incident.Ot2Wages = val
-		} else {
-			return
-		}
-	}
-	if req.Ot3Wages != "" {
-		if val, ok := StringToFloat64(c, req.Ot3Wages, "ot3_wages"); ok {
-			incident.Ot3Wages = val
-		} else {
-			return
-		}
-	}
-	if req.CompPhk != "" {
-		if val, ok := StringToFloat64(c, req.CompPhk, "comp_phk"); ok {
-			incident.CompPhk = val
-		} else {
-			return
-		}
-	}
-	if req.TaxAlwPhk != "" {
-		if val, ok := StringToFloat64(c, req.TaxAlwPhk, "tax_alw_phk"); ok {
-			incident.TaxAlwPhk = val
-		} else {
-			return
-		}
-	}
-	if req.AbsentDed != "" {
-		if val, ok := StringToFloat64(c, req.AbsentDed, "absent_ded"); ok {
-			incident.AbsentDed = val
-		} else {
-			return
-		}
-	}
-	if req.AbsentDed2 != "" {
-		if val, ok := StringToFloat64(c, req.AbsentDed2, "absent_ded2"); ok {
-			incident.AbsentDed2 = val
-		} else {
-			return
-		}
-	}
-	if req.CorrectAdd != "" {
-		if val, ok := StringToFloat64(c, req.CorrectAdd, "correct_add"); ok {
-			incident.CorrectAdd = val
-		} else {
-			return
-		}
-	}
-	if req.CorrectSub != "" {
-		if val, ok := StringToFloat64(c, req.CorrectSub, "correct_sub"); ok {
-			incident.CorrectSub = val
-		} else {
-			return
-		}
-	}
-	if req.IncentiveDed != "" {
-		if val, ok := StringToFloat64(c, req.IncentiveDed, "incentive_ded"); ok {
-			incident.IncentiveDed = val
-		} else {
-			return
-		}
-	}
-	if req.LoanDed != "" {
-		if val, ok := StringToFloat64(c, req.LoanDed, "loan_ded"); ok {
-			incident.LoanDed = val
-		} else {
-			return
-		}
-	}
-	if req.TaxDedPhk != "" {
-		if val, ok := StringToFloat64(c, req.TaxDedPhk, "tax_ded_phk"); ok {
-			incident.TaxDedPhk = val
-		} else {
-			return
-		}
-	}
-	if req.MandahAlw != "" {
-		if val, ok := StringToFloat64(c, req.MandahAlw, "mandah_alw"); ok {
-			incident.MandahAlw = val
-		} else {
-			return
-		}
+	if req.TranspAlwAdd > 0 {
+		incident.TranspAlwAdd = req.TranspAlwAdd
 	}
 
 	if err := h.incidentService.UpdateIncident(incident); err != nil {

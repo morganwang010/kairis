@@ -36,6 +36,8 @@ interface AttendanceRecord {
   ew3: number
 
   days: Record<number, string> // day number to status (W, O, etc.)
+  ot1_hours: number
+  ew_hours: number
 }
 
 interface SheetData {
@@ -858,6 +860,8 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
       ew1: record.ew1 || 0,
       ew2: record.ew2 || 0,
       ew3: record.ew3 || 0,
+      ot1_hours: record.ot1_hours || 0,
+      ew_hours: record.ew_hours || 0,
     })
     setIsModalVisible(true)
   }
@@ -910,6 +914,8 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
             days: editingRecord?.days || {},
             permission: values.permission || 0,
             leave_replc: values.leave_replc || 0,
+            ot1_hours: values.ot1_hours || 0,
+            ew_hours: values.ew_hours || 0,
           }
 
           // 初始化天数记录
@@ -1034,7 +1040,9 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
               ew3: record.ew3 || 0,
               month: record.month,
               days: record.days || {} ,// 确保days字段存在
-              permission: record.permission || 0
+              permission: record.permission || 0,
+              ot1_hours: record.ot1_hours || 0,
+              ew_hours: record.ew_hours || 0,
             }))
              setData(formattedRecords)
           
@@ -1249,26 +1257,26 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
               name="employee_id"
               label={t('newAttendancePage.employeeId')}
             >
-              <Input />
+              <Input disabled />
             </Form.Item>
             <Form.Item
               name="employee_name"
               label={t('newAttendancePage.employeeName')}
             >
-              <Input />
+              <Input disabled />
             </Form.Item>
             <Form.Item
               name="position"
               label={t('newAttendancePage.position')}
             >
-              <Input />
+              <Input disabled />
             </Form.Item>
 
             <Form.Item
               name="month"
               label={t('newAttendancePage.month')}
             >
-              <DatePicker picker="month" style={{ width: '100%' }} />
+              <DatePicker disabled picker="month" style={{ width: '100%' }} />
             </Form.Item>
             <Form.Item
               name="work"
@@ -1319,18 +1327,18 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
               <InputNumber placeholder="请输入年假天数" min={0} style={{ width: '100%' }} />
             </Form.Item> 
             <Form.Item
-              name="ot1"
-              label={t('newAttendancePage.ot1')}
+              name="ot1_hours"
+              label={t('newAttendancePage.ot1Hours')}
             >
-              <InputNumber placeholder="请输入OT1天数" min={0} style={{ width: '100%' }} />
+              <InputNumber placeholder={t('newAttendancePage.ot1Hours')} min={0} style={{ width: '100%' }} />
             </Form.Item> 
             <Form.Item
-              name="ew1"
-              label={t('newAttendancePage.ew1')}
+              name="ew_hours"
+              label={t('newAttendancePage.ewHours')}
             >
-              <InputNumber placeholder="请输入EW1天数" min={0} style={{ width: '100%' }} />
+              <InputNumber placeholder={t('newAttendancePage.ewHours')} min={0} style={{ width: '100%' }} />
             </Form.Item> 
-            <Form.Item
+            {/* <Form.Item
               name="ew2"
               label={t('newAttendancePage.ew2')}
             >
@@ -1341,7 +1349,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
               label={t('newAttendancePage.ew3')}
             >
               <InputNumber placeholder="请输入EW3天数" min={0} style={{ width: '100%' }} />
-            </Form.Item>
+            </Form.Item> */}
           </div>
           <div style={{ textAlign: 'right', marginTop: 24 }}>
             <Button onClick={() => setIsModalVisible(false)} style={{ marginRight: 8 }}>

@@ -110,7 +110,7 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
       if (typeof value === 'string') {
         trimmedRecord[key] = value.trim()
       } else {
-        trimmedRecord[key] = String(value).trim()
+        trimmedRecord[key] = value
       }
     })
     return trimmedRecord
@@ -306,18 +306,33 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
   // 提交表单
   const handleSubmit = async () => {
     try {
-      const values = await trimRecord(form.validateFields())
+      const values = await form.validateFields()
+
       
+      // 将字符串类型的数值字段转换为number类型
+      const numericValues = Object.entries(values).reduce((acc, [key, value]) => {
+        if (key === 'month') {
+          acc[key] = value
+        } else if (typeof value === 'string') {
+          acc[key] = parseFloat(value) || 0
+        } else {
+          acc[key] = value
+        }
+        return acc
+      }, {} as any)
+            console.log('提交表单值:', numericValues)
       if (editingIncident) {
         // 更新记录
-        await updateIncident({ ...values, id: editingIncident.id })
+        await updateIncident({ ...numericValues, id: editingIncident.id })
         setIncidentsData(prev => prev.map(incident => 
-          incident.id === editingIncident.id ? { ...incident, ...values } : incident
+          incident.id === editingIncident.id ? { ...incident, ...numericValues } : incident
         ))
         messageApi.success(t('incidentPage.updateSuccess'))
+                // 重新加载数据
+        loadIncidents()
       } else {
         // 添加新记录
-        const newRecord = { ...values, project_id: parseInt(projectId) }
+        const newRecord = { ...numericValues, project_id: parseInt(projectId) }
         await addIncident(newRecord)
         messageApi.success(t('incidentPage.addSuccess'))
         // 重新加载数据
@@ -847,10 +862,10 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
                           <div style={{ flex: 1 }}>
                           <Form form={filterForm} layout="inline" style={{ marginBottom: 1 }}>
                             <Form.Item name="employee_id" label={t('employeePage.employeeId')}>
-                              <Input placeholder={t('employeePage.enterEmployeeId')} />
+                              <Input  placeholder={t('employeePage.enterEmployeeId')} />
                             </Form.Item>
                             <Form.Item name="name" label={t('employeePage.employeeName')}>
-                              <Input placeholder={t('employeePage.enterEmployeeName')} />
+                              <Input  placeholder={t('employeePage.enterEmployeeName')} />
                             </Form.Item>
                             <Form.Item name="month" label={t('newAttendancePage.month')} initialValue={dayjs(currentMonth)}>
                               <DatePicker
@@ -1070,6 +1085,7 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
             correct_add: 0,
             correct_sub: 0,
             tax_ded_phk: 0,
+         
           }}
         >
           <Form.Item
@@ -1077,7 +1093,7 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
             name="month"
             rules={[{ required: true, message: t('incidentPage.monthRequired') }]}
           >
-            <DatePicker picker="month" style={{ width: '100%' }} />
+            <DatePicker disabled picker="month" style={{ width: '100%' }} />
           </Form.Item>
           
           <Form.Item
@@ -1085,7 +1101,7 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
             name="employee_id"
             rules={[{ required: true, message: t('incidentPage.employeeIdRequired') }]}
           >
-            <Input />
+            <Input disabled />
           </Form.Item>
           
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
@@ -1136,10 +1152,16 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
             
             <div style={{ flex: 1, minWidth: '200px' }}>
               <h4>{t('incidentPage.otSection')}</h4>
-              <Form.Item label={t('incidentPage.otWages2')} name="ot2_wages">
+              <Form.Item label={t('incidentPage.mealAlwAdd')} name="meal_alw_add">
                 <Input type="number" />
               </Form.Item>
-              <Form.Item label={t('incidentPage.otWages3')} name="ot3_wages">
+              <Form.Item label={t('incidentPage.transpAlwAdd')} name="transp_alw_add">
+                <Input type="number" />
+              </Form.Item>
+              <Form.Item label={t('incidentPage.otAdd')} name="ot_add">
+                <Input type="number" />
+              </Form.Item>
+                   <Form.Item label={t('incidentPage.ewAdd')} name="ew_add">
                 <Input type="number" />
               </Form.Item>
               <Form.Item label={t('incidentPage.compPhk')} name="comp_phk">
@@ -1159,6 +1181,12 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
                 <Input type="number" />
               </Form.Item>
               <Form.Item label={t('incidentPage.loanDed')} name="loan_ded">
+                <Input type="number" />
+              </Form.Item>
+              <Form.Item label={t('incidentPage.ewDrv')} name="ew_drv">
+                <Input type="number" />
+              </Form.Item>
+              <Form.Item label={t('incidentPage.otDrv')} name="ot_drv">
                 <Input type="number" />
               </Form.Item>
             </div>

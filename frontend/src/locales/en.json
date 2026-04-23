@@ -812,7 +812,8 @@
     "editFailed": "Edit failed",
     "loadRecordsError": "Failed to load attendance records",
     "ot1Hours": "OT1_Hours",
-    "ewHours": "EW_Hours"
+    "ewHours": "EW_Hours",
+    "editAttendance": "Edit Attendance"
   },
   "salaryUploadPage": {
     "title": "Salary Import",
