@@ -801,38 +801,38 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
       },
     })
 
-    // 添加操作列
-    columns.push({
-      title: t('common.action'),
-      key: 'action',
-      // fixed: 'right',      
-      width: '10%',
-      render: (_, record: AttendanceRecord) => (
-        <span>
-          <Button
-            // type="link"
-             type="primary" 
-            size="small"
-            icon={<EditOutlined />}
-             style={{ marginRight: 8 }}
-            onClick={() => handleEdit(record)}
-          >
-            {t('common.edit')}
-          </Button>
-          <Button 
-            // type="link"
-            type="primary" 
-            size="small"
-            danger
-            icon={<DeleteOutlined />}
-            onClick={() => handleDelete(record.id)}
-          >
-            {t('common.delete')}
-          </Button>
+    // 添加操作列---暂时隐藏
+    // columns.push({
+    //   title: t('common.action'),
+    //   key: 'action',
+    //   // fixed: 'right',      
+    //   width: '10%',
+    //   render: (_, record: AttendanceRecord) => (
+    //     <span>
+    //       <Button
+    //         // type="link"
+    //          type="primary" 
+    //         size="small"
+    //         icon={<EditOutlined />}
+    //          style={{ marginRight: 8 }}
+    //         onClick={() => handleEdit(record)}
+    //       >
+    //         {t('common.edit')}
+    //       </Button>
+    //       <Button 
+    //         // type="link"
+    //         type="primary" 
+    //         size="small"
+    //         danger
+    //         icon={<DeleteOutlined />}
+    //         onClick={() => handleDelete(record.id)}
+    //       >
+    //         {t('common.delete')}
+    //       </Button>
         
-        </span>
-      ),
-    })
+    //     </span>
+    //   ),
+    // })
 
     return columns
   }

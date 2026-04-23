@@ -218,110 +218,110 @@ const loadData = async () => {
   //     setIsModalVisible(true)
   //   }
 
-  const showEditModal = (record: SalaryRecord) => {
-    setIsEditMode(true)
-    setCurrentRecord(record)
-    // 设置Form组件中所有SalaryRecord字段
-    form.setFieldsValue({
-      employee_id: record.employee_id,
-      employee_name: record.employee_name,
-      department: record.department,
-      project_id: record.project_id,
-      basic_salary: record.basic_salary,
-      final_salary: record.final_salary,
-      housing_alw: record.housing_alw,
-      position_alw: record.position_alw,
-      field_alw: record.field_alw,
-      fix_alw: record.fix_alw,
-      meal_alw: record.meal_alw,
-      transp_alw: record.transp_alw,
-      ot1_hour: record.ot1_hour,
-      ew1_hour: record.ew1_hour,
-      ew1_wages: record.ew1_wages,
-      ew2_hour: record.ew2_hour,
-      ew2_wages: record.ew2_wages,
-      ew3_hour: record.ew3_hour,
-      ew3_wages: record.ew3_wages,
-      month: record.month,
-      tax_type: record.tax_type,
-      total_accept: record.total_accept,
-      net_accept: record.net_accept,
-      // 添加所有其他字段
-      jmstk_alw: record.jmstk_alw,
-      pension_alw: record.pension_alw,
-      tax_alw_salary: record.tax_alw_salary,
-      tax_alw_phk: record.tax_alw_phk,
-      comp_phk: record.comp_phk,
-      askes_bpjs_alw: record.askes_bpjs_alw,
-      med_alw: record.med_alw,
-      pulsa_alw: record.pulsa_alw,
-      others: record.others,
-      att_alw: record.att_alw,
-      housing_alw_tetap: record.housing_alw_tetap,
-      religious_alw: record.religious_alw,
-      rapel_basic_salary: record.rapel_basic_salary,
-      rapel_jmstk_alw: record.rapel_jmstk_alw,
-      incentive_alw: record.incentive_alw,
-      acting: record.acting,
-      performance_alw: record.performance_alw,
-      trip_alw: record.trip_alw,
-      correct_add: record.correct_add,
-      correct_sub: record.correct_sub,
-      leav_comp: record.leav_comp,
-      jmstk_fee: record.jmstk_fee,
-      pension_ded: record.pension_ded,
-      tax_ded_salary: record.tax_ded_salary,
-      tax_ded_phk: record.tax_ded_phk,
-      askes_bpjs_ded: record.askes_bpjs_ded,
-      incentive_ded: record.incentive_ded,
-      purapel_basic_sal: record.purapel_basic_sal,
-      loan_ded: record.loan_ded,
-      absent_ded: record.absent_ded,
-      round_off_salary: record.round_off_salary,
-      tax_status: record.tax_status,
-      id_card: record.id_card,
-      npwp: record.npwp,
-      hierarchy_id: record.hierarchy_id,
-      hierarchy_name: record.hierarchy_name,
-      location_name: record.location_name,
-      join_date: record.join_date,
-      resign_date: record.resign_date,
-      position: record.position,
-      work: record.work,
-      off: record.off,
-      permission: record.permission,
-      unpresent: record.unpresent,
-      sick: record.sick,
-      standby: record.standby,
-      ew: record.ew,
-      annualleave: record.annualleave,
-      salary_slip_status: record.salary_slip_status,
-      pulsa_alw_month: record.pulsa_alw_month,
-      total_net_wages: record.total_net_wages,
+  // const showEditModal = (record: SalaryRecord) => {
+  //   setIsEditMode(true)
+  //   setCurrentRecord(record)
+  //   // 设置Form组件中所有SalaryRecord字段
+  //   form.setFieldsValue({
+  //     employee_id: record.employee_id,
+  //     employee_name: record.employee_name,
+  //     department: record.department,
+  //     project_id: record.project_id,
+  //     basic_salary: record.basic_salary,
+  //     final_salary: record.final_salary,
+  //     housing_alw: record.housing_alw,
+  //     position_alw: record.position_alw,
+  //     field_alw: record.field_alw,
+  //     fix_alw: record.fix_alw,
+  //     meal_alw: record.meal_alw,
+  //     transp_alw: record.transp_alw,
+  //     ot1_hour: record.ot1_hour,
+  //     ew1_hour: record.ew1_hour,
+  //     ew1_wages: record.ew1_wages,
+  //     ew2_hour: record.ew2_hour,
+  //     ew2_wages: record.ew2_wages,
+  //     ew3_hour: record.ew3_hour,
+  //     ew3_wages: record.ew3_wages,
+  //     month: record.month,
+  //     tax_type: record.tax_type,
+  //     total_accept: record.total_accept,
+  //     net_accept: record.net_accept,
+  //     // 添加所有其他字段
+  //     jmstk_alw: record.jmstk_alw,
+  //     pension_alw: record.pension_alw,
+  //     tax_alw_salary: record.tax_alw_salary,
+  //     tax_alw_phk: record.tax_alw_phk,
+  //     comp_phk: record.comp_phk,
+  //     askes_bpjs_alw: record.askes_bpjs_alw,
+  //     med_alw: record.med_alw,
+  //     pulsa_alw: record.pulsa_alw,
+  //     others: record.others,
+  //     att_alw: record.att_alw,
+  //     housing_alw_tetap: record.housing_alw_tetap,
+  //     religious_alw: record.religious_alw,
+  //     rapel_basic_salary: record.rapel_basic_salary,
+  //     rapel_jmstk_alw: record.rapel_jmstk_alw,
+  //     incentive_alw: record.incentive_alw,
+  //     acting: record.acting,
+  //     performance_alw: record.performance_alw,
+  //     trip_alw: record.trip_alw,
+  //     correct_add: record.correct_add,
+  //     correct_sub: record.correct_sub,
+  //     leav_comp: record.leav_comp,
+  //     jmstk_fee: record.jmstk_fee,
+  //     pension_ded: record.pension_ded,
+  //     tax_ded_salary: record.tax_ded_salary,
+  //     tax_ded_phk: record.tax_ded_phk,
+  //     askes_bpjs_ded: record.askes_bpjs_ded,
+  //     incentive_ded: record.incentive_ded,
+  //     purapel_basic_sal: record.purapel_basic_sal,
+  //     loan_ded: record.loan_ded,
+  //     absent_ded: record.absent_ded,
+  //     round_off_salary: record.round_off_salary,
+  //     tax_status: record.tax_status,
+  //     id_card: record.id_card,
+  //     npwp: record.npwp,
+  //     hierarchy_id: record.hierarchy_id,
+  //     hierarchy_name: record.hierarchy_name,
+  //     location_name: record.location_name,
+  //     join_date: record.join_date,
+  //     resign_date: record.resign_date,
+  //     position: record.position,
+  //     work: record.work,
+  //     off: record.off,
+  //     permission: record.permission,
+  //     unpresent: record.unpresent,
+  //     sick: record.sick,
+  //     standby: record.standby,
+  //     ew: record.ew,
+  //     annualleave: record.annualleave,
+  //     salary_slip_status: record.salary_slip_status,
+  //     pulsa_alw_month: record.pulsa_alw_month,
+  //     total_net_wages: record.total_net_wages,
 
 
 
-    })
-    setIsModalVisible(true)
-  }
+  //   })
+  //   setIsModalVisible(true)
+  // }
 
-  const handleDelete = (_id: string) => {
-    modal.confirm({
-      title: '确认删除',
-      content: '确定要删除这条薪资记录吗？',
-      onOk: async () => {
-        try {
-          await deleteSalaryRecord(Number(_id));
-          // 从本地状态中移除删除的记录
-          setSalaryRecords(prev => prev.filter(record => record.id !== Number(_id)));
-          messageApi.success('薪资记录删除成功');
-        } catch (error) {
-          console.error('删除薪资记录失败:', error);
-          messageApi.error('删除薪资记录失败，请稍后重试');
-        }
-      }
-    })
-  }
+  // const handleDelete = (_id: string) => {
+  //   modal.confirm({
+  //     title: '确认删除',
+  //     content: '确定要删除这条薪资记录吗？',
+  //     onOk: async () => {
+  //       try {
+  //         await deleteSalaryRecord(Number(_id));
+  //         // 从本地状态中移除删除的记录
+  //         setSalaryRecords(prev => prev.filter(record => record.id !== Number(_id)));
+  //         messageApi.success('薪资记录删除成功');
+  //       } catch (error) {
+  //         console.error('删除薪资记录失败:', error);
+  //         messageApi.error('删除薪资记录失败，请稍后重试');
+  //       }
+  //     }
+  //   })
+  // }
   const handleSwitchChange = (record: SalaryRecord) => async (checked: boolean) => {
     try {
       console.log('切换计算状态:', record.id, checked);
@@ -1397,41 +1397,42 @@ const loadData = async () => {
       key: 'round_off_salary',
       render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
     },
-    {
-      title: t('newSalaryPage.isCalculate'),
-      dataIndex: 'is_calculate',
-      key: 'is_calculate',
-      render: (is_calculate: number, record: SalaryRecord) => (
-        <Switch
-         checkedChildren="Yes" unCheckedChildren="No"
-          checked={is_calculate === 1}
-          style={{ backgroundColor: is_calculate === 1 ? '#52c41a' : '#ff4d4f' }}
-          onChange={handleSwitchChange(record)}
-        />
-      )
-    },
-    {
-      title: t('common.action'),
-      key: 'action',
-      // fixed: 'right',
-      render: (_: any, record: any) => (
-        <Space size="middle">
-          <Button 
-            type="primary" 
-            icon={<EditOutlined />} 
-            onClick={() => showEditModal(record)}
-          >{t('common.edit')}</Button>
-          <Button 
-            type="primary" 
-            size="small" 
-            danger 
-            icon={<DeleteOutlined />} 
-            onClick={() => handleDelete(record.id)}
-          >{t('common.delete')}</Button>
+    // {
+    //   title: t('newSalaryPage.isCalculate'),
+    //   dataIndex: 'is_calculate',
+    //   key: 'is_calculate',
+    //   render: (is_calculate: number, record: SalaryRecord) => (
+    //     <Switch
+    //      checkedChildren="Yes" unCheckedChildren="No"
+    //       checked={is_calculate === 1}
+    //       style={{ backgroundColor: is_calculate === 1 ? '#52c41a' : '#ff4d4f' }}
+    //       onChange={handleSwitchChange(record)}
+    //     />
+    //   )
+    // },
+    // 添加操作列---暂时隐藏
+    // {
+    //   title: t('common.action'),
+    //   key: 'action',
+    //   // fixed: 'right',
+    //   render: (_: any, record: any) => (
+    //     <Space size="middle">
+    //       <Button 
+    //         type="primary" 
+    //         icon={<EditOutlined />} 
+    //         onClick={() => showEditModal(record)}
+    //       >{t('common.edit')}</Button>
+    //       <Button 
+    //         type="primary" 
+    //         size="small" 
+    //         danger 
+    //         icon={<DeleteOutlined />} 
+    //         onClick={() => handleDelete(record.id)}
+    //       >{t('common.delete')}</Button>
 
-        </Space>
-      )
-    }
+    //     </Space>
+    //   )
+    // }
   ]
 
   //导出excel下载功能，
@@ -1598,7 +1599,7 @@ const loadData = async () => {
               </Form>
               <div style={{ display: 'flex', gap: 8 }}>
                 <Button size="small" type="primary" icon={<PlusOutlined />} onClick={handleCalculateMonthlySalary}>{t('newSalaryPage.calculateMonthlySalary')}</Button>
-                <Button size="small" type="primary" icon={<UploadOutlined />} onClick={() => setImportModalVisible(true)}>{t('newSalaryPage.importSalaryRecords')}</Button>
+                {/* <Button size="small" type="primary" icon={<UploadOutlined />} onClick={() => setImportModalVisible(true)}>{t('newSalaryPage.importSalaryRecords')}</Button> */}
                 <Button size="small" type="primary" icon={<FileExcelOutlined />} onClick={handleExportToExcel}>{t('newSalaryPage.exportToExcel')}</Button>
               </div>
             </div>

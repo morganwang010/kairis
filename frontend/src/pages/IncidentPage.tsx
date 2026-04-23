@@ -726,44 +726,37 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
     { title: t('incidentPage.correctAdd'), dataIndex: 'correct_add', key: 'correct_add', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
     { title: t('incidentPage.correctSub'), dataIndex: 'correct_sub', key: 'correct_sub', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
     { title: t('incidentPage.taxDedPhk'), dataIndex: 'tax_ded_phk', key: 'tax_ded_phk', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
-    {
-      title: t('common.action'),
-      key: 'action',
+    
+    // 添加操作列---暂时隐藏
+    // {
+    //   title: t('common.action'),
+    //   key: 'action',
       
-      width: 180,
-      // fixed: 'right',
-      render: (_, record) => (
-        <span>
-          <Button 
-            type="primary" 
-            size="small" 
-            icon={<EditOutlined />} 
-            onClick={() => openEditDialog(record)}
-            style={{ marginRight: 8 }}
-          >
-          {t('common.edit')}
-          </Button>
-          <Button
-            size="small"
-             danger
-            icon={<DeleteOutlined />}
-            onClick={() => handleDelete(record.id)}
-          >
-            {t('common.delete')}
-          </Button>
-          {/* <Popconfirm
-            title="确定删除该记录吗？"
-            onConfirm={() => handleDelete(record.id)}
-            okText="确定"
-            cancelText="取消"
-          >
-            <Button danger size="small" icon={<DeleteOutlined />}>
-                删除
-              </Button>
-          </Popconfirm> */}
-        </span>
-      ),
-    },
+    //   width: 180,
+    //   // fixed: 'right',
+    //   render: (_, record) => (
+    //     <span>
+    //       <Button 
+    //         type="primary" 
+    //         size="small" 
+    //         icon={<EditOutlined />} 
+    //         onClick={() => openEditDialog(record)}
+    //         style={{ marginRight: 8 }}
+    //       >
+    //       {t('common.edit')}
+    //       </Button>
+    //       <Button
+    //         size="small"
+    //          danger
+    //         icon={<DeleteOutlined />}
+    //         onClick={() => handleDelete(record.id)}
+    //       >
+    //         {t('common.delete')}
+    //       </Button>
+         
+    //     </span>
+    //   ),
+    // },
   ]
 // 导出Excel下载功能
   const handleExportToExcel = () => {
