@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Table, Button, Modal, Form, Input, DatePicker, InputNumber, message, Card, Upload, Tabs, Checkbox, Pagination } from 'antd'
-import { EditOutlined, DeleteOutlined, UploadOutlined, SyncOutlined } from '@ant-design/icons'
+import {  DeleteOutlined, UploadOutlined, SyncOutlined } from '@ant-design/icons'
 import * as XLSX from 'xlsx'
 import type { ColumnsType } from 'antd/es/table'
 import type { UploadProps } from 'antd'
 import dayjs from 'dayjs'
 
-import { getAttendanceRecords, addAttendanceRecord, updateAttendanceRecord, deleteAttendanceRecord, deleteAttendanceRecordByIds, importAttendanceRecords, importSingleAttendanceRecord } from '../api'
+import { getAttendanceRecords, addAttendanceRecord, updateAttendanceRecord, deleteAttendanceRecordByIds, importAttendanceRecords, importSingleAttendanceRecord } from '../api'
 interface AttendancePageProps {
   projectId?: string
   projectName?: string
@@ -81,6 +81,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
 
   // 数据刷新后恢复高亮状态
   useEffect(() => {
+    setEditingRecord(null)
     if (highlightedRowId) {
       setTimeout(() => {
         const row = document.querySelector(`.ant-table-tbody tr[data-row-key="${highlightedRowId}"]`);
@@ -839,50 +840,50 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
 
 
 
-  const handleEdit = (record: AttendanceRecord) => {
-    setEditingRecord(record)
-    form.setFieldsValue({
-      employee_id: record.employee_id,
-      employee_name: record.employee_name,
-      position: record.position,
-      project: record.project,
-      month: dayjs(record.month),
-      work: record.work,
-      off: record.off,
-      unpresent: record.unpresent || 0,
-      absent: record.absent,
-      sick: record.sick,
-      leave_replc: record.leave_replc,
-      ew: record.ew,
-      standby: record.standby,
-      extrawork: record.extrawork,
-      ot1: record.ot1 || 0,
-      ew1: record.ew1 || 0,
-      ew2: record.ew2 || 0,
-      ew3: record.ew3 || 0,
-      ot1_hours: record.ot1_hours || 0,
-      ew_hours: record.ew_hours || 0,
-    })
-    setIsModalVisible(true)
-  }
+  // const handleEdit = (record: AttendanceRecord) => {
+  //   setEditingRecord(record)
+  //   form.setFieldsValue({
+  //     employee_id: record.employee_id,
+  //     employee_name: record.employee_name,
+  //     position: record.position,
+  //     project: record.project,
+  //     month: dayjs(record.month),
+  //     work: record.work,
+  //     off: record.off,
+  //     unpresent: record.unpresent || 0,
+  //     absent: record.absent,
+  //     sick: record.sick,
+  //     leave_replc: record.leave_replc,
+  //     ew: record.ew,
+  //     standby: record.standby,
+  //     extrawork: record.extrawork,
+  //     ot1: record.ot1 || 0,
+  //     ew1: record.ew1 || 0,
+  //     ew2: record.ew2 || 0,
+  //     ew3: record.ew3 || 0,
+  //     ot1_hours: record.ot1_hours || 0,
+  //     ew_hours: record.ew_hours || 0,
+  //   })
+  //   setIsModalVisible(true)
+  // }
 
-  const handleDelete = (id: string) => {
-    console.log("start delete attendance")
-    modal.confirm({
-      title: t('newAttendancePage.confirmDeleteTitle'),
-      content: t('newAttendancePage.confirmDeleteContent'),
-      onOk: async () => {
-        try {
-          await deleteAttendanceRecord(id)  
-          setData(data.filter(item => item.id !== id))
-          messageApi.success('删除成功')
-        } catch (error) {
-          console.error('删除考勤记录失败:', error)
-          messageApi.error('删除失败，请稍后重试')
-        }
-      },
-    })
-  }
+  // const handleDelete = (id: string) => {
+  //   console.log("start delete attendance")
+  //   modal.confirm({
+  //     title: t('newAttendancePage.confirmDeleteTitle'),
+  //     content: t('newAttendancePage.confirmDeleteContent'),
+  //     onOk: async () => {
+  //       try {
+  //         await deleteAttendanceRecord(id)  
+  //         setData(data.filter(item => item.id !== id))
+  //         messageApi.success('删除成功')
+  //       } catch (error) {
+  //         console.error('删除考勤记录失败:', error)
+  //         messageApi.error('删除失败，请稍后重试')
+  //       }
+  //     },
+  //   })
+  // }
 
   // 获取状态对应的文字颜色
 

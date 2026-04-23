@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import ScientificNumberDisplay from '../components/ScientificNumberDisplay'
 import { Card, Table, Button, Modal, Form, Input, DatePicker, Pagination, message,  Upload, Tabs, Checkbox } from 'antd'
-import { PlusOutlined, EditOutlined, DeleteOutlined, UploadOutlined, SyncOutlined } from '@ant-design/icons'
+import { PlusOutlined,  DeleteOutlined, UploadOutlined, SyncOutlined } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/es/table'
 import type { UploadProps } from 'antd'
 import * as XLSX from 'xlsx'
 import dayjs from 'dayjs'
 // const { MonthPicker } = DatePicker;
-import { getIncidentRecords, addIncident, updateIncident, deleteIncident, importIncidentRecords, importSingleIncidentRecord, deleteIncidentRecordByIds } from '../api/index'
+import { getIncidentRecords, addIncident, updateIncident,  importIncidentRecords, importSingleIncidentRecord, deleteIncidentRecordByIds } from '../api/index'
 // import { getEmployees } from '../api/index'
 
 interface IncidentPageProps {
@@ -268,40 +268,40 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
 
 
   // 打开编辑对话框
-  const openEditDialog = (row: IncidentRecord) => {
-    setEditingIncident(row)
-    form.setFieldsValue({
-      ...row,
-      month: dayjs(row.month) // Convert string to dayjs object for MonthPicker compatibility
-    })
-    setDialogVisible(true)
-  }
+  // const openEditDialog = (row: IncidentRecord) => {
+  //   setEditingIncident(row)
+  //   form.setFieldsValue({
+  //     ...row,
+  //     month: dayjs(row.month) // Convert string to dayjs object for MonthPicker compatibility
+  //   })
+  //   setDialogVisible(true)
+  // }
 
-  // 删除记录
-  const handleDelete = async (id: number)  => {
-    console.log(t('common.startDeleteIncident') + id);
+  // // 删除记录
+  // const handleDelete = async (id: number)  => {
+  //   console.log(t('common.startDeleteIncident') + id);
     
-    modal.confirm({
-      title: t('incidentPage.confirmDelete'),
-      content: t('incidentPage.confirmDelete'),
-      okText: t('common.confirm'),
-      cancelText: t('common.cancel'),
-      onOk: async () => {
-        try {
-          console.log(id)
-          await deleteIncident(id);
+  //   modal.confirm({
+  //     title: t('incidentPage.confirmDelete'),
+  //     content: t('incidentPage.confirmDelete'),
+  //     okText: t('common.confirm'),
+  //     cancelText: t('common.cancel'),
+  //     onOk: async () => {
+  //       try {
+  //         console.log(id)
+  //         await deleteIncident(id);
           
-          // 更新本地状态
-          setIncidentsData(prevData => prevData.filter(item => item.id !== id));
+  //         // 更新本地状态
+  //         setIncidentsData(prevData => prevData.filter(item => item.id !== id));
           
-          messageApi.success(t('incidentPage.deleteSuccess'));
-        } catch (error) {
-          console.error('删除失败:', error);
-          messageApi.error(t('incidentPage.deleteError'));
-        }
-      }
-    });
-  };
+  //         messageApi.success(t('incidentPage.deleteSuccess'));
+  //       } catch (error) {
+  //         console.error('删除失败:', error);
+  //         messageApi.error(t('incidentPage.deleteError'));
+  //       }
+  //     }
+  //   });
+  // };
 
   // 提交表单
   const handleSubmit = async () => {

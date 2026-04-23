@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Card, Table, Button, Space, Modal, Form, Input, DatePicker, InputNumber, message, Upload, Tabs,Pagination, Switch, Checkbox } from 'antd'
-import { PlusOutlined, EditOutlined, DeleteOutlined, UploadOutlined, SyncOutlined, InboxOutlined , FileExcelOutlined} from '@ant-design/icons'
+import { Card, Table, Button,  Modal, Form, Input, DatePicker, InputNumber, message, Upload, Tabs,Pagination,  Checkbox } from 'antd'
+import { PlusOutlined,  DeleteOutlined,  SyncOutlined, InboxOutlined , FileExcelOutlined} from '@ant-design/icons'
 import ScientificNumberDisplay from '../components/ScientificNumberDisplay'
-import { calculateMonthlySalary, getSalaries, updateSalary , importSingleSalaryRecord, importSalaryRecords ,updateSalaryCalculateStatus, deleteSalaryRecord, deleteSalaryRecordByIds} from '../api';
+import { calculateMonthlySalary, getSalaries, updateSalary , importSingleSalaryRecord, importSalaryRecords , deleteSalaryRecordByIds} from '../api';
+
 import dayjs from 'dayjs'
 import * as XLSX from 'xlsx'
 import type { UploadProps } from 'antd'
@@ -180,7 +181,13 @@ const NewSalaryPage: React.FC<NewSalaryPageProps> = ({ projectId = 'all',  }) =>
   const [currentMonth, setCurrentMonth] = useState(dayjs().format('YYYY-MM'))
   const [filterForm] = Form.useForm()
   const [filterValues, setFilterValues] = useState<{[key: string]: any}>({})
+  const [currentRecord, setCurrentRecord] = useState<SalaryRecord | null>(null)
+  const [isModalVisible, setIsModalVisible] = useState(false)
+  
+  const [isEditMode, setIsEditMode] = useState(false)
 const loadData = async () => {
+      setCurrentRecord(null)
+      setIsEditMode(false)
       const allData = await fetchSalaryData();
       
       // 根据projectId筛选数据
@@ -198,6 +205,7 @@ const loadData = async () => {
         setSalaryRecords(allData);
       }
     };  
+    
   // 根据projectId从API获取并筛选数据
   useEffect(() => {
     
@@ -205,9 +213,7 @@ const loadData = async () => {
     loadData();
   }, [projectId, currentMonth, currentPage, pageSize, filterValues])
   
-  const [isModalVisible, setIsModalVisible] = useState(false)
-  const [currentRecord, setCurrentRecord] = useState<SalaryRecord | null>(null)
-  const [isEditMode, setIsEditMode] = useState(false)
+  
   const [form] = Form.useForm()
   
   // showAddModal函数暂时未使用，需要时取消注释
@@ -322,31 +328,31 @@ const loadData = async () => {
   //     }
   //   })
   // }
-  const handleSwitchChange = (record: SalaryRecord) => async (checked: boolean) => {
-    try {
-      console.log('切换计算状态:', record.id, checked);
-      // 调用API更新is_calculate字段
-      await updateSalaryCalculateStatus(
-        record.id,
-        checked ? 1: 0
-      );
+  // const handleSwitchChange = (record: SalaryRecord) => async (checked: boolean) => {
+  //   try {
+  //     console.log('切换计算状态:', record.id, checked);
+  //     // 调用API更新is_calculate字段
+  //     await updateSalaryCalculateStatus(
+  //       record.id,
+  //       checked ? 1: 0
+  //     );
       
-      // 更新本地状态
-      setSalaryRecords(prev => 
-        prev.map(item => 
-          item.id === record.id 
-            ? { ...item, is_calculate: checked ? 1 : 0 }
-            : item
-        )
-      );
+  //     // 更新本地状态
+  //     setSalaryRecords(prev => 
+  //       prev.map(item => 
+  //         item.id === record.id 
+  //           ? { ...item, is_calculate: checked ? 1 : 0 }
+  //           : item
+  //       )
+  //     );
       
-      messageApi.success('计算状态更新成功');
-    } catch (error) {
-      console.error('更新计算状态失败:', error);
-      // messageApi里需要显示error信息
-      messageApi.error('更新计算状态失败 ' + error);
-    }
-  }
+  //     messageApi.success('计算状态更新成功');
+  //   } catch (error) {
+  //     console.error('更新计算状态失败:', error);
+  //     // messageApi里需要显示error信息
+  //     messageApi.error('更新计算状态失败 ' + error);
+  //   }
+  // }
 
 
 
