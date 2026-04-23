@@ -72,8 +72,38 @@ const SettingsPage = () => {
     salaryForm.validateFields()
       .then(async (values) => {
         try {
-          await updateSalaryCoefficient({ ...salaryCoefficient, ...values });
-          setSalaryCoefficient(prev => ({ ...prev, ...values }));
+          // 转换所有值为 number 类型
+          const numericValues = Object.entries(values).reduce((acc, [key, value]) => {
+            acc[key] = typeof value === 'string' ? parseFloat(value) : value;
+            return acc;
+          }, {} as any);
+          
+          // 确保只传递后端期望的字段，使用正确的下划线命名法
+          const coefficientData = {
+            id: numericValues.id ,
+            c_jmstk_alw: numericValues.c_jmstk_alw,
+            c_pension_alw: numericValues.c_pension_alw,
+            c_askes_alw: numericValues.c_askes_alw,
+            c_ot_hour1: numericValues.c_ot_hour1,
+            c_ot_wages1: numericValues.c_ot_wages1,
+            c_ew_hour1: numericValues.c_ew_hour1,
+            c_ew_wages1: numericValues.c_ew_wages1,
+            c_ew_hour2: numericValues.c_ew_hour2,
+            c_ew_wages2: numericValues.c_ew_wages2,
+            c_ew_hour3: numericValues.c_ew_hour3,
+            c_ew_wages3: numericValues.c_ew_wages3,
+            c_jmstk_fee: numericValues.c_jmstk_fee,
+            c_pension_ded: numericValues.c_pension_ded,
+            c_askes_ded: numericValues.c_askes_ded,
+            jmstk_max: numericValues.jmstk_max,
+            pension_max: numericValues.pension_max,
+            askes_max: numericValues.askes_max,
+            askes_min: numericValues.askes_min,
+            is_delete: numericValues.is_delete || 0
+          };
+          
+          await updateSalaryCoefficient(coefficientData);
+          setSalaryCoefficient(prev => ({ ...prev, ...numericValues }));
           messageApi.success('工资系数已保存');
         } catch (error) {
         console.error('Failed to update salary coefficient:', error);

@@ -729,7 +729,7 @@ export const getSalaryCoefficient = async () => {
 };
 
 export const updateSalaryCoefficient = async (coefficient: any) => {
-  const response = await apiClient.put('/salary-coefficients', coefficient);
+  const response = await apiClient.put(`/salary-coefficients/${coefficient.id}`, coefficient);
   return response.data;
 };
 

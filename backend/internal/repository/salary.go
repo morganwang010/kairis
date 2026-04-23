@@ -249,9 +249,9 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 		// 计算加班时长和工资
 		otHours := 0.0
 		if record.IdStatus == "nst" || record.IdStatus == "NST" || record.IdStatus == "Nst" {
-			otHours = float64(record.Work)*7.5 + record.Ot1Hours
+			otHours = float64(record.Work)*7.5 + record.Ot1Hours*otHoursOn
 		} else {
-			otHours = record.Ot1Hours
+			otHours = record.Ot1Hours * otHoursOn
 		}
 		// ot1Hour := record.Ot1 * coefficient.COtHour1
 		// ot1Wages := (ot1Hour / coefficient.COtWages1) * totalNetWages
@@ -273,19 +273,19 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 			ewWages = (record.EwHours / coefficient.CEwWages2 / coefficient.CEwHour2) * totalNetWages * ewHoursOn
 		}
 
-		workDays := float64(record.Work) + record.Ew
+		workDays := float64(record.Work)
 
 		// 计算各项补助
-		mealAlw := workDays * record.MealAlwDay
-		transpAlw := workDays * record.TranspAlwDay
-		pulsaAlw := record.PulsaAlwDay * workDays
-		attAlw := workDays * record.AttAlwDay
+		mealAlw := record.MealAlwDay * (workDays + record.Ew)
+		transpAlw := record.TranspAlwDay * workDays
+		pulsaAlw := record.PulsaAlwDay * (workDays + record.Ew)
+		attAlw := record.AttAlwDay * (workDays + record.Ew)
 
 		// 计算缺勤扣除
 		absentDed1 := record.Unpresent / 30.0 * record.BasicSalary
 
 		// 计算税前总收入
-		totalAcceptNoTax := totalNetWages + record.HousingAlwTetap + record.PulsaAlwMonth + jmstkAlw + pensionAlw + otWages + ewWages + mealAlw + transpAlw + askesBpjsAlw + pulsaAlw + attAlw + record.LeaveComp + record.MedAlw + record.Others + record.ReligiousAlw + record.RapelBasicSalary + record.RapelJmstkAlw + record.Acting + record.PerformanceAlw + record.TripAlw + record.MandahAlw + record.IncentiveAlw + record.MealAlwAdd + record.TranspAlwAdd + record.CompPhk + record.TaxAlwPhk + record.CorrectAdd + record.EwDrv - record.CorrectSub - absentDed1 - record.AbsentDed2 - record.IncentiveDed - record.LoanDed - record.TaxDedPhk + record.MealAlwMonth + record.TranspAlwMonth + record.OtDrv + record.OtAdd + record.EwAdd + record.EwDrv
+		totalAcceptNoTax := totalNetWages + record.HousingAlwTetap + record.PulsaAlwMonth + jmstkAlw + pensionAlw + otWages + ewWages + mealAlw + transpAlw + askesBpjsAlw + pulsaAlw + attAlw + record.LeaveComp + record.MedAlw + record.Others + record.ReligiousAlw + record.RapelBasicSalary + record.RapelJmstkAlw + record.Acting + record.PerformanceAlw + record.TripAlw + record.MandahAlw + record.IncentiveAlw + record.MealAlwAdd + record.TranspAlwAdd + record.CompPhk + record.TaxAlwPhk + record.CorrectAdd - record.CorrectSub - absentDed1 - record.AbsentDed2 - record.IncentiveDed - record.LoanDed - record.TaxDedPhk + record.MealAlwMonth + record.TranspAlwMonth + record.OtDrv + record.OtAdd + record.EwAdd + record.EwDrv
 
 		// 计算税额
 		taxAlwSalary := 0.0
@@ -303,7 +303,6 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 					return err
 				}
 			}
-
 			// 查找税率
 			rate := 0.0
 			for _, taxRate := range taxRates {
@@ -312,7 +311,7 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 					break
 				}
 			}
-			slog.Info("taxRates", "taxRates", taxRates)
+			slog.Info("the final taxRates", "taxRates", taxRates)
 			slog.Info("taxRate", "taxRate", record.TaxType)
 			slog.Info("totalAcceptNoTax", "totalAcceptNoTax", totalAcceptNoTax)
 			slog.Info("tax rate", "rate", rate)
