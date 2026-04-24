@@ -1,10 +1,9 @@
 import { useState, useEffect, type FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, Table, Button, Modal, Form, Input,  DatePicker, Pagination,  message,  Upload, Tabs, Checkbox } from 'antd'
-import { PlusOutlined, EditOutlined, DeleteOutlined, UploadOutlined, SyncOutlined } from '@ant-design/icons'
+import { PlusOutlined, DeleteOutlined, UploadOutlined, SyncOutlined } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/es/table'
 import {  deleteEmployee, getProjects, importEmployeeRecords, importSingleEmployeeRecord, updateEmployee, getEmployees } from '../api'
-// import { invoke, isTauri } from '@tauri-apps/api/core'
 import dayjs from 'dayjs'
 import ScientificNumberDisplay from '../components/ScientificNumberDisplay';
 import * as XLSX from 'xlsx';
@@ -45,7 +44,7 @@ interface Employee {
   location_name: string // 位置名称
 }
 
-const EmployeePage: FC<EmployeePageProps> = ({ projectId, projectName }) => {
+const EmployeePage: FC<EmployeePageProps> = ({ projectId }) => {
   const [dialogVisible, setDialogVisible] = useState(false)
   const [importModalVisible, setImportModalVisible] = useState(false)
   const [form] = Form.useForm()
@@ -69,7 +68,7 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId, projectName }) => {
   const [modal, contextHolder] = Modal.useModal()
   const [messageApi, messageContextHolder] = message.useMessage();
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
-  console.log('projectName', projectName)
+  // console.log('projectName', projectName)
   // 全选/取消全选
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
@@ -148,6 +147,7 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId, projectName }) => {
 
   // 加载员工数据
   const loadEmployees = async (filters?: any) => {
+    setEditingEmployee(null)
     try {
       if (true) {
         // 在Tauri环境中，调用后端API，传递分页参数
@@ -220,45 +220,45 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId, projectName }) => {
     loadEmployees({})
   }
 
-  const openEditDialog = (row: Employee) => {
-    setEditingEmployee(row)
-    // 将日期字符串转换为 dayjs 对象
-    const formattedRow = {
-      ...row,
-      join_date: row.join_date ? dayjs(row.join_date) : null,
-      resign_date: row.resign_date ? dayjs(row.resign_date) : null
-    }
-    form.setFieldsValue(formattedRow)
-    setDialogVisible(true)
-  }
+  // const openEditDialog = (row: Employee) => {
+  //   setEditingEmployee(row)
+  //   // 将日期字符串转换为 dayjs 对象
+  //   const formattedRow = {
+  //     ...row,
+  //     join_date: row.join_date ? dayjs(row.join_date) : null,
+  //     resign_date: row.resign_date ? dayjs(row.resign_date) : null
+  //   }
+  //   form.setFieldsValue(formattedRow)
+  //   setDialogVisible(true)
+  // }
 
-  const handleDelete = async (id: number) => {
-      // setIsEditMode(false);
-      // setIsModalVisible(true);
-      console.log("ssssssssssssssssssthe delete project id is: "+id);
-      modal.confirm({
-        title: t('projectPage.confirmDelete'),
-        content: t('employeePage.confirmDelete'),
-        onOk: async () => {
-          try {
-            // 调用删除项目API
-            console.log("start delete project id is: "+id);
-            await deleteEmployee(id.toString());
-            setEmployeesData(prev => prev.filter(emp => emp.id !== id));
-            // deleteProjects({ project_id: parseInt(id) }).then(() => {
-            //   // 刷新项目列表
-            //   console.log("end delete project id is: "+id);
-            //   loadProjects();
-            // });
-            // setProjects(projects.filter(project => project.id !== id));
-            messageApi.success(t('employeePage.deleteSuccess'));
-          } catch (error) {
-            console.error(t('employeePage.deleteEmployeeError'), error);
-            messageApi.error(t('employeePage.deleteError'));
-          }
-        },
-      });
-    };
+  // const handleDelete = async (id: number) => {
+  //     // setIsEditMode(false);
+  //     // setIsModalVisible(true);
+  //     console.log("ssssssssssssssssssthe delete project id is: "+id);
+  //     modal.confirm({
+  //       title: t('projectPage.confirmDelete'),
+  //       content: t('employeePage.confirmDelete'),
+  //       onOk: async () => {
+  //         try {
+  //           // 调用删除项目API
+  //           console.log("start delete project id is: "+id);
+  //           await deleteEmployee(id.toString());
+  //           setEmployeesData(prev => prev.filter(emp => emp.id !== id));
+  //           // deleteProjects({ project_id: parseInt(id) }).then(() => {
+  //           //   // 刷新项目列表
+  //           //   console.log("end delete project id is: "+id);
+  //           //   loadProjects();
+  //           // });
+  //           // setProjects(projects.filter(project => project.id !== id));
+  //           messageApi.success(t('employeePage.deleteSuccess'));
+  //         } catch (error) {
+  //           console.error(t('employeePage.deleteEmployeeError'), error);
+  //           messageApi.error(t('employeePage.deleteError'));
+  //         }
+  //       },
+  //     });
+  //   };
 
 
   // 文件上传处理
@@ -659,34 +659,34 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId, projectName }) => {
     { title: t('employeePage.phoneAllowanceDay'), dataIndex: 'pulsa_alw_day', key: 'pulsa_alw_day', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
     { title: t('employeePage.attendanceAllowanceDay'), dataIndex: 'att_alw_day', key: 'att_alw_day', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
 
-    {
-      title: t('common.action'),
-      key: 'action',
-      width: 180,
-      // fixed: 'right',
-      render: (_, record) => (
-        <span>
-          <Button 
-            type="primary" 
-            size="small" 
-            icon={<EditOutlined />} 
-            onClick={() => openEditDialog(record)}
-            style={{ marginRight: 8 }}
-          >
-            {t('common.edit')}
-          </Button>
-          <Button 
-            type="primary" 
-            size="small" 
-             danger
-            icon={<DeleteOutlined />}
-            onClick={() => handleDelete(record.id)}
-          >
-            {t('common.delete')}
-          </Button>
-        </span>
-      ),
-    },
+    // {
+    //   title: t('common.action'),
+    //   key: 'action',
+    //   width: 180,
+    //   // fixed: 'right',
+    //   render: (_, record) => (
+    //     <span>
+    //       <Button 
+    //         type="primary" 
+    //         size="small" 
+    //         icon={<EditOutlined />} 
+    //         onClick={() => openEditDialog(record)}
+    //         style={{ marginRight: 8 }}
+    //       >
+    //         {t('common.edit')}
+    //       </Button>
+    //       <Button 
+    //         type="primary" 
+    //         size="small" 
+    //          danger
+    //         icon={<DeleteOutlined />}
+    //         onClick={() => handleDelete(record.id)}
+    //       >
+    //         {t('common.delete')}
+    //       </Button>
+    //     </span>
+    //   ),
+    // },
   ]
 
   return (
