@@ -1516,6 +1516,8 @@ const loadData = async () => {
           project_id: projectId,
           page: newCurrentPage.toString(),
           pageSize: pageSize.toString(),
+          employee_id: formattedValues.employee_id,
+          employee_name: formattedValues.employee_name,
           ...formattedValues
         };
         
@@ -1584,7 +1586,7 @@ const loadData = async () => {
                 <Form.Item name="employee_id" label={t('employeePage.employeeId')}>
                   <Input placeholder={t('employeePage.enterEmployeeId')} />
                 </Form.Item>
-                <Form.Item name="name" label={t('employeePage.employeeName')}>
+                <Form.Item name="employee_name" label={t('employeePage.employeeName')}>
                   <Input placeholder={t('employeePage.enterEmployeeName')} />
                 </Form.Item>
                 <Form.Item name="month" label={t('attendancePage.month')} initialValue={dayjs(currentMonth)}>

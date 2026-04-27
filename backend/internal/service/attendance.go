@@ -87,8 +87,8 @@ func (s *AttendanceService) GetAttendanceByEmployeeIDAndMonth(employeeID, month 
 	return s.attendanceRepo.GetByEmployeeIDAndMonth(employeeID, month, projectID)
 }
 
-func (s *AttendanceService) ListAttendances(offset, limit int, projectID, month string) ([]repository.AttendanceWithEmployee, int64, error) {
-	return s.attendanceRepo.List(offset, limit, projectID, month)
+func (s *AttendanceService) ListAttendances(offset, limit int, projectID, month string, employeeID, employeeName string) ([]repository.AttendanceWithEmployee, int64, error) {
+	return s.attendanceRepo.List(offset, limit, projectID, month, employeeID, employeeName)
 }
 
 func (s *AttendanceService) UpdateAttendance(attendance *model.Attendances) error {

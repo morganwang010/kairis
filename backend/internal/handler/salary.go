@@ -55,8 +55,10 @@ func (h *SalaryHandler) List(c *gin.Context) {
 	projectIDStr := c.Query("project_id")
 	offsetStr := c.Query("page")
 	limitStr := c.Query("pageSize")
+	employeeID := c.Query("employee_id")
+	employeeName := c.Query("employee_name")
 
-	slog.Info("List salaries", "month", month, "project_id", projectIDStr)
+	slog.Info("List salaries", "month", month, "project_id", projectIDStr, "employee_id", employeeID, "employee_name", employeeName)
 
 	projectID, ok := StringToInt(c, projectIDStr, "project_id")
 	if !ok {
@@ -82,7 +84,7 @@ func (h *SalaryHandler) List(c *gin.Context) {
 	}
 	offset = (offset - 1) * limit
 
-	salaries, total, err := h.salaryService.List(offset, limit, month, projectID)
+	salaries, total, err := h.salaryService.List(offset, limit, month, projectID, employeeID, employeeName)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
 		return

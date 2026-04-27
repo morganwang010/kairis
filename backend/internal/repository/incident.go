@@ -32,23 +32,31 @@ func (r *IncidentRepository) GetByID(id uint) (*model.Incidents, error) {
 	return &incident, nil
 }
 
-func (r *IncidentRepository) List(offset, limit int, projectID, month string) ([]IncidentWithEmployee, int64, error) {
+func (r *IncidentRepository) List(offset, limit int, projectID, month, employeeID, employeeName string) ([]IncidentWithEmployee, int64, error) {
 	var incidents []IncidentWithEmployee
 	var total int64
 
-	// 先查询总数
-	if err := r.db.Table("incidents as a").
+	// 构建基础查询条件
+	query := r.db.Table("incidents as a").
 		Joins("LEFT JOIN employees as e ON a.employee_id = e.employee_id").
-		Where("a.month = ? AND a.project_id = ?", month, projectID).
-		Count(&total).Error; err != nil {
+		Where("a.month = ? AND a.project_id = ?", month, projectID)
+
+	// 添加employeeID和employeeName的条件过滤
+	if employeeID != "" {
+		query = query.Where("a.employee_id = ?", employeeID)
+	}
+	if employeeName != "" {
+		query = query.Where("e.employee_name LIKE ?", "%"+employeeName+"%")
+	}
+
+	// 先查询总数
+	if err := query.Count(&total).Error; err != nil {
 		return incidents, total, err
 	}
 
 	// 再查询分页数据
-	if err := r.db.Table("incidents as a").
+	if err := query.
 		Select(`a.*, e.employee_name,e.position`).
-		Joins("LEFT JOIN employees as e ON a.employee_id = e.employee_id").
-		Where("a.month = ? AND a.project_id = ?", month, projectID).
 		Order("a.employee_id DESC").
 		Offset(offset).
 		Limit(limit).

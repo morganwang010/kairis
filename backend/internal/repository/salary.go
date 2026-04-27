@@ -146,24 +146,34 @@ func (r *SalaryRepository) Get(id uint) (*model.Salaries, error) {
 	return &salary, nil
 }
 
-func (r *SalaryRepository) List(offset, limit int, month string, projectID int) ([]AttendanceWithEmployeeAndIncident, int64, error) {
+func (r *SalaryRepository) List(offset, limit int, month string, projectID int, employeeID, employeeName string) ([]AttendanceWithEmployeeAndIncident, int64, error) {
 	var salaries []AttendanceWithEmployeeAndIncident
 	var total int64
 
+	// 构建基础查询条件
+	query := r.db.Table("salaries as s").
+		Joins("LEFT JOIN employees as e ON s.employee_id = e.employee_id").
+		Where("s.month = ? AND s.project_id = ? AND s.delete_flag = 0", month, projectID)
+
+	// 添加employeeID和employeeName的条件过滤
+	if employeeID != "" {
+		query = query.Where("s.employee_id = ?", employeeID)
+	}
+	if employeeName != "" {
+		query = query.Where("e.employee_name LIKE ?", "%"+employeeName+"%")
+	}
+
 	// 先查询总数
-	if err := r.db.Table("salaries as a").
-		Joins("LEFT JOIN employees as e ON a.employee_id = e.employee_id").
-		Where("a.month = ? AND a.project_id = ?", month, projectID).
-		Count(&total).Error; err != nil {
+	if err := query.Count(&total).Error; err != nil {
 		return salaries, total, err
 	}
-	// slog.Info("List salaries", "offset", offset, "limit", limit, "total", total)
-	if err := r.db.Table("salaries as s").
+
+	// 再查询分页数据
+	if err := query.
 		Select(`s.*, e.employee_name, e.basic_salary, e.department, e.field_alw, e.housing_alw, e.position_alw, e.fix_alw, e.meal_alw_day, e.transp_alw_day, e.pulsa_alw_day, e.att_alw_day, e.tax_type, e.npwp, e.location_name, e.join_date, e.pulsa_alw_month, e.housing_alw_tetap, ir.leave_comp, ir.med_alw, ir.others, ir.religious_alw, ir.rapel_basic_salary, ir.rapel_jmstk_alw, ir.incentive_alw, ir.acting, ir.performance_alw, ir.trip_alw, ir.ot2_wages, ir.ot3_wages, ir.comp_phk, ir.tax_alw_phk, ir.absent_ded2, ir.incentive_ded, ir.loan_ded, ir.tax_ded_phk, ir.correct_add, ir.correct_sub, ir.mandah_alw, a.work, a.off, a.ot1, a.ew1, a.ew2, a.ew3, a.ew, a.unpresent,a.sick,a.standby,a.leave_replc,e.id_card,e.hierarchy_id,e.hierarchy_name,e.position,e.email,a.permission,e.meal_alw_month,e.transp_alw_month,e.id_status,ir.meal_alw_add,ir.transp_alw_add,a.ot1_hours,a.ew_hours,ir.ot_drv,ir.ew_drv,ir.ot_add,ir.ew_add`).
 		Joins("LEFT JOIN attendances as a ON s.employee_id = a.employee_id AND s.month = a.month").
-		Joins("LEFT JOIN employees as e ON s.employee_id = e.employee_id").
 		Joins("LEFT JOIN incidents as ir ON s.employee_id = ir.employee_id AND s.month = ir.month").
-		Where("s.month = ? AND s.project_id = ? AND s.delete_flag = 0", month, projectID).
+		Order("s.employee_id DESC").
 		Offset(offset).
 		Limit(limit).
 		Find(&salaries).Error; err != nil {

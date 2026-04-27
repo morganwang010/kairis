@@ -62,8 +62,8 @@ func (s *IncidentService) GetIncidentByID(id uint) (*model.Incidents, error) {
 	return s.incidentRepo.GetByID(id)
 }
 
-func (s *IncidentService) ListIncidents(offset, limit int, projectID, month string) ([]repository.IncidentWithEmployee, int64, error) {
-	return s.incidentRepo.List(offset, limit, projectID, month)
+func (s *IncidentService) ListIncidents(offset, limit int, projectID, month, employeeID, employeeName string) ([]repository.IncidentWithEmployee, int64, error) {
+	return s.incidentRepo.List(offset, limit, projectID, month, employeeID, employeeName)
 }
 
 func (s *IncidentService) UpdateIncident(incident *model.Incidents) error {

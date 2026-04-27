@@ -94,6 +94,8 @@ export const getSalaries = async (params?: {
   project_id?: string;
   page?: string;
   pageSize?: string;
+  employee_id?: string;
+  employee_name?: string;
 }) => {
   try {
     const response = await apiClient.get('/salaries', { params });
@@ -329,6 +331,8 @@ export const getAttendanceRecords = async (params?: {
   month?: string;
   page?: number;
   page_size?: number;
+  employee_id?: string;
+  employee_name?: string;
 }) => {
   try {
     console.log('考勤查询参数:', params)
@@ -429,9 +433,9 @@ export const deleteAllAttendanceRecord = async (projectId: string, month: string
 };
 // 偶发事件相关API
 // 获取偶发事件记录
-export const getIncidentRecords = async (projectId: string, month: string,pageSize:number,currentPage:number) => {
+export const getIncidentRecords = async (projectId: string, month: string,pageSize:number,currentPage:number,employeeID?: string,employeeName?: string) => {
   try {
-    const response = await apiClient.get('/incidents', { params: { projectId, month,pageSize,currentPage } });
+    const response = await apiClient.get('/incidents', { params: { projectId, month,pageSize,currentPage,employeeID,employeeName } });
     console.log('获取偶发事件记录成功:', response.data);
     return response;
   } catch (error) {

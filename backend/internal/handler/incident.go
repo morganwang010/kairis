@@ -283,10 +283,12 @@ func (h *IncidentHandler) List(c *gin.Context) {
 	pageSize, _ := strconv.Atoi(c.DefaultQuery("pageSize", "10"))
 	projectID := c.Query("projectId")
 	month := c.Query("month")
+	employeeID := c.Query("employeeID")
+	employeeName := c.Query("employeeName")
 
 	offset := (page - 1) * pageSize
 
-	incidents, total, err := h.incidentService.ListIncidents(offset, pageSize, projectID, month)
+	incidents, total, err := h.incidentService.ListIncidents(offset, pageSize, projectID, month, employeeID, employeeName)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
 		return

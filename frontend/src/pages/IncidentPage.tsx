@@ -813,7 +813,7 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
         console.log('加载偶发事件数据参数:', params)
         
         // 直接调用getIncidentRecords，使用新的参数
-        getIncidentRecords(projectId, currentMonth.toString(),pageSize,currentPage).then(response => {
+        getIncidentRecords(projectId, currentMonth.toString(),pageSize,currentPage,formattedValues.employee_id,formattedValues.name).then(response => {
           console.log('加载偶发事件数据响应:', response)
           setIncidentsData((response as any).data.list)
           setTotalRecords((response as any).data.total)
