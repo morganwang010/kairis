@@ -213,11 +213,13 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
           page: currentPage,
           pageSize: pageSize,
           project_id: projectId,
+          employee_id: filterValues.employee_id,
+          employee_name: filterValues.employee_name,
           ...filterValues
         }
  
         console.log('加载偶发事件数据参数:', params)
-        const response = await getIncidentRecords(projectId, currentMonth,pageSize,currentPage)
+        const response = await getIncidentRecords(projectId, currentMonth,pageSize,currentPage,filterValues.employee_id,filterValues.employee_name)
         console.log('加载偶发事件数据响应:', response)
         
         // 确保response是一个对象
@@ -264,7 +266,7 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
   useEffect(() => {
     // loadEmployees();
     loadIncidents();
-  }, [projectId, currentMonth, currentPage, pageSize, filterValues])
+  }, [projectId, currentMonth, currentPage, pageSize])
 
 
   // 打开编辑对话框
