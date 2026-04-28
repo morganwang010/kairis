@@ -609,6 +609,7 @@ export const deleteTaxFreeBase = async (id: string) => {
 // 员工信息导入API
 export const importEmployeeRecords = async (records: any[]) => {
   try {
+    console.log('批量导入员工信息请求:', records);
     const response = await apiClient.post('/employees/import', { records });
     console.log('批量导入员工信息成功:', response.data);
     return response.data;

@@ -962,6 +962,11 @@ const loadData = async () => {
       key: 'id_status'
     },    
     {
+      title: t('employeePage.otStatus'),
+      dataIndex: 'ot_status',
+      key: 'ot_status'
+    },  
+    {
       title: t('newSalaryPage.position'),
       dataIndex: 'position',
       key: 'position'

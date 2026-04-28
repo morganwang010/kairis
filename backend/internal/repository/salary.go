@@ -44,6 +44,7 @@ type AttendanceWithEmployee struct {
 	HousingAlwTetap float64 `gorm:"column:housing_alw_tetap" json:"housing_alw_tetap"`
 	LeaveComp       float64 `gorm:"column:leave_comp" json:"leave_comp"`
 	IdStatus        string  `gorm:"column:id_status" json:"id_status"`
+	OtStatus        string  `gorm:"column:ot_status" json:"ot_status"`
 }
 
 type AttendanceWithEmployeeAndIncident struct {
@@ -170,7 +171,7 @@ func (r *SalaryRepository) List(offset, limit int, month string, projectID int, 
 
 	// 再查询分页数据
 	if err := query.
-		Select(`s.*, e.employee_name, e.basic_salary, e.department, e.field_alw, e.housing_alw, e.position_alw, e.fix_alw, e.meal_alw_day, e.transp_alw_day, e.pulsa_alw_day, e.att_alw_day, e.tax_type, e.npwp, e.location_name, e.join_date, e.pulsa_alw_month, e.housing_alw_tetap, ir.leave_comp, ir.med_alw, ir.others, ir.religious_alw, ir.rapel_basic_salary, ir.rapel_jmstk_alw, ir.incentive_alw, ir.acting, ir.performance_alw, ir.trip_alw, ir.ot2_wages, ir.ot3_wages, ir.comp_phk, ir.tax_alw_phk, ir.absent_ded2, ir.incentive_ded, ir.loan_ded, ir.tax_ded_phk, ir.correct_add, ir.correct_sub, ir.mandah_alw, a.work, a.off, a.ot1, a.ew1, a.ew2, a.ew3, a.ew, a.unpresent,a.sick,a.standby,a.leave_replc,e.id_card,e.hierarchy_id,e.hierarchy_name,e.position,e.email,a.permission,e.meal_alw_month,e.transp_alw_month,e.id_status,ir.meal_alw_add,ir.transp_alw_add,a.ot1_hours,a.ew_hours,ir.ot_drv,ir.ew_drv,ir.ot_add,ir.ew_add`).
+		Select(`s.*, e.employee_name, e.basic_salary, e.department, e.field_alw, e.housing_alw, e.position_alw, e.fix_alw, e.meal_alw_day, e.transp_alw_day, e.pulsa_alw_day, e.att_alw_day, e.tax_type, e.npwp, e.location_name, e.join_date, e.pulsa_alw_month, e.housing_alw_tetap, ir.leave_comp, ir.med_alw, ir.others, ir.religious_alw, ir.rapel_basic_salary, ir.rapel_jmstk_alw, ir.incentive_alw, ir.acting, ir.performance_alw, ir.trip_alw, ir.ot2_wages, ir.ot3_wages, ir.comp_phk, ir.tax_alw_phk, ir.absent_ded2, ir.incentive_ded, ir.loan_ded, ir.tax_ded_phk, ir.correct_add, ir.correct_sub, ir.mandah_alw, a.work, a.off, a.ot1, a.ew1, a.ew2, a.ew3, a.ew, a.unpresent,a.sick,a.standby,a.leave_replc,e.id_card,e.hierarchy_id,e.hierarchy_name,e.position,e.email,a.permission,e.meal_alw_month,e.transp_alw_month,e.id_status,ir.meal_alw_add,ir.transp_alw_add,a.ot1_hours,a.ew_hours,ir.ot_drv,ir.ew_drv,ir.ot_add,ir.ew_add,e.ot_status`).
 		Joins("LEFT JOIN attendances as a ON s.employee_id = a.employee_id AND s.month = a.month").
 		Joins("LEFT JOIN incidents as ir ON s.employee_id = ir.employee_id AND s.month = ir.month").
 		Order("s.employee_id DESC").
@@ -217,7 +218,7 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 
 	var attendanceRecords []AttendanceWithEmployeeAndIncident
 	if err := r.db.Table("attendances as a").
-		Select(`a.*, e.employee_name, e.basic_salary, e.department, e.field_alw, e.housing_alw, e.position_alw, e.fix_alw, e.meal_alw_day, e.transp_alw_day, e.pulsa_alw_day, e.att_alw_day, e.tax_type, e.npwp, e.location_name, e.join_date, e.pulsa_alw_month, e.housing_alw_tetap, ir.leave_comp, ir.med_alw, ir.others, ir.religious_alw, ir.rapel_basic_salary, ir.rapel_jmstk_alw, ir.incentive_alw, ir.acting, ir.performance_alw, ir.trip_alw, ir.ot2_wages, ir.ot3_wages, ir.comp_phk, ir.tax_alw_phk, ir.absent_ded2, ir.incentive_ded, ir.loan_ded, ir.tax_ded_phk, ir.correct_add, ir.correct_sub, ir.mandah_alw,e.meal_alw_month,e.transp_alw_month,ir.meal_alw_add,ir.transp_alw_add,ir.ew_drv,ir.ot_drv,ir.ot_add,ir.ew_add`).
+		Select(`a.*, e.employee_name, e.basic_salary, e.department, e.field_alw, e.housing_alw, e.position_alw, e.fix_alw, e.meal_alw_day, e.transp_alw_day, e.pulsa_alw_day, e.att_alw_day, e.tax_type, e.npwp, e.location_name, e.join_date, e.pulsa_alw_month, e.housing_alw_tetap, ir.leave_comp, ir.med_alw, ir.others, ir.religious_alw, ir.rapel_basic_salary, ir.rapel_jmstk_alw, ir.incentive_alw, ir.acting, ir.performance_alw, ir.trip_alw, ir.ot2_wages, ir.ot3_wages, ir.comp_phk, ir.tax_alw_phk, ir.absent_ded2, ir.incentive_ded, ir.loan_ded, ir.tax_ded_phk, ir.correct_add, ir.correct_sub, ir.mandah_alw,e.meal_alw_month,e.transp_alw_month,ir.meal_alw_add,ir.transp_alw_add,ir.ew_drv,ir.ot_drv,ir.ot_add,ir.ew_add,e.ot_status`).
 		Joins("LEFT JOIN employees as e ON a.employee_id = e.employee_id").
 		Joins("LEFT JOIN incidents as ir ON a.employee_id = ir.employee_id AND a.month = ir.month").
 		Where("a.month = ? AND a.project_id = ?", month, projectID).
@@ -255,13 +256,15 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 		} else {
 			askesBpjsAlw = record.BasicSalary * coefficient.CAskesAlw * askesAlwByNation
 		}
+		otHoursOn = otHoursOn * 1
+		ewHoursOn = ewHoursOn * 1
 
 		// 计算加班时长和工资
 		otHours := 0.0
-		if record.IdStatus == "nst" || record.IdStatus == "NST" || record.IdStatus == "Nst" {
-			otHours = float64(record.Work)*7.5 + record.Ot1Hours*otHoursOn
+		if record.OtStatus == "ot" || record.IdStatus == "OT" || record.IdStatus == "Ot" {
+			otHours = float64(record.Work)*7.5 + record.Ot1Hours
 		} else {
-			otHours = record.Ot1Hours * otHoursOn
+			otHours = record.Ot1Hours
 		}
 		// ot1Hour := record.Ot1 * coefficient.COtHour1
 		// ot1Wages := (ot1Hour / coefficient.COtWages1) * totalNetWages
@@ -274,13 +277,15 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 
 		// ew3Hour := record.Ew3 * coefficient.CEwHour3
 		// ew3Wages := (ew3Hour / coefficient.CEwWages3 / coefficient.CEwHour2) * totalNetWages
-		otWages := otHours / coefficient.CEwWages1 * totalNetWages * otHoursOn
+
+		otWages := otHours / coefficient.CEwWages1 * totalNetWages
+
 		//
 		ewWages := 0.0
 		if record.IdStatus == "nst" || record.IdStatus == "NST" || record.IdStatus == "Nst" {
-			ewWages = record.EwHours / coefficient.CEwWages1 * totalNetWages * ewHoursOn
+			ewWages = record.EwHours / coefficient.CEwWages1 * totalNetWages
 		} else {
-			ewWages = (record.EwHours / coefficient.CEwWages2 / coefficient.CEwHour2) * totalNetWages * ewHoursOn
+			ewWages = (record.EwHours / coefficient.CEwWages2 / coefficient.CEwHour2) * totalNetWages
 		}
 
 		workDays := float64(record.Work)

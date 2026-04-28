@@ -141,6 +141,7 @@ CREATE TABLE IF NOT EXISTS employees (
     join_date TIMESTAMP ,
     resign_date TIMESTAMP ,
     id_status TEXT default '',
+    ot_status TEXT default '',
     email TEXT default '',
     basic_salary NUMERIC DEFAULT 0.00,
     housing_alw NUMERIC DEFAULT 0.00,

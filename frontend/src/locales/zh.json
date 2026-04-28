@@ -700,7 +700,8 @@
     "confirmBatchDelete": "确定删除选中的员工吗？",
     "batchDeleteSuccess": "批量删除成功",
     "housingAllowanceTetap": "固定住房补助",
-    "idStatus": "用工形式"
+    "idStatus": "用工形式",
+    "otStatus": "加班状态"
   },
   "settingsPage": {
     "title": "系统设置",

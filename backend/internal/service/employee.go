@@ -88,6 +88,7 @@ type ImportEmployeeItem struct {
 	DeleteFlag      int     `json:"delete_flag"`
 	OtDrv           float64 `json:"ot_drv"`
 	IdStatus        string  `json:"id_status"`
+	OtStatus        string  `json:"ot_status"`
 }
 
 func DMYToYMD(dmy string) string {
@@ -115,7 +116,7 @@ func (s *EmployeeService) ImportEmployee(req ImportEmployeeRequest) error {
 				return fmt.Errorf("invalid resign_date format: %v", err)
 			}
 		}
-		slog.Info("Import employee", "id_status", employee.IdStatus)
+		// slog.Info("Import employee", "id_status", employee.IdStatus)
 
 		employeeModel := &model.Employee{
 			EmployeeID:      employee.EmployeeID,
@@ -148,6 +149,7 @@ func (s *EmployeeService) ImportEmployee(req ImportEmployeeRequest) error {
 			HousingAlwTetap: employee.HousingAlwTetap,
 			DeleteFlag:      employee.DeleteFlag,
 			IdStatus:        employee.IdStatus,
+			OtStatus:        employee.OtStatus,
 		}
 
 		existingEmployee, err := s.employeeRepo.GetByEmployeeID(employee.EmployeeID, uint(employee.ProjectID))
@@ -156,7 +158,7 @@ func (s *EmployeeService) ImportEmployee(req ImportEmployeeRequest) error {
 			if err := s.employeeRepo.Update(employeeModel); err != nil {
 				return err
 			}
-			slog.Info("Update employee", "employee_id", employee.EmployeeID)
+			// slog.Info("Update employee", "employee_id", employee.EmployeeID)
 			continue
 		} else {
 			slog.Info("Create employee", "employee_id", employee.EmployeeID)

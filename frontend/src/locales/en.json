@@ -668,7 +668,8 @@
     "batchDelete": "Batch Delete",
     "confirmBatchDelete": "Are you sure to delete selected employees?",
     "batchDeleteSuccess": "Batch Delete Success",
-    "idStatus": "ID_Status"
+    "idStatus": "ID_Status",
+    "otStatus": "OT_Status"
   },
   "settingsPage": {
     "title": "System Settings",

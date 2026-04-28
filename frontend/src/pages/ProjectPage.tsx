@@ -134,18 +134,18 @@ const ProjectPage: React.FC = () => {
       key: 'askesAlwByNation',
       width: 120,
     },
-    {
-      title: t('projectPage.otHoursOn'),
-      dataIndex: 'otHoursOn',
-      key: 'otHoursOn',
-      width: 120,
-    },
-    {
-      title: t('projectPage.ewHoursOn'),
-      dataIndex: 'ewHoursOn',
-      key: 'ewHoursOn',
-      width: 120,
-    },
+    // {
+    //   title: t('projectPage.otHoursOn'),
+    //   dataIndex: 'otHoursOn',
+    //   key: 'otHoursOn',
+    //   width: 120,
+    // },
+    // {
+    //   title: t('projectPage.ewHoursOn'),
+    //   dataIndex: 'ewHoursOn',
+    //   key: 'ewHoursOn',
+    //   width: 120,
+    // },
     {
       title: t('projectPage.status'),
       dataIndex: 'status',
@@ -390,7 +390,7 @@ const ProjectPage: React.FC = () => {
           >
             <InputNumber min={0} max={1} placeholder={t('projectPage.askesAlwPlaceholder')} />
           </Form.Item>
-          <Form.Item
+          {/* <Form.Item
             label={t('projectPage.otHoursOn')}
             name="otHoursOn"
             rules={[{ required: true, message: t('projectPage.otHoursOnRequired') }]}
@@ -403,7 +403,7 @@ const ProjectPage: React.FC = () => {
             rules={[{ required: true, message: t('projectPage.ewHoursOnRequired') }]}
           >
             <InputNumber min={0} max={1} placeholder={t('projectPage.ewHoursHoursOnPlaceholder')} />
-          </Form.Item>
+          </Form.Item> */}
           {/* <div style={{ display: 'flex', gap: 16 }}>
             <Form.Item
               label={t('projectPage.startTime')}

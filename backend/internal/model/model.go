@@ -275,7 +275,8 @@ type Employee struct {
 	HierarchyName   string    `gorm:"column:hierarchy_name" json:"hierarchy_name"`                 // TEXT
 	JoinDate        time.Time `gorm:"column:join_date;default:CURRENT_TIMESTAMP" json:"join_date"` // TIMESTAMP
 	ResignDate      time.Time `gorm:"column:resign_date;default:CURRENT_TIMESTAMP" json:"resign_date"`
-	IdStatus        string    `gorm:"column:id_status;default:''" json:"id_status"`         // TEXT default
+	IdStatus        string    `gorm:"column:id_status;default:''" json:"id_status"`
+	OtStatus        string    `gorm:"column:ot_status;default:''" json:"ot_status"`         // TEXT default
 	Email           string    `gorm:"column:email;default:''" json:"email"`                 // TEXT default
 	BasicSalary     float64   `gorm:"column:basic_salary;default:0.00" json:"basic_salary"` // NUMERIC default 0.00
 	HousingAlw      float64   `gorm:"column:housing_alw;default:0.00" json:"housing_alw"`   // NUMERIC default 0.00
