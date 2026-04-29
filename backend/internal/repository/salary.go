@@ -261,7 +261,7 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 
 		// 计算加班时长和工资
 		otHours := 0.0
-		if record.OtStatus == "ot" || record.IdStatus == "OT" || record.IdStatus == "Ot" {
+		if record.OtStatus == "ot" || record.OtStatus == "OT" || record.OtStatus == "Ot" {
 			otHours = float64(record.Work)*7.5 + record.Ot1Hours
 		} else {
 			otHours = record.Ot1Hours
