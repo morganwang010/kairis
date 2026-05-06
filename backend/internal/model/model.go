@@ -126,6 +126,8 @@ type Incidents struct {
 	OtDrv            float64 `gorm:"column:ot_drv;default:0.00" json:"ot_drv"`
 	OtAdd            float64 `gorm:"column:ot_add;default:0.00" json:"ot_add"`
 	EwAdd            float64 `gorm:"column:ew_add;default:0.00" json:"ew_add"`
+	Jp3              float64 `gorm:"column:jp_3;default:0.00" json:"jp_3"`
+	Bpjs5            float64 `gorm:"column:bpjs_5;default:0.00" json:"bpjs_5"`
 
 	// 时间字段
 	CreateTime time.Time `gorm:"column:create_time;default:CURRENT_TIMESTAMP" json:"create_time"`

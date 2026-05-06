@@ -129,6 +129,8 @@ type AttendanceWithEmployeeAndIncident struct {
 	EwWages          float64   `gorm:"column:ew_wages;default:0.00" json:"ew_wages"`
 	OtDrv            float64   `gorm:"column:ot_drv;default:0.00" json:"ot_drv"`
 	EwAdd            float64   `gorm:"column:ew_add;default:0.00" json:"ew_add"`
+	Jp3              float64   `gorm:"column:jp_3;default:0.00" json:"jp_3"`
+	Bpjs5            float64   `gorm:"column:bpjs_5;default:0.00" json:"bpjs_5"`
 }
 
 func NewSalaryRepository(db *gorm.DB) *SalaryRepository {
@@ -171,7 +173,7 @@ func (r *SalaryRepository) List(offset, limit int, month string, projectID int, 
 
 	// 再查询分页数据
 	if err := query.
-		Select(`s.*, e.employee_name, e.basic_salary, e.department, e.field_alw, e.housing_alw, e.position_alw, e.fix_alw, e.meal_alw_day, e.transp_alw_day, e.pulsa_alw_day, e.att_alw_day, e.tax_type, e.npwp, e.location_name, e.join_date, e.pulsa_alw_month, e.housing_alw_tetap, ir.leave_comp, ir.med_alw, ir.others, ir.religious_alw, ir.rapel_basic_salary, ir.rapel_jmstk_alw, ir.incentive_alw, ir.acting, ir.performance_alw, ir.trip_alw, ir.ot2_wages, ir.ot3_wages, ir.comp_phk, ir.tax_alw_phk, ir.absent_ded2, ir.incentive_ded, ir.loan_ded, ir.tax_ded_phk, ir.correct_add, ir.correct_sub, ir.mandah_alw, a.work, a.off, a.ot1, a.ew1, a.ew2, a.ew3, a.ew, a.unpresent,a.sick,a.standby,a.leave_replc,e.id_card,e.hierarchy_id,e.hierarchy_name,e.position,e.email,a.permission,e.meal_alw_month,e.transp_alw_month,e.id_status,ir.meal_alw_add,ir.transp_alw_add,a.ot1_hours,a.ew_hours,ir.ot_drv,ir.ew_drv,ir.ot_add,ir.ew_add,e.ot_status`).
+		Select(`s.*, e.employee_name, e.basic_salary, e.department, e.field_alw, e.housing_alw, e.position_alw, e.fix_alw, e.meal_alw_day, e.transp_alw_day, e.pulsa_alw_day, e.att_alw_day, e.tax_type, e.npwp, e.location_name, e.join_date, e.pulsa_alw_month, e.housing_alw_tetap, ir.leave_comp, ir.med_alw, ir.others, ir.religious_alw, ir.rapel_basic_salary, ir.rapel_jmstk_alw, ir.incentive_alw, ir.acting, ir.performance_alw, ir.trip_alw, ir.ot2_wages, ir.ot3_wages, ir.comp_phk, ir.tax_alw_phk, ir.absent_ded2, ir.incentive_ded, ir.loan_ded, ir.tax_ded_phk, ir.correct_add, ir.correct_sub, ir.mandah_alw, a.work, a.off, a.ot1, a.ew1, a.ew2, a.ew3, a.ew, a.unpresent,a.sick,a.standby,a.leave_replc,e.id_card,e.hierarchy_id,e.hierarchy_name,e.position,e.email,a.permission,e.meal_alw_month,e.transp_alw_month,e.id_status,ir.meal_alw_add,ir.transp_alw_add,a.ot1_hours,a.ew_hours,ir.ot_drv,ir.ew_drv,ir.ot_add,ir.ew_add,e.ot_status,ir.jp_3,ir.bpjs_5`).
 		Joins("LEFT JOIN attendances as a ON s.employee_id = a.employee_id AND s.month = a.month").
 		Joins("LEFT JOIN incidents as ir ON s.employee_id = ir.employee_id AND s.month = ir.month").
 		Order("s.employee_id DESC").
@@ -210,7 +212,7 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 	if err := r.db.First(&project, projectID).Error; err != nil {
 		return err
 	}
-	askesAlwByNation := float64(project.AskesAlw)
+	// askesAlwByNation := float64(project.AskesAlw)
 	otHoursOn := float64(project.OtHoursOn)
 	ewHoursOn := float64(project.EwHoursOn)
 
@@ -218,7 +220,7 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 
 	var attendanceRecords []AttendanceWithEmployeeAndIncident
 	if err := r.db.Table("attendances as a").
-		Select(`a.*, e.employee_name, e.basic_salary, e.department, e.field_alw, e.housing_alw, e.position_alw, e.fix_alw, e.meal_alw_day, e.transp_alw_day, e.pulsa_alw_day, e.att_alw_day, e.tax_type, e.npwp, e.location_name, e.join_date, e.pulsa_alw_month, e.housing_alw_tetap, ir.leave_comp, ir.med_alw, ir.others, ir.religious_alw, ir.rapel_basic_salary, ir.rapel_jmstk_alw, ir.incentive_alw, ir.acting, ir.performance_alw, ir.trip_alw, ir.ot2_wages, ir.ot3_wages, ir.comp_phk, ir.tax_alw_phk, ir.absent_ded2, ir.incentive_ded, ir.loan_ded, ir.tax_ded_phk, ir.correct_add, ir.correct_sub, ir.mandah_alw,e.meal_alw_month,e.transp_alw_month,ir.meal_alw_add,ir.transp_alw_add,ir.ew_drv,ir.ot_drv,ir.ot_add,ir.ew_add,e.ot_status,e.id_status`).
+		Select(`a.*, e.employee_name, e.basic_salary, e.department, e.field_alw, e.housing_alw, e.position_alw, e.fix_alw, e.meal_alw_day, e.transp_alw_day, e.pulsa_alw_day, e.att_alw_day, e.tax_type, e.npwp, e.location_name, e.join_date, e.pulsa_alw_month, e.housing_alw_tetap, ir.leave_comp, ir.med_alw, ir.others, ir.religious_alw, ir.rapel_basic_salary, ir.rapel_jmstk_alw, ir.incentive_alw, ir.acting, ir.performance_alw, ir.trip_alw, ir.ot2_wages, ir.ot3_wages, ir.comp_phk, ir.tax_alw_phk, ir.absent_ded2, ir.incentive_ded, ir.loan_ded, ir.tax_ded_phk, ir.correct_add, ir.correct_sub, ir.mandah_alw,e.meal_alw_month,e.transp_alw_month,ir.meal_alw_add,ir.transp_alw_add,ir.ew_drv,ir.ot_drv,ir.ot_add,ir.ew_add,e.ot_status,e.id_status,ir.jp_3,ir.bpjs_5`).
 		Joins("LEFT JOIN employees as e ON a.employee_id = e.employee_id").
 		Joins("LEFT JOIN incidents as ir ON a.employee_id = ir.employee_id AND a.month = ir.month").
 		Where("a.month = ? AND a.project_id = ?", month, projectID).
@@ -251,11 +253,11 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 
 		// 计算社保补助
 		askesBpjsAlw := 0.0
-		if record.BasicSalary > coefficient.AskesMax {
-			askesBpjsAlw = coefficient.AskesMax * coefficient.CAskesAlw * askesAlwByNation
-		} else {
-			askesBpjsAlw = record.BasicSalary * coefficient.CAskesAlw * askesAlwByNation
-		}
+		// if record.BasicSalary > coefficient.AskesMax {
+		// 	askesBpjsAlw = coefficient.AskesMax * coefficient.CAskesAlw * askesAlwByNation
+		// } else {
+		// 	askesBpjsAlw = record.BasicSalary * coefficient.CAskesAlw * askesAlwByNation
+		// }
 		otHoursOn = otHoursOn * 1
 		ewHoursOn = ewHoursOn * 1
 
@@ -303,7 +305,7 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 		absentDed1 := record.Unpresent / 30.0 * record.BasicSalary
 
 		// 计算税前总收入
-		totalAcceptNoTax := totalNetWages + record.HousingAlwTetap + record.PulsaAlwMonth + jmstkAlw + pensionAlw + otWages + ewWages + mealAlw + transpAlw + askesBpjsAlw + pulsaAlw + attAlw + record.LeaveComp + record.MedAlw + record.Others + record.ReligiousAlw + record.RapelBasicSalary + record.RapelJmstkAlw + record.Acting + record.PerformanceAlw + record.TripAlw + record.MandahAlw + record.IncentiveAlw + record.MealAlwAdd + record.TranspAlwAdd + record.CompPhk + record.TaxAlwPhk + record.CorrectAdd - record.CorrectSub - absentDed1 - record.AbsentDed2 - record.IncentiveDed - record.LoanDed - record.TaxDedPhk + record.MealAlwMonth + record.TranspAlwMonth + record.OtDrv + record.OtAdd + record.EwAdd + record.EwDrv
+		totalAcceptNoTax := totalNetWages + record.HousingAlwTetap + record.PulsaAlwMonth + jmstkAlw + pensionAlw + otWages + ewWages + mealAlw + transpAlw + askesBpjsAlw + pulsaAlw + attAlw + record.LeaveComp + record.MedAlw + record.Others + record.ReligiousAlw + record.RapelBasicSalary + record.RapelJmstkAlw + record.Acting + record.PerformanceAlw + record.TripAlw + record.MandahAlw + record.IncentiveAlw + record.MealAlwAdd + record.TranspAlwAdd + record.CompPhk + record.TaxAlwPhk + record.CorrectAdd - record.CorrectSub - absentDed1 - record.AbsentDed2 - record.IncentiveDed - record.LoanDed - record.TaxDedPhk + record.MealAlwMonth + record.TranspAlwMonth + record.OtDrv + record.OtAdd + record.EwAdd + record.EwDrv + record.Jp3
 
 		// 计算税额
 		taxAlwSalary := 0.0
@@ -378,18 +380,20 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 		taxDedSalary := taxAlwSalary
 
 		// 计算社保扣除
-		cappedSalary := 0.0
-		if record.BasicSalary <= coefficient.AskesMin {
-			cappedSalary = coefficient.AskesMin
-		} else if record.BasicSalary <= coefficient.AskesMax {
-			cappedSalary = record.BasicSalary
-		} else {
-			cappedSalary = coefficient.AskesMax
-		}
-		askesBpjsDed := cappedSalary * coefficient.CAskesDed
+		// cappedSalary := 0.0
+		// if record.BasicSalary <= coefficient.AskesMin {
+		// 	cappedSalary = coefficient.AskesMin
+		// } else if record.BasicSalary <= coefficient.AskesMax {
+		// 	cappedSalary = record.BasicSalary
+		// } else {
+		// 	cappedSalary = coefficient.AskesMax
+		// }
+		// askesBpjsDed := cappedSalary * coefficient.CAskesDed
+
+		askesBpjsDed := 0.0
 
 		// 计算实发工资
-		netAccept := totalAccept - jmstkFee - pensionDed - taxDedSalary - askesBpjsDed
+		netAccept := totalAccept - jmstkFee - pensionDed - taxDedSalary - askesBpjsDed - record.Bpjs5
 
 		// 实发工资取整百
 		roundOffSalary := float64(int((netAccept+50)/100)) * 100

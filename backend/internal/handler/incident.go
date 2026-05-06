@@ -44,6 +44,8 @@ type CreateIncidentRequest struct {
 	LoanDed          string `json:"loan_ded"`
 	TaxDedPhk        string `json:"tax_ded_phk"`
 	MandahAlw        string `json:"mandah_alw"`
+	Jp3              string `json:"jp_3"`
+	Bpjs5            string `json:"bpjs_5"`
 }
 
 type UpdateIncidentRequest struct {
@@ -75,6 +77,8 @@ type UpdateIncidentRequest struct {
 	OtDrv            float64 `json:"ot_drv"`
 	MealAlwAdd       float64 `json:"meal_alw_add"`
 	TranspAlwAdd     float64 `json:"transp_alw_add"`
+	Jp3              float64 `json:"jp_3"`
+	Bpjs5            float64 `json:"bpjs_5"`
 }
 
 func (h *IncidentHandler) Create(c *gin.Context) {
@@ -248,6 +252,20 @@ func (h *IncidentHandler) Create(c *gin.Context) {
 	if req.MandahAlw != "" {
 		if val, ok := StringToFloat64(c, req.MandahAlw, "mandah_alw"); ok {
 			incident.MandahAlw = val
+		} else {
+			return
+		}
+	}
+	if req.Jp3 != "" {
+		if val, ok := StringToFloat64(c, req.Jp3, "jp_3"); ok {
+			incident.Jp3 = val
+		} else {
+			return
+		}
+	}
+	if req.Bpjs5 != "" {
+		if val, ok := StringToFloat64(c, req.Bpjs5, "bpjs_5"); ok {
+			incident.Bpjs5 = val
 		} else {
 			return
 		}
@@ -471,6 +489,8 @@ func (h *IncidentHandler) Import(c *gin.Context) {
 			OtDrv            string `json:"ot_drv"`
 			OtAdd            string `json:"ot_add"`
 			EwAdd            string `json:"ew_add"`
+			Jp3              string `json:"jp_3"`
+			Bpjs5            string `json:"bpjs_5"`
 		} `json:"records"`
 	}
 	slog.Info("Before binding", "req", &req)
@@ -604,6 +624,14 @@ func (h *IncidentHandler) Import(c *gin.Context) {
 		if !ok {
 			return
 		}
+		jp3, ok := StringToFloat64(c, item.Jp3, "jp_3")
+		if !ok {
+			return
+		}
+		bpjs5, ok := StringToFloat64(c, item.Bpjs5, "bpjs_5")
+		if !ok {
+			return
+		}
 
 		importReq.Incidents[i] = service.ImportIncidentItem{
 			EmployeeID:       item.EmployeeID,
@@ -637,6 +665,8 @@ func (h *IncidentHandler) Import(c *gin.Context) {
 			OtDrv:            otDrv,
 			OtAdd:            otAdd,
 			EwAdd:            ewAdd,
+			Jp3:              jp3,
+			Bpjs5:            bpjs5,
 		}
 	}
 

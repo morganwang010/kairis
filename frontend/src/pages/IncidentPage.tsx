@@ -478,6 +478,8 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
           ot_drv: trimmedRecord['OT_Drv'] || trimmedRecord['Ot_Drv'] || "0",
           ot_add: trimmedRecord['OT_Add'] || trimmedRecord['Ot_Add'] || "0",
           ew_add: trimmedRecord['EW_Add'] || trimmedRecord['Ew_Add'] || "0",
+          jp_3: trimmedRecord['JP_3%'] || trimmedRecord['jp_3'] || "0",
+          bpjs_5: trimmedRecord['BPJS_5%'] || trimmedRecord['bpjs_5'] || "0",
         }
       }).filter(record => record.employee_id)
       
@@ -728,6 +730,8 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
     { title: t('incidentPage.correctAdd'), dataIndex: 'correct_add', key: 'correct_add', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
     { title: t('incidentPage.correctSub'), dataIndex: 'correct_sub', key: 'correct_sub', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
     { title: t('incidentPage.taxDedPhk'), dataIndex: 'tax_ded_phk', key: 'tax_ded_phk', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    { title: t('incidentPage.jp3'), dataIndex: 'jp_3', key: 'jp_3', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    { title: t('incidentPage.bpjs5'), dataIndex: 'bpjs_5', key: 'bpjs_5', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
     
     // 添加操作列---暂时隐藏
     // {

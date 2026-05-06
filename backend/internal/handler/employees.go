@@ -442,15 +442,17 @@ func (h *EmployeeHandler) Import(c *gin.Context) {
 		// // 转换MealAlwMonth为float64类型
 		// slog.Info("meal_alw_month", "meal_alw_month", item.MealAlwMonth)
 
-		mealAlwMonth, ok := StringToFloat64(c, item.MealAlwMonth, "meal_alw_month")
-		if !ok {
-			return
-		}
+		// mealAlwMonth, ok := StringToFloat64(c, item.MealAlwMonth, "meal_alw_month")
+		// if !ok {
+		// 	return
+		// }
+		mealAlwMonth := 0.0
+		transpAlwMonth := 0.0
 		// 转换TranspAlwMonth为float64类型
-		transpAlwMonth, ok := StringToFloat64(c, item.TranspAlwMonth, "transp_alw_month")
-		if !ok {
-			return
-		}
+		// transpAlwMonth, ok := StringToFloat64(c, item.TranspAlwMonth, "transp_alw_month")
+		// if !ok {
+		// 	return
+		// }
 
 		// 转换PulsaAlwDay为float64类型
 		pulsaAlwDay, ok := StringToFloat64(c, item.PulsaAlwDay, "pulsa_alw/day")

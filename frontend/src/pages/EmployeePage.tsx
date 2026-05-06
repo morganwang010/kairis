@@ -656,8 +656,8 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId }) => {
     { title: t('employeePage.phoneAllowanceMonth'), dataIndex: 'pulsa_alw_month', key: 'pulsa_alw_month', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
     { title: t('employeePage.mealAllowanceDay'), dataIndex: 'meal_alw_day', key: 'meal_alw_day', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
     { title: t('employeePage.transportAllowanceDay'), dataIndex: 'transp_alw_day', key: 'transp_alw_day', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
-    { title: t('employeePage.mealAllowanceMonth'), dataIndex: 'meal_alw_month', key: 'meal_alw_month', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
-    { title: t('employeePage.transportAllowanceMonth'), dataIndex: 'transp_alw_month', key: 'transp_alw_month', width: 160, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+    // { title: t('employeePage.mealAllowanceMonth'), dataIndex: 'meal_alw_month', key: 'meal_alw_month', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+    // { title: t('employeePage.transportAllowanceMonth'), dataIndex: 'transp_alw_month', key: 'transp_alw_month', width: 160, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
    
     { title: t('employeePage.phoneAllowanceDay'), dataIndex: 'pulsa_alw_day', key: 'pulsa_alw_day', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
     { title: t('employeePage.attendanceAllowanceDay'), dataIndex: 'att_alw_day', key: 'att_alw_day', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },

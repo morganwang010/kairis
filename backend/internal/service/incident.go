@@ -42,6 +42,8 @@ type ImportIncidentItem struct {
 	OtDrv            float64 `json:"ot_drv"`
 	OtAdd            float64 `json:"ot_add"`
 	EwAdd            float64 `json:"ew_add"`
+	Jp3              float64 `json:"jp_3"`
+	Bpjs5            float64 `json:"bpjs_5"`
 }
 
 type IncidentService struct {
@@ -112,6 +114,8 @@ func (s *IncidentService) ImportIncident(req ImportIncidentRequest) error {
 			OtDrv:            incident.OtDrv,
 			OtAdd:            incident.OtAdd,
 			EwAdd:            incident.EwAdd,
+			Jp3:              incident.Jp3,
+			Bpjs5:            incident.Bpjs5,
 		}
 		existingIncident, err := s.incidentRepo.GetByEmployeeIDAndMonth(incident.EmployeeID, incident.Month, incident.ProjectID)
 		if err == nil && existingIncident != nil {

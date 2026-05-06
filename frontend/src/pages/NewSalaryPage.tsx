@@ -1157,20 +1157,20 @@ const loadData = async () => {
       render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
     },
      
-    {
-      title: t('newSalaryPage.mealAllowanceMonth'),
-      dataIndex: 'meal_alw_month',
-      key: 'meal_alw_month',
-      width: 120,
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('newSalaryPage.transportAllowanceMonth'),
-      dataIndex: 'transp_alw_month',
-      key: 'transp_alw_month',
-      width: 120,
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
+    // {
+    //   title: t('newSalaryPage.mealAllowanceMonth'),
+    //   dataIndex: 'meal_alw_month',
+    //   key: 'meal_alw_month',
+    //   width: 120,
+    //   render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+    // },
+    // {
+    //   title: t('newSalaryPage.transportAllowanceMonth'),
+    //   dataIndex: 'transp_alw_month',
+    //   key: 'transp_alw_month',
+    //   width: 120,
+    //   render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+    // },
  
     {
       title: t('newSalaryPage.taxAllowanceSalary'),
@@ -1178,12 +1178,12 @@ const loadData = async () => {
       key: 'tax_alw_salary',
       render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
     },
-    {
-      title: t('newSalaryPage.bpjsAllowance'),
-      dataIndex: 'askes_bpjs_alw',
-      key: 'askes_bpjs_alw',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
+    // {
+    //   title: t('newSalaryPage.bpjsAllowance'),
+    //   dataIndex: 'askes_bpjs_alw',
+    //   key: 'askes_bpjs_alw',
+    //   render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+    // },
     {
       title: t('newSalaryPage.phoneAllowanceByDay'),
       dataIndex: 'pulsa_alw',
@@ -1366,6 +1366,19 @@ const loadData = async () => {
       render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
     },
     {
+      title: t('incidentPage.jp3'),
+      dataIndex: 'jp_3',
+      key: 'jp_3',
+      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+    },
+    {
+      title: t('incidentPage.bpjs5'),
+      dataIndex: 'bpjs_5',
+      key: 'bpjs_5',
+      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+    },
+
+    {
       title: t('newSalaryPage.totalAcceptance'),
       dataIndex: 'total_accept',
       key: 'total_accept',
@@ -1389,12 +1402,12 @@ const loadData = async () => {
       key: 'tax_ded_salary',
       render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
     },
-    {
-      title: t('newSalaryPage.bpjsDeduction'),
-      dataIndex: 'askes_bpjs_ded',
-      key: 'askes_bpjs_ded',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
+    // {
+    //   title: t('newSalaryPage.bpjsDeduction'),
+    //   dataIndex: 'askes_bpjs_ded',
+    //   key: 'askes_bpjs_ded',
+    //   render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+    // },
 
     {
       title: t('newSalaryPage.netAcceptance'),

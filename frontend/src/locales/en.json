@@ -562,7 +562,9 @@
     "ewDrv": "EW_Drv",
     "otDrv": "OT_Drv",
     "otAdd": "OT_Add",
-    "ewAdd": "EW_Add"
+    "ewAdd": "EW_Add",
+    "jp3": "JP_3%",
+    "bpjs5": "BPJS_5%"
   },
   "employeePage": {
     "title": "Employee Management",

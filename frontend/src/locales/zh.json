@@ -550,7 +550,9 @@
     "ewDrv": "司机补贴",
     "otDrv": "司机加班补贴",
     "otAdd": "司机加班补贴新增",
-    "ewAdd": "司机加班补贴新增2"
+    "ewAdd": "司机加班补贴新增2",
+    "jp3": "JP_3%",
+    "bpjs5": "BPJS_5%"
   },
   "employeeUploadPage": {
     "title": "员工信息导入",

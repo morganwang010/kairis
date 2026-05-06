@@ -410,6 +410,8 @@ CREATE TABLE incidents (
     ot_drv NUMERIC default 0.00,
     ot_add NUMERIC default 0.00,
     ew_add NUMERIC default 0.00,
+    jp_3 NUMERIC default 0.00,
+    bpjs_5 NUMERIC default 0.00,
     UNIQUE (employee_id, project_id, month)
 );
 
