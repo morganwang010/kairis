@@ -212,7 +212,7 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 	if err := r.db.First(&project, projectID).Error; err != nil {
 		return err
 	}
-	// askesAlwByNation := float64(project.AskesAlw)
+	askesAlwByNation := float64(project.AskesAlw)
 	otHoursOn := float64(project.OtHoursOn)
 	ewHoursOn := float64(project.EwHoursOn)
 
@@ -253,11 +253,11 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 
 		// 计算社保补助
 		askesBpjsAlw := 0.0
-		// if record.BasicSalary > coefficient.AskesMax {
-		// 	askesBpjsAlw = coefficient.AskesMax * coefficient.CAskesAlw * askesAlwByNation
-		// } else {
-		// 	askesBpjsAlw = record.BasicSalary * coefficient.CAskesAlw * askesAlwByNation
-		// }
+		if record.BasicSalary > coefficient.AskesMax {
+			askesBpjsAlw = coefficient.AskesMax * coefficient.CAskesAlw * askesAlwByNation
+		} else {
+			askesBpjsAlw = record.BasicSalary * coefficient.CAskesAlw * askesAlwByNation
+		}
 		otHoursOn = otHoursOn * 1
 		ewHoursOn = ewHoursOn * 1
 

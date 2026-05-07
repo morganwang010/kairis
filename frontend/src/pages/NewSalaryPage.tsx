@@ -1178,12 +1178,12 @@ const loadData = async () => {
       key: 'tax_alw_salary',
       render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
     },
-    // {
-    //   title: t('newSalaryPage.bpjsAllowance'),
-    //   dataIndex: 'askes_bpjs_alw',
-    //   key: 'askes_bpjs_alw',
-    //   render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    // },
+    {
+      title: t('newSalaryPage.bpjsAllowance'),
+      dataIndex: 'askes_bpjs_alw',
+      key: 'askes_bpjs_alw',
+      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+    },
     {
       title: t('newSalaryPage.phoneAllowanceByDay'),
       dataIndex: 'pulsa_alw',
@@ -1365,12 +1365,12 @@ const loadData = async () => {
       key: 'tax_ded_phk',
       render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
     },
-    {
-      title: t('incidentPage.jp3'),
-      dataIndex: 'jp_3',
-      key: 'jp_3',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
+    // {
+    //   title: t('incidentPage.jp3'),
+    //   dataIndex: 'jp_3',
+    //   key: 'jp_3',
+    //   render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+    // },
     {
       title: t('incidentPage.bpjs5'),
       dataIndex: 'bpjs_5',

@@ -50,7 +50,7 @@ npm run dev
 ```bash
 cd backend
 go mod download
-go run main.go
+go run cmd/main.go
 ```
 
 ## 开发规范

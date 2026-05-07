@@ -730,7 +730,7 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
     { title: t('incidentPage.correctAdd'), dataIndex: 'correct_add', key: 'correct_add', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
     { title: t('incidentPage.correctSub'), dataIndex: 'correct_sub', key: 'correct_sub', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
     { title: t('incidentPage.taxDedPhk'), dataIndex: 'tax_ded_phk', key: 'tax_ded_phk', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
-    { title: t('incidentPage.jp3'), dataIndex: 'jp_3', key: 'jp_3', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    // { title: t('incidentPage.jp3'), dataIndex: 'jp_3', key: 'jp_3', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
     { title: t('incidentPage.bpjs5'), dataIndex: 'bpjs_5', key: 'bpjs_5', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
     
     // 添加操作列---暂时隐藏
