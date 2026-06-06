@@ -870,50 +870,202 @@ const loadData = async () => {
       key: 'employee_id'
     },
 
-    {
-      title: t('newSalaryPage.taxType'),
-      dataIndex: 'tax_type',
-      key: 'tax_type'
-    },
     // {
-    //   title: t('newSalaryPage.idCard'),
-    //   dataIndex: 'id_card',
-    //   key: 'id_card'
+    //   title: t('newSalaryPage.taxType'),
+    //   dataIndex: 'tax_type',
+    //   key: 'tax_type'
+    // },
+   
+    // {
+    //   title: t('newSalaryPage.joinDate'),
+    //   dataIndex: 'join_date',
+    //   key: 'join_date',
+    //  render: (text: string) => text !== "-" ? dayjs(text,'YYYY-MM-DD').format('YYYY-MM-DD') : '-'
     // },
     // {
-    //   title: t('newSalaryPage.npwp'),
-    //   dataIndex: 'npwp',
-    //   key: 'npwp'
+    //   title: t('newSalaryPage.resignDate'),
+    //   dataIndex: 'resign_date',
+    //   key: 'resign_date',
+    //  render: (text: string) => text !== "" ? dayjs(text,'YYYY-MM-DD').format('YYYY-MM-DD') : '-'
     // },
+    { title: t('employeePage.taxStatus'), dataIndex: 'tax_type', key: 'tax_type', width: 80 },
+    { title: t('employeePage.bpjsHealthTambahanStatus'), dataIndex: 'bpjs_health_tambahan_status', key: 'bpjs_health_tambahan_status', width: 150 },
+    { title: t('employeePage.position'), dataIndex: 'position', key: 'position', width: 120 },
+
+    { title: t('employeePage.hireDate'), dataIndex: 'join_date', key: 'join_date', width: 120, render: (text: string) => text !== "-" ? dayjs(text,'YYYY-MM-DD').format('YYYY-MM-DD') : '-' },
+    { title: t('employeePage.resignDate'), dataIndex: 'resign_date', key: 'resign_date', width: 120, render: (text: string) => text !== "0001-01-01T00:00:00Z" ? dayjs(text,'YYYY-MM-DD').format('YYYY-MM-DD') : '-' },
+    { title: t('employeePage.dateOfBirth'), dataIndex: 'date_of_birth', key: 'date_of_birth', width: 150 },
     
-    // {
-    //   title: t('newSalaryPage.hierarchyId'),
-    //   dataIndex: 'hierarchy_id',
-    //   key: 'hierarchy_id'
-    // },
-    // {
-    //   title: t('newSalaryPage.hierarchyName'),
-    //   dataIndex: 'hierarchy_name',
-    //   key: 'hierarchy_name'
-    // },
-    // {
-    //   title: t('newSalaryPage.locationName'),
-    //   dataIndex: 'location_name',
-    //   key: 'location_name'
-    // },
-    {
-      title: t('newSalaryPage.joinDate'),
-      dataIndex: 'join_date',
-      key: 'join_date',
-     render: (text: string) => text !== "-" ? dayjs(text,'YYYY-MM-DD').format('YYYY-MM-DD') : '-'
-    },
-    {
-      title: t('newSalaryPage.resignDate'),
-      dataIndex: 'resign_date',
-      key: 'resign_date',
-     render: (text: string) => text !== "" ? dayjs(text,'YYYY-MM-DD').format('YYYY-MM-DD') : '-'
-    },
-  
+    // { title: t('employeePage.position'), dataIndex: 'position', key: 'position', width: 120 },
+    { title: t('employeePage.email'), dataIndex: 'email', key: 'email', width: 180 },
+    { title: t('employeePage.basicSalary'), dataIndex: 'basic_salary', key: 'basic_salary', width: 120, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+    { title: t('employeePage.postFunctionAlwMonth'), dataIndex: 'post_function_alw_month', key: 'post_function_alw_month', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+    { title: t('employeePage.phoneAlwMonth'), dataIndex: 'phone_alw_month', key: 'phone_alw_month', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+    { title: t('employeePage.internetAlwMonth'), dataIndex: 'internet_alw_month', key: 'internet_alw_month', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+    { title: t('employeePage.incentiveMonth'), dataIndex: 'incentive_month', key: 'incentive_month', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+    { title: t('employeePage.operationalAlwMonth'), dataIndex: 'operational_alw_month', key: 'operational_alw_month', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+    { title: t('employeePage.housingAlwMonth'), dataIndex: 'housing_alw_month', key: 'housing_alw_month', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+    { title: t('employeePage.seniorityAlwMonth'), dataIndex: 'seniority_alw_month', key: 'seniority_alw_month', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+    { title: t('employeePage.transportAlwMonth'), dataIndex: 'transport_alw_month', key: 'transport_alw_month', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+    { title: t('employeePage.fieldAlwMonth'), dataIndex: 'field_alw_month', key: 'field_alw_month', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+    { title: t('employeePage.accommodationAlwMonth'), dataIndex: 'accommodation_alw_month', key: 'accommodation_alw_month', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+    { title: t('employeePage.workDay'), dataIndex: 'work_day', key: 'work_day', width: 100 },
+    { title: t('employeePage.onDay'), dataIndex: 'on_day', key: 'on_day', width: 100 },
+    { title: t('employeePage.btDay'), dataIndex: 'bt_day', key: 'bt_day', width: 100 },
+    { title: t('employeePage.oaDay'), dataIndex: 'oa_day', key: 'oa_day', width: 100 },
+    { title: t('employeePage.travellDay'), dataIndex: 'travell_day', key: 'travell_day', width: 100 },
+    { title: t('employeePage.tntDay'), dataIndex: 'tnt_day', key: 'tnt_day', width: 100 },
+    { title: t('employeePage.stDay'), dataIndex: 'st_day', key: 'st_day', width: 100 },
+    { title: t('employeePage.trDay'), dataIndex: 'tr_day', key: 'tr_day', width: 100 },
+  {
+        title: t('newAttendancePage.w'),
+        dataIndex: 'w',
+        key: 'w',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.on'),
+        dataIndex: 'on',
+        key: 'on',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.osOa'),
+        dataIndex: 'os_oa',
+        key: 'os_oa',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.ot'),
+        dataIndex: 'ot',
+        key: 'ot',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.ovt'),
+        dataIndex: 'ovt',
+        key: 'ovt',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.bt'),
+        dataIndex: 'bt',
+        key: 'bt',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.t'),
+        dataIndex: 't',
+        key: 't',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.tnt'),
+        dataIndex: 'tnt',
+        key: 'tnt',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.al'),
+        dataIndex: 'al',
+        key: 'al',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.rot'),
+        dataIndex: 'rot',
+        key: 'rot',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.tr'),
+        dataIndex: 'tr',
+        key: 'tr',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.st'),
+        dataIndex: 'st',
+        key: 'st',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.ls'),
+        dataIndex: 'ls',
+        key: 'ls',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.q'),
+        dataIndex: 'q',
+        key: 'q',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.wfh'),
+        dataIndex: 'wfh',
+        key: 'wfh',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.pl'),
+        dataIndex: 'pl',
+        key: 'pl',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.l'),
+        dataIndex: 'l',
+        key: 'l',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.sc'),
+        dataIndex: 'sc',
+        key: 'sc',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.sc1'),
+        dataIndex: 'sc1',
+        key: 'sc1',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.co'),
+        dataIndex: 'co',
+        key: 'co',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.pm'),
+        dataIndex: 'pm',
+        key: 'pm',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.na'),
+        dataIndex: 'na',
+        key: 'na',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.off'),
+        dataIndex: 'off',
+        key: 'off',
+        width: 100,
+      },
+      { title: t('incidentPage.thr'), dataIndex: 'thr', key: 'thr', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    { title: t('incidentPage.bonus'), dataIndex: 'bonus', key: 'bonus', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    { title: t('incidentPage.compensation'), dataIndex: 'compensation', key: 'compensation', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    { title: t('incidentPage.actingAllowance'), dataIndex: 'acting_alw', key: 'acting_alw', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    { title: t('incidentPage.salaryProrate'), dataIndex: 'salary_prorate', key: 'salary_prorate', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    { title: t('incidentPage.rapel'), dataIndex: 'rapel', key: 'rapel', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    { title: t('incidentPage.taxAlw'), dataIndex: 'tax_alw', key: 'tax_alw', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    { title: t('incidentPage.taxDed'), dataIndex: 'tax_ded', key: 'tax_ded', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    { title: t('incidentPage.otherAdd'), dataIndex: 'other_add', key: 'other_add', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    { title: t('incidentPage.otherDed'), dataIndex: 'other_ded', key: 'other_ded', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+      
    {
   title: t('newSalaryPage.age'),
   dataIndex: 'age',
