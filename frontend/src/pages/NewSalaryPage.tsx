@@ -106,6 +106,45 @@ interface SalaryRecord {
   ot3_wages: number,
   unpresent: number,
   is_calculate:number,
+  age: number,
+  total_fixed_alw: number,
+  work_alw: number,
+  on_alw: number,
+  osoa_alw: number,
+  ot_alw: number,
+  ovt_alw: number,
+  bt_alw: number,
+  t_alw: number,
+  tnt_alw: number,
+  al_alw: number,
+  rot_alw: number,
+  tr_alw: number,
+  st_alw: number,
+  ls_alw: number,
+  total_non_fixed_alw: number,
+  q_ded: number,
+  pl_ded: number,
+  late_ded: number,
+  sc_ded: number,
+  sc1_ded: number,
+  co_ded: number,
+  pm_ded: number,
+  na_ded: number,
+  salary_ded: number,
+  jkk_alw: number,
+  jkm_alw: number,
+  jht_alw: number,
+  jp_alw: number,
+  bpjs_manpower_alw: number,
+  bpjs_health_alw: number,
+  gross_salary: number,
+  jht_ded: number,
+  jp_ded: number,
+  bpjs_work_ded: number,
+  bpjs_health_ded: number,
+  bpjs_health_tambahan: number,
+  total_deduction: number,
+  final_staff_receive: number,
 }
 
 interface SheetData {
@@ -216,167 +255,6 @@ const loadData = async () => {
   
   const [form] = Form.useForm()
   
-  // showAddModal函数暂时未使用，需要时取消注释
-  // const showAddModal = () => {
-  //     setIsEditMode(false)
-  //     setCurrentRecord(null)
-  //     form.resetFields()
-  //     setIsModalVisible(true)
-  //   }
-
-  // const showEditModal = (record: SalaryRecord) => {
-  //   setIsEditMode(true)
-  //   setCurrentRecord(record)
-  //   // 设置Form组件中所有SalaryRecord字段
-  //   form.setFieldsValue({
-  //     employee_id: record.employee_id,
-  //     employee_name: record.employee_name,
-  //     department: record.department,
-  //     project_id: record.project_id,
-  //     basic_salary: record.basic_salary,
-  //     final_salary: record.final_salary,
-  //     housing_alw: record.housing_alw,
-  //     position_alw: record.position_alw,
-  //     field_alw: record.field_alw,
-  //     fix_alw: record.fix_alw,
-  //     meal_alw: record.meal_alw,
-  //     transp_alw: record.transp_alw,
-  //     ot1_hour: record.ot1_hour,
-  //     ew1_hour: record.ew1_hour,
-  //     ew1_wages: record.ew1_wages,
-  //     ew2_hour: record.ew2_hour,
-  //     ew2_wages: record.ew2_wages,
-  //     ew3_hour: record.ew3_hour,
-  //     ew3_wages: record.ew3_wages,
-  //     month: record.month,
-  //     tax_type: record.tax_type,
-  //     total_accept: record.total_accept,
-  //     net_accept: record.net_accept,
-  //     // 添加所有其他字段
-  //     jmstk_alw: record.jmstk_alw,
-  //     pension_alw: record.pension_alw,
-  //     tax_alw_salary: record.tax_alw_salary,
-  //     tax_alw_phk: record.tax_alw_phk,
-  //     comp_phk: record.comp_phk,
-  //     askes_bpjs_alw: record.askes_bpjs_alw,
-  //     med_alw: record.med_alw,
-  //     pulsa_alw: record.pulsa_alw,
-  //     others: record.others,
-  //     att_alw: record.att_alw,
-  //     housing_alw_tetap: record.housing_alw_tetap,
-  //     religious_alw: record.religious_alw,
-  //     rapel_basic_salary: record.rapel_basic_salary,
-  //     rapel_jmstk_alw: record.rapel_jmstk_alw,
-  //     incentive_alw: record.incentive_alw,
-  //     acting: record.acting,
-  //     performance_alw: record.performance_alw,
-  //     trip_alw: record.trip_alw,
-  //     correct_add: record.correct_add,
-  //     correct_sub: record.correct_sub,
-  //     leav_comp: record.leav_comp,
-  //     jmstk_fee: record.jmstk_fee,
-  //     pension_ded: record.pension_ded,
-  //     tax_ded_salary: record.tax_ded_salary,
-  //     tax_ded_phk: record.tax_ded_phk,
-  //     askes_bpjs_ded: record.askes_bpjs_ded,
-  //     incentive_ded: record.incentive_ded,
-  //     purapel_basic_sal: record.purapel_basic_sal,
-  //     loan_ded: record.loan_ded,
-  //     absent_ded: record.absent_ded,
-  //     round_off_salary: record.round_off_salary,
-  //     tax_status: record.tax_status,
-  //     id_card: record.id_card,
-  //     npwp: record.npwp,
-  //     hierarchy_id: record.hierarchy_id,
-  //     hierarchy_name: record.hierarchy_name,
-  //     location_name: record.location_name,
-  //     join_date: record.join_date,
-  //     resign_date: record.resign_date,
-  //     position: record.position,
-  //     work: record.work,
-  //     off: record.off,
-  //     permission: record.permission,
-  //     unpresent: record.unpresent,
-  //     sick: record.sick,
-  //     standby: record.standby,
-  //     ew: record.ew,
-  //     annualleave: record.annualleave,
-  //     salary_slip_status: record.salary_slip_status,
-  //     pulsa_alw_month: record.pulsa_alw_month,
-  //     total_net_wages: record.total_net_wages,
-
-
-
-  //   })
-  //   setIsModalVisible(true)
-  // }
-
-  // const handleDelete = (_id: string) => {
-  //   modal.confirm({
-  //     title: '确认删除',
-  //     content: '确定要删除这条薪资记录吗？',
-  //     onOk: async () => {
-  //       try {
-  //         await deleteSalaryRecord(Number(_id));
-  //         // 从本地状态中移除删除的记录
-  //         setSalaryRecords(prev => prev.filter(record => record.id !== Number(_id)));
-  //         messageApi.success('薪资记录删除成功');
-  //       } catch (error) {
-  //         console.error('删除薪资记录失败:', error);
-  //         messageApi.error('删除薪资记录失败，请稍后重试');
-  //       }
-  //     }
-  //   })
-  // }
-  // const handleSwitchChange = (record: SalaryRecord) => async (checked: boolean) => {
-  //   try {
-  //     console.log('切换计算状态:', record.id, checked);
-  //     // 调用API更新is_calculate字段
-  //     await updateSalaryCalculateStatus(
-  //       record.id,
-  //       checked ? 1: 0
-  //     );
-      
-  //     // 更新本地状态
-  //     setSalaryRecords(prev => 
-  //       prev.map(item => 
-  //         item.id === record.id 
-  //           ? { ...item, is_calculate: checked ? 1 : 0 }
-  //           : item
-  //       )
-  //     );
-      
-  //     messageApi.success('计算状态更新成功');
-  //   } catch (error) {
-  //     console.error('更新计算状态失败:', error);
-  //     // messageApi里需要显示error信息
-  //     messageApi.error('更新计算状态失败 ' + error);
-  //   }
-  // }
-
-
-
-  // 封装API调用函数
-  // const updateSalaryResult = async (id: number, data: Partial<SalaryRecord>) => {
-  //   try {
-  //     // 调用实际的API更新薪资记录
-  //     try {
-  //       await updateSalary(id, data);
-  //     } catch (error) {
-  //       console.error('更新薪资记录失败:', error);
-  //       messageApi.error('API函数updateSalary不可用，模拟更新:');
-  //     }
-  //     // 重新加载数据以反映更新
-  //     const updatedData = await fetchSalaryData();
-  //     setSalaryRecords(updatedData);
-  //     return true;
-  //   } catch (error) {
-  //     console.error('更新薪资记录失败:', error);
-  //     messageApi.error(t('common.updateFailed'));
-  //     return false;
-  //   }
-  // };
-
   const addSalary = async (data: Omit<SalaryRecord, 'id' | 'create_time' | 'update_time'>) => {
     try {
       // 调用实际的API添加薪资记录
@@ -517,6 +395,46 @@ const loadData = async () => {
         net_accept: record['Net_Accept'] || record['net_accept'] || record['净接受补贴'] || 0,
         round_off_salary: record['Round_Off_Salary'] || record['round_off_salary'] || record['四舍五入工资'] || 0,
         mandah_alw: record['Mandah_Alw'] || record['mandah_alw'] || record['Mandah补贴'] || 0,
+        age: record['age'] || record['Age'] || 0,
+        total_fixed_alw: record['total_fixed_alw'] || record['Total_Fixed_Alw'] || 0,
+        work_alw: record['work_alw'] || record['Work_Alw'] || 0,
+        on_alw: record['on_alw'] || record['On_Alw'] || 0,
+        osoa_alw: record['osoa_alw'] || record['Osoa_Alw'] || 0,
+        ot_alw: record['ot_alw'] || record['Ot_Alw'] || 0,
+        ovt_alw: record['ovt_alw'] || record['Ovt_Alw'] || 0,
+        bt_alw: record['bt_alw'] || record['Bt_Alw'] || 0,
+        t_alw: record['t_alw'] || record['T_Alw'] || 0,
+        tnt_alw: record['tnt_alw'] || record['Tnt_Alw'] || 0,
+        al_alw: record['al_alw'] || record['Al_Alw'] || 0,
+        rot_alw: record['rot_alw'] || record['Rot_Alw'] || 0,
+        tr_alw: record['tr_alw'] || record['Tr_Alw'] || 0,
+        st_alw: record['st_alw'] || record['St_Alw'] || 0,
+        ls_alw: record['ls_alw'] || record['Ls_Alw'] || 0,
+        total_non_fixed_alw: record['total_non_fixed_alw'] || record['Total_Non_Fixed_Alw'] || 0,
+        q_ded: record['q_ded'] || record['Q_Ded'] || 0,
+        pl_ded: record['pl_ded'] || record['Pl_Ded'] || 0,
+        late_ded: record['late_ded'] || record['Late_Ded'] || 0,
+        sc_ded: record['sc_ded'] || record['Sc_Ded'] || 0,
+        sc1_ded: record['sc1_ded'] || record['Sc1_Ded'] || 0,
+        co_ded: record['co_ded'] || record['Co_Ded'] || 0,
+        pm_ded: record['pm_ded'] || record['Pm_Ded'] || 0,
+        na_ded: record['na_ded'] || record['Na_Ded'] || 0,
+        salary_ded: record['salary_ded'] || record['Salary_Ded'] || 0,
+        jkk_alw: record['jkk_alw'] || record['Jkk_Alw'] || 0,
+        jkm_alw: record['jkm_alw'] || record['Jkm_Alw'] || 0,
+        jht_alw: record['jht_alw'] || record['Jht_Alw'] || 0,
+        jp_alw: record['jp_alw'] || record['Jp_Alw'] || 0,
+        bpjs_manpower_alw: record['bpjs_manpower_alw'] || record['Bpjs_Manpower_Alw'] || 0,
+        bpjs_health_alw: record['bpjs_health_alw'] || record['Bpjs_Health_Alw'] || 0,
+        gross_salary: record['gross_salary'] || record['Gross_Salary'] || 0,
+        jht_ded: record['jht_ded'] || record['Jht_Ded'] || 0,
+        jp_ded: record['jp_ded'] || record['Jp_Ded'] || 0,
+        bpjs_work_ded: record['bpjs_work_ded'] || record['Bpjs_Work_Ded'] || 0,
+        bpjs_health_ded: record['bpjs_health_ded'] || record['Bpjs_Health_Ded'] || 0,
+        bpjs_health_tambahan: record['bpjs_health_tambahan'] || record['Bpjs_Health_Tambahan'] || 0,
+        total_deduction: record['total_deduction'] || record['Total_Deduction'] || 0,
+        final_staff_receive: record['final_staff_receive'] || record['Final_Staff_Receive'] || 0,
+
       }
       
       // 检查必要字段
@@ -651,6 +569,45 @@ const loadData = async () => {
           total_accept: record['Total_Accept'].toString(),  // 总收入
           net_accept: record['Net_Accept'].toString(),  // 实际到手收入
           round_off_salary: record['Round_Off_Salary'].toString(),  // 薪资四舍五入调整项
+          age: record["Age"].toString(),
+          total_fixed_alw: record["Total_Fixed_Alw"].toString(),
+          work_alw: record["Work_Alw"].toString(),
+          on_alw: record["On_Alw"].toString(),
+          osoa_alw: record["Osoa_Alw"].toString(),
+          ot_alw: record["Ot_Alw"].toString(),
+          ovt_alw: record["Ovt_Alw"].toString(),
+          bt_alw: record["Bt_Alw"].toString(),
+          t_alw: record["T_Alw"].toString(),
+          tnt_alw: record["Tnt_Alw"].toString(),
+          al_alw: record["Al_Alw"].toString(),
+          rot_alw: record["Rot_Alw"].toString(),
+          tr_alw: record["Tr_Alw"].toString(),
+          st_alw: record["St_Alw"].toString(),
+          ls_alw: record["Ls_Alw"].toString(),
+          total_non_fixed_alw: record["Total_Non_Fixed_Alw"].toString(),
+          q_ded: record["Q_Ded"].toString(),
+          pl_ded: record["Pl_Ded"].toString(),
+          late_ded: record["Late_Ded"].toString(),
+          sc_ded: record["Sc_Ded"].toString(),
+          sc1_ded: record["Sc1_Ded"].toString(),
+          co_ded: record["Co_Ded"].toString(),
+          pm_ded: record["Pm_Ded"].toString(),
+          na_ded: record["Na_Ded"].toString(),
+          salary_ded: record["Salary_Ded"].toString(),
+          jkk_alw: record["Jkk_Alw"].toString(),
+          jkm_alw: record["Jkm_Alw"].toString(),
+          jht_alw: record["Jht_Alw"].toString(),
+          jp_alw: record["Jp_Alw"].toString(),
+          bpjs_manpower_alw: record["Bpjs_Manpower_Alw"].toString(),
+          bpjs_health_alw: record["Bpjs_Health_Alw"].toString(),
+          gross_salary: record["Gross_Salary"].toString(),
+          jht_ded: record["Jht_Ded"].toString(),
+          jp_ded: record["Jp_Ded"].toString(),
+          bpjs_work_ded: record["Bpjs_Work_Ded"].toString(),
+          bpjs_health_ded: record["Bpjs_Health_Ded"].toString(),
+          bpjs_health_tambahan: record["Bpjs_Health_Tambahan"].toString(),
+          total_deduction: record["Total_Deduction"].toString(),
+          final_staff_receive: record["Final_Staff_Receive"].toString(),
       })).filter(record => record.employee_id)
       
       if (records.length === 0) {
@@ -918,32 +875,32 @@ const loadData = async () => {
       dataIndex: 'tax_type',
       key: 'tax_type'
     },
-    {
-      title: t('newSalaryPage.idCard'),
-      dataIndex: 'id_card',
-      key: 'id_card'
-    },
-    {
-      title: t('newSalaryPage.npwp'),
-      dataIndex: 'npwp',
-      key: 'npwp'
-    },
+    // {
+    //   title: t('newSalaryPage.idCard'),
+    //   dataIndex: 'id_card',
+    //   key: 'id_card'
+    // },
+    // {
+    //   title: t('newSalaryPage.npwp'),
+    //   dataIndex: 'npwp',
+    //   key: 'npwp'
+    // },
     
-    {
-      title: t('newSalaryPage.hierarchyId'),
-      dataIndex: 'hierarchy_id',
-      key: 'hierarchy_id'
-    },
-    {
-      title: t('newSalaryPage.hierarchyName'),
-      dataIndex: 'hierarchy_name',
-      key: 'hierarchy_name'
-    },
-    {
-      title: t('newSalaryPage.locationName'),
-      dataIndex: 'location_name',
-      key: 'location_name'
-    },
+    // {
+    //   title: t('newSalaryPage.hierarchyId'),
+    //   dataIndex: 'hierarchy_id',
+    //   key: 'hierarchy_id'
+    // },
+    // {
+    //   title: t('newSalaryPage.hierarchyName'),
+    //   dataIndex: 'hierarchy_name',
+    //   key: 'hierarchy_name'
+    // },
+    // {
+    //   title: t('newSalaryPage.locationName'),
+    //   dataIndex: 'location_name',
+    //   key: 'location_name'
+    // },
     {
       title: t('newSalaryPage.joinDate'),
       dataIndex: 'join_date',
@@ -956,507 +913,242 @@ const loadData = async () => {
       key: 'resign_date',
      render: (text: string) => text !== "" ? dayjs(text,'YYYY-MM-DD').format('YYYY-MM-DD') : '-'
     },
-    {
-      title: t('employeePage.idStatus'),
-      dataIndex: 'id_status',
-      key: 'id_status'
-    },    
-    {
-      title: t('employeePage.otStatus'),
-      dataIndex: 'ot_status',
-      key: 'ot_status'
-    },  
-    {
-      title: t('newSalaryPage.position'),
-      dataIndex: 'position',
-      key: 'position'
-    },
-    {
-      title: t('newSalaryPage.email'),
-      dataIndex: 'email',
-      key: 'email'
-    },    
-        {
-      title: t('newSalaryPage.work'),
-      dataIndex: 'work',
-      key: 'work'
-    },
-        {
-      title: t('newSalaryPage.off'),
-      dataIndex: 'off',
-      key: 'off'
-    },
-        {
-      title: t('newSalaryPage.permission'),
-      dataIndex: 'permission',
-      key: 'permission'
-    },
-        {
-      title: t('newSalaryPage.absent'),
-      dataIndex: 'unpresent',
-      key: 'unpresent'
-    },
-        {
-      title: t('newSalaryPage.sick'),
-      dataIndex: 'sick',
-      key: 'sick'
-    },
-    {
-      title: t('newSalaryPage.standby'),
-      dataIndex: 'standby',
-      key: 'standby'
-    },
-
-        {
-      title: t('newSalaryPage.extrawork'),
-      dataIndex: 'ew',
-      key: 'ew'
-    },
-        {
-      title: t('newSalaryPage.annualleave'),
-      dataIndex: 'leave_replc',
-      key: 'leave_replc'
-    },
-    {
-      title: t('newAttendancePage.ot1Hours'),
-      dataIndex: 'ot1_hours',
-      key: 'ot1_hours'
-    },
-          {
-      title: t('newAttendancePage.ewHours'),
-      dataIndex: 'ew_hours',
-      key: 'ew_hours'
-    },    
-    // {
-    //   title: t('newSalaryPage.EW2'),
-    //   dataIndex: 'ew2',
-    //   key: 'ew2'
-    // },    
-    // {
-    //   title: t('newSalaryPage.EW3'),
-    //   dataIndex: 'ew3',
-    //   key: 'ew3'
-    // },      
-    {
-      title: t('newSalaryPage.basicSalary'),
-      dataIndex: 'basic_salary',
-      key: 'basic_salary',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('newSalaryPage.housingAllowance'),
-      dataIndex: 'housing_alw',
-      key: 'housing_alw',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('newSalaryPage.positionAllowance'),
-      dataIndex: 'position_alw',
-      key: 'position_alw',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('newSalaryPage.fieldAllowance'),
-      dataIndex: 'field_alw',
-      key: 'field_alw',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    // {
-    //   title: t('newSalaryPage.fixedAllowance'),
-    //   dataIndex: 'fix_alw',
-    //   key: 'fix_alw',
-    //   render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    // },
-        {
-      title: t('newSalaryPage.totalNetWages'),
-      dataIndex: 'total_net_wages',
-      key: 'total_net_wages',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('newSalaryPage.HousingAlwTetap'),
-      dataIndex: 'housing_alw_tetap',
-      key: 'housing_alw_tetap',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    }, 
-        {
-      title: t('newSalaryPage.phoneAllowanceByMonth'),
-      dataIndex: 'pulsa_alw_month',
-      key: 'pulsa_alw_month',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('newSalaryPage.jmstkAllowance'),
-      dataIndex: 'jmstk_alw',
-      key: 'jmstk_alw',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('newSalaryPage.pensionAllowance'),
-      dataIndex: 'pension_alw',
-      key: 'pension_alw',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
- 
-   {      title: t('newSalaryPage.otHours'),      dataIndex: 'ot_hours',      key: 'ot_hours',      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-        {
-      title: t('newSalaryPage.otWages'),
-      dataIndex: 'ot_wages',
-      key: 'ot_wages',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    // {
-    //   title: t('newSalaryPage.extraWorkHours'),
-    //   dataIndex: 'ew1_hour',
-    //   key: 'ew1_hour',
-    //   render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    // },
-
-    {
-      title: t('newSalaryPage.ewWages'),
-      dataIndex: 'ew_wages',
-      key: 'ew_wages',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    //    {
-    //   title: t('newSalaryPage.extraWorkHours2'),
-    //   dataIndex: 'ew2_hour',
-    //   key: 'ew2_hour',
-    //   render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    // },
-    // {
-    //   title: t('newSalaryPage.extraWages2'),
-    //   dataIndex: 'ew2_wages',
-    //   key: 'ew2_wages',
-    //   render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    // },
-    //    {
-    //   title: t('newSalaryPage.extraWorkHours3'),
-    //   dataIndex: 'ew3_hour',
-    //   key: 'ew3_hour',
-    //   render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    // },
-
-    // {
-    //   title: t('newSalaryPage.extraWages3'),
-    //   dataIndex: 'ew3_wages',
-    //   key: 'ew3_wages',
-    //   render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    // },
-       {
-      title: t('newSalaryPage.mealAllowanceDay'),
-      dataIndex: 'meal_alw',
-      key: 'meal_alw',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('newSalaryPage.transportAllowanceDay'),
-      dataIndex: 'transp_alw',
-      key: 'transp_alw',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-     
-    // {
-    //   title: t('newSalaryPage.mealAllowanceMonth'),
-    //   dataIndex: 'meal_alw_month',
-    //   key: 'meal_alw_month',
-    //   width: 120,
-    //   render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    // },
-    // {
-    //   title: t('newSalaryPage.transportAllowanceMonth'),
-    //   dataIndex: 'transp_alw_month',
-    //   key: 'transp_alw_month',
-    //   width: 120,
-    //   render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    // },
- 
-    {
-      title: t('newSalaryPage.taxAllowanceSalary'),
-      dataIndex: 'tax_alw_salary',
-      key: 'tax_alw_salary',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('newSalaryPage.bpjsAllowance'),
-      dataIndex: 'askes_bpjs_alw',
-      key: 'askes_bpjs_alw',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('newSalaryPage.phoneAllowanceByDay'),
-      dataIndex: 'pulsa_alw',
-      key: 'pulsa_alw',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-       {
-      title: t('newSalaryPage.attendanceAllowance'),
-      dataIndex: 'att_alw',
-      key: 'att_alw',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    }, 
-       {
-      title: t('newSalaryPage.absentDeduction'),
-      dataIndex: 'absent_ded',
-      key: 'absent_ded',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('incidentPage.ewAdd'),
-      dataIndex: 'ew_add',
-      key: 'ew_add',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    }, 
-    {
-      title: t('incidentPage.otAdd'),
-      dataIndex: 'ot_add',
-      key: 'ot_add',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('incidentPage.ewDrv'),
-      dataIndex: 'ew_drv',
-      key: 'ew_drv',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    }, 
-    {
-      title: t('incidentPage.otDrv'),
-      dataIndex: 'ot_drv',
-      key: 'ot_drv',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },     
-    {
-      title: t('newSalaryPage.leaveCompensation'),
-      dataIndex: 'leave_comp',
-      key: 'leave_comp',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('newSalaryPage.medicalAllowance'),
-      dataIndex: 'med_alw',
-      key: 'med_alw',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('newSalaryPage.otherAllowance'),
-      dataIndex: 'others',
-      key: 'others',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('newSalaryPage.religiousAllowance'),
-      dataIndex: 'religious_alw',
-      key: 'religious_alw',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('newSalaryPage.rapelBasicSalary'),
-      dataIndex: 'rapel_basic_salary',
-      key: 'rapel_basic_salary',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('newSalaryPage.rapelJmstkAlw'),
-      dataIndex: 'rapel_jmstk_alw',
-      key: 'rapel_jmstk_alw',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('newSalaryPage.actingAllowance'),
-      dataIndex: 'acting',
-      key: 'acting',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('newSalaryPage.performanceAllowance'),
-      dataIndex: 'performance_alw',
-      key: 'performance_alw',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('newSalaryPage.travelAllowance'),
-      dataIndex: 'trip_alw',
-      key: 'trip_alw',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('newSalaryPage.mandahAllowance'),
-      dataIndex: 'mandah_alw',
-      key: 'mandah_alw',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('newSalaryPage.incentiveAllowance'),
-      dataIndex: 'incentive_alw',
-      key: 'incentive_alw',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('incidentPage.mealAlwAdd'),
-      dataIndex: 'meal_alw_add',
-      key: 'meal_alw_add',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('incidentPage.transpAlwAdd'),
-      dataIndex: 'transp_alw_add',
-      key: 'transp_alw_add',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },        
-    // {
-    //   title: t('newSalaryPage.overtimeWages2'),
-    //   dataIndex: 'ot2_wages',
-    //   key: 'ot2_wages',
-    //   render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    // },
-    // {
-    //   title: t('newSalaryPage.overtimeWages3'),
-    //   dataIndex: 'ot3_wages',
-    //   key: 'ot3_wages',
-    //   render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    // },
-    {
-      title: t('newSalaryPage.phkCompensation'),
-      dataIndex: 'comp_phk',
-      key: 'comp_phk',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('newSalaryPage.taxAllowancePhk'),
-      dataIndex: 'tax_alw_phk',
-      key: 'tax_alw_phk',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('newSalaryPage.absentDed2'),
-      dataIndex: 'absent_ded2',
-      key: 'absent_ded2',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('newSalaryPage.incentiveDeduction'),
-      dataIndex: 'incentive_ded',
-      key: 'incentive_ded',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('newSalaryPage.loanDeduction'),
-      dataIndex: 'loan_ded',
-      key: 'loan_ded',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-
-    {
-      title: t('newSalaryPage.positiveCorrection'),
-      dataIndex: 'correct_add',
-      key: 'correct_add',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('newSalaryPage.negativeCorrection'),
-      dataIndex: 'correct_sub',
-      key: 'correct_sub',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('newSalaryPage.taxDeductionPhk'),
-      dataIndex: 'tax_ded_phk',
-      key: 'tax_ded_phk',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    // {
-    //   title: t('incidentPage.jp3'),
-    //   dataIndex: 'jp_3',
-    //   key: 'jp_3',
-    //   render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    // },
-    {
-      title: t('incidentPage.bpjs5'),
-      dataIndex: 'bpjs_5',
-      key: 'bpjs_5',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-
-    {
-      title: t('newSalaryPage.totalAcceptance'),
-      dataIndex: 'total_accept',
-      key: 'total_accept',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('newSalaryPage.jmstkFee'),
-      dataIndex: 'jmstk_fee',
-      key: 'jmstk_fee',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('newSalaryPage.pensionDeduction'),
-      dataIndex: 'pension_ded',
-      key: 'pension_ded',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('newSalaryPage.taxDeductionSalary'),
-      dataIndex: 'tax_ded_salary',
-      key: 'tax_ded_salary',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    // {
-    //   title: t('newSalaryPage.bpjsDeduction'),
-    //   dataIndex: 'askes_bpjs_ded',
-    //   key: 'askes_bpjs_ded',
-    //   render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    // },
-
-    {
-      title: t('newSalaryPage.netAcceptance'),
-      dataIndex: 'net_accept',
-      key: 'net_accept',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    {
-      title: t('newSalaryPage.salaryRounding'),
-      dataIndex: 'round_off_salary',
-      key: 'round_off_salary',
-      render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
-    },
-    // {
-    //   title: t('newSalaryPage.isCalculate'),
-    //   dataIndex: 'is_calculate',
-    //   key: 'is_calculate',
-    //   render: (is_calculate: number, record: SalaryRecord) => (
-    //     <Switch
-    //      checkedChildren="Yes" unCheckedChildren="No"
-    //       checked={is_calculate === 1}
-    //       style={{ backgroundColor: is_calculate === 1 ? '#52c41a' : '#ff4d4f' }}
-    //       onChange={handleSwitchChange(record)}
-    //     />
-    //   )
-    // },
-    // 添加操作列---暂时隐藏
-    // {
-    //   title: t('common.action'),
-    //   key: 'action',
-    //   // fixed: 'right',
-    //   render: (_: any, record: any) => (
-    //     <Space size="middle">
-    //       <Button 
-    //         type="primary" 
-    //         icon={<EditOutlined />} 
-    //         onClick={() => showEditModal(record)}
-    //       >{t('common.edit')}</Button>
-    //       <Button 
-    //         type="primary" 
-    //         size="small" 
-    //         danger 
-    //         icon={<DeleteOutlined />} 
-    //         onClick={() => handleDelete(record.id)}
-    //       >{t('common.delete')}</Button>
-
-    //     </Space>
-    //   )
-    // }
+  
+   {
+  title: t('newSalaryPage.age'),
+  dataIndex: 'age',
+  key: 'age',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.totalFixedAllowance'),
+  dataIndex: 'total_fixed_alw',
+  key: 'total_fixed_alw',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.workAllowance'),
+  dataIndex: 'work_alw',
+  key: 'work_alw',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.onAllowance'),
+  dataIndex: 'on_alw',
+  key: 'on_alw',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.osoaAllowance'),
+  dataIndex: 'osoa_alw',
+  key: 'osoa_alw',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.otAllowance'),
+  dataIndex: 'ot_alw',
+  key: 'ot_alw',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.ovtAllowance'),
+  dataIndex: 'ovt_alw',
+  key: 'ovt_alw',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.btAllowance'),
+  dataIndex: 'bt_alw',
+  key: 'bt_alw',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.tAllowance'),
+  dataIndex: 't_alw',
+  key: 't_alw',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.tntAllowance'),
+  dataIndex: 'tnt_alw',
+  key: 'tnt_alw',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.alAllowance'),
+  dataIndex: 'al_alw',
+  key: 'al_alw',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.rotAllowance'),
+  dataIndex: 'rot_alw',
+  key: 'rot_alw',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.trAllowance'),
+  dataIndex: 'tr_alw',
+  key: 'tr_alw',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.stAllowance'),
+  dataIndex: 'st_alw',
+  key: 'st_alw',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.lsAllowance'),
+  dataIndex: 'ls_alw',
+  key: 'ls_alw',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.totalNonFixedAllowance'),
+  dataIndex: 'total_non_fixed_alw',
+  key: 'total_non_fixed_alw',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.qDeduction'),
+  dataIndex: 'q_ded',
+  key: 'q_ded',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.plDeduction'),
+  dataIndex: 'pl_ded',
+  key: 'pl_ded',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.lateDeduction'),
+  dataIndex: 'late_ded',
+  key: 'late_ded',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.scDeduction'),
+  dataIndex: 'sc_ded',
+  key: 'sc_ded',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.sc1Deduction'),
+  dataIndex: 'sc1_ded',
+  key: 'sc1_ded',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.coDeduction'),
+  dataIndex: 'co_ded',
+  key: 'co_ded',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.pmDeduction'),
+  dataIndex: 'pm_ded',
+  key: 'pm_ded',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.naDeduction'),
+  dataIndex: 'na_ded',
+  key: 'na_ded',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.salaryDeduction'),
+  dataIndex: 'salary_ded',
+  key: 'salary_ded',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.jkkAllowance'),
+  dataIndex: 'jkk_alw',
+  key: 'jkk_alw',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.jkmAllowance'),
+  dataIndex: 'jkm_alw',
+  key: 'jkm_alw',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.jhtAllowance'),
+  dataIndex: 'jht_alw',
+  key: 'jht_alw',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.jpAllowance'),
+  dataIndex: 'jp_alw',
+  key: 'jp_alw',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.bpjsManpowerAllowance'),
+  dataIndex: 'bpjs_manpower_alw',
+  key: 'bpjs_manpower_alw',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.bpjsHealthAllowance'),
+  dataIndex: 'bpjs_health_alw',
+  key: 'bpjs_health_alw',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.grossSalary'),
+  dataIndex: 'gross_salary',
+  key: 'gross_salary',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.jhtDeduction'),
+  dataIndex: 'jht_ded',
+  key: 'jht_ded',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.jpDeduction'),
+  dataIndex: 'jp_ded',
+  key: 'jp_ded',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.bpjsWorkDeduction'),
+  dataIndex: 'bpjs_work_ded',
+  key: 'bpjs_work_ded',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.bpjsHealthDeduction'),
+  dataIndex: 'bpjs_health_ded',
+  key: 'bpjs_health_ded',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.bpjsHealthTambahan'),
+  dataIndex: 'bpjs_health_tambahan',
+  key: 'bpjs_health_tambahan',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.totalDeduction'),
+  dataIndex: 'total_deduction',
+  key: 'total_deduction',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.finalStaffReceive'),
+  dataIndex: 'final_staff_receive',
+  key: 'final_staff_receive',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+    // 
   ]
 
   //导出excel下载功能，
@@ -1580,24 +1272,31 @@ const loadData = async () => {
     <div>
       {messageContextHolder}
       {contextHolder}
-      <Card style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 120px)' }}>
-        <style>
-          {`
-            .table-row-light {
-              background-color: #ffffff;
-            }
-            .table-row-light:hover {
-              background-color: #f5f5f5 !important;
-            }
-            .table-row-dark {
-              background-color: #fafafa;
-            }
-            .table-row-dark:hover {
-              background-color: #f5f5f5 !important;
-            }
-          `}
-        </style>
-        <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+      <Card className="flex flex-col border-blue-500/10 shadow-lg shadow-blue-500/5 overflow-hidden" style={{ height: 'calc(100vh - 120px)' }} styles={{ body: { flex: 1, display: 'flex', flexDirection: 'column', padding: '12px' } }}>
+        <style>{`
+          .table-row-light {
+            background-color: #ffffff;
+            transition: background-color 0.15s ease;
+          }
+          .table-row-light:hover {
+            background-color: #eef2ff !important;
+          }
+          .table-row-dark {
+            background-color: #f1f5f9;
+            transition: background-color 0.15s ease;
+          }
+          .table-row-dark:hover {
+            background-color: #e0e7ff !important;
+          }
+          .ant-table-wrapper .ant-table-thead > tr > th {
+            background: linear-gradient(135deg, #f8faff, #eef2ff) !important;
+            color: #1e293b !important;
+            font-weight: 600 !important;
+            border-bottom: 1px solid #c7d2fe !important;
+          }
+          .ant-card { border-radius: 12px !important; }
+        `}</style>
+        <div className="bg-gradient-to-r from-blue-50/60 to-indigo-50/60 rounded-lg px-4 py-3 border border-blue-500/10 mb-3">
           <div className="header-actions" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16 }}>
               <Form form={filterForm} layout="inline" style={{ flex: 1 }}>
@@ -1642,21 +1341,20 @@ const loadData = async () => {
             </div>
           </div> 
         </div>
-        <div style={{ flex: 1, overflow: 'hidden' }}>
-          <Table 
-            columns={columns} 
-            dataSource={salaryRecords} 
-            rowKey="id"
-            rowClassName={(_, index) => (index % 2 === 0 ? 'table-row-light' : 'table-row-dark')}
-            style={{ width: '100%', height: '100%' }}
-            pagination={false}
-            scroll={{ x: 'max-content', y: 'calc(100vh - 450px)' }}
-          />
-        </div>
-         <Pagination
+        <Table 
+          columns={columns} 
+          dataSource={salaryRecords} 
+          rowKey="id"
+          rowClassName={(_, index) => (index % 2 === 0 ? 'table-row-light' : 'table-row-dark')}
+          className="w-full"
+          pagination={false}
+          scroll={{ x: 'max-content', y: 'calc(100vh - 450px)' }}
+        />
+        
+        <Pagination
           current={currentPage}
           pageSize={pageSize}
-          pageSizeOptions={[ '50', '100','200']}
+          pageSizeOptions={['50', '100', '200']}
           showSizeChanger
           showTotal={(total) => t('common.totalRecords', { count: total })}
           total={total}
@@ -1665,7 +1363,7 @@ const loadData = async () => {
             setPageSize(size)
             setCurrentPage(1) // 改变每页条数时回到第一页
           }}
-          style={{ marginTop: 20, textAlign: 'center' }}
+          className="mt-5 text-center"
         />
 
       </Card>

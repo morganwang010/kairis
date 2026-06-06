@@ -59,6 +59,16 @@ interface IncidentRecord {
   correct_sub: number
   absent_ded: number
   absent_ded2: number
+  thr: number // THR补贴
+  bonus: number // 奖金
+  compensation: number // 补偿金
+  acting_alw: number // 代岗津贴
+  salary_prorate: number // 薪资折算
+  rapel: number // 补差额薪资
+  tax_alw: number // 免税津贴
+  tax_ded: number // 个税扣除
+  other_add: number // 其他加项
+  other_ded: number // 其他扣项
 }
 
 interface SheetData {
@@ -450,36 +460,16 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
           employee_id: trimmedRecord['employee_id'] || trimmedRecord['Employee_Id'],
           project_id: projectId === 'all' ? 0 : (projectId),
           month: trimmedRecord['month'] || trimmedRecord['Month'] || new Date().toISOString().slice(0, 7),
-          leave_comp: trimmedRecord['Leave_Comp'] || trimmedRecord['leave_comp'] || "0",
-          med_alw: trimmedRecord['Med_Alw'] || trimmedRecord['med_alw'] || "0",
-          others: trimmedRecord['Others'] || trimmedRecord['others'] || "0",
-          religious_alw: trimmedRecord['Religious_Alw'] || trimmedRecord['religious_alw'] || "0",
-          rapel_basic_salary: trimmedRecord['Rapel_Basic_Salary'] || trimmedRecord['rapel_basic_salary'] || "0",
-          rapel_jmstk_alw: trimmedRecord['Rapel_Jmstk_Alw'] || trimmedRecord['rapel_jmstk_alw'] || "0",
-          incentive_alw: trimmedRecord['Incentive_Alw'] || trimmedRecord['incentive_alw'] || "0",
-          acting: trimmedRecord['Acting'] || trimmedRecord['acting'] || "0",
-          performance_alw: trimmedRecord['Performance_Alw'] || trimmedRecord['performance_alw'] || "0",
-          trip_alw: trimmedRecord['Trip_Alw'] || trimmedRecord['trip_alw'] || "0",
-          ot2_wages: trimmedRecord['OT2_Wages'] || trimmedRecord['ot2_wages'] || "0",
-          ot3_wages: trimmedRecord['OT3_Wages'] || trimmedRecord['ot3_wages'] || "0",
-          comp_phk: trimmedRecord['Comp_Phk'] || trimmedRecord['comp_phk'] || "0",
-          tax_alw_phk: trimmedRecord['Tax_Alw_Phk'] || trimmedRecord['tax_alw_phk'] || "0",
-          absent_ded: trimmedRecord['Absent_ded'] || trimmedRecord['absent_ded'] || "0",
-          absent_ded2: trimmedRecord['Absent_Ded2'] || trimmedRecord['absent_ded2'] || "0",
-          incentive_ded: trimmedRecord['Incentive_Ded'] || trimmedRecord['incentive_ded'] || "0",
-          loan_ded: trimmedRecord['Loan_Ded'] || trimmedRecord['loan_ded'] || "0",
-          correct_add: trimmedRecord['Correct_Add'] || trimmedRecord['correct_add'] || "0",
-          correct_sub: trimmedRecord['Correct_Sub'] || trimmedRecord['correct_sub'] || "0",
-          tax_ded_phk: trimmedRecord['Tax_Ded_Phk'] || trimmedRecord['tax_ded_phk'] || "0",
-          mandah_alw: trimmedRecord['Mandah_Alw'] || trimmedRecord['mandah_alw'] || "0",
-          meal_alw_add: trimmedRecord['Meal_Alw/Add'] || trimmedRecord['meal_alw_add'] || "0",
-          transp_alw_add: trimmedRecord['Transp_Alw/Add'] || trimmedRecord['transp_alw_add'] || "0",
-          ew_drv: trimmedRecord['EW_Drv'] || trimmedRecord['Ew_Drv'] || "0",
-          ot_drv: trimmedRecord['OT_Drv'] || trimmedRecord['Ot_Drv'] || "0",
-          ot_add: trimmedRecord['OT_Add'] || trimmedRecord['Ot_Add'] || "0",
-          ew_add: trimmedRecord['EW_Add'] || trimmedRecord['Ew_Add'] || "0",
-          jp_3: trimmedRecord['JP_3%'] || trimmedRecord['jp_3'] || "0",
-          bpjs_5: trimmedRecord['BPJS_5%'] || trimmedRecord['bpjs_5'] || "0",
+          thr: trimmedRecord['thr'] || trimmedRecord['Thr']||trimmedRecord['THR'],
+          bonus: trimmedRecord['bonus'] || trimmedRecord['Bonus'],
+          compensation: trimmedRecord['compensation'] || trimmedRecord['Compensation'],
+          acting_alw: trimmedRecord['acting_alw'] || trimmedRecord['Acting_Alw'],
+          salary_prorate: trimmedRecord['salary_prorate'] || trimmedRecord['Salary_Prorate'],
+          rapel: trimmedRecord['rapel'] || trimmedRecord['Rapel'],
+          tax_alw: trimmedRecord['tax_alw'] || trimmedRecord['Tax_Alw'],
+          tax_ded: trimmedRecord['tax_ded'] || trimmedRecord['Tax_Ded'],
+          other_add: trimmedRecord['other_add'] || trimmedRecord['Other_Add'],
+          other_ded: trimmedRecord['other_ded'] || trimmedRecord['Other_Ded'],
         }
       }).filter(record => record.employee_id)
       
@@ -701,37 +691,47 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
     { title: t('incidentPage.month'), dataIndex: 'month', key: 'month', width: 120 },
     { title: t('incidentPage.employeeName'), dataIndex: 'employee_name', key: 'employee_name', width: 120 },
     { title: t('incidentPage.employeeId'), dataIndex: 'employee_id', key: 'employee_id', width: 120 },
-    { title: t('incidentPage.leaveComp'), dataIndex: 'leave_comp', key: 'leave_comp', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
-    { title: t('incidentPage.medAlw'), dataIndex: 'med_alw', key: 'med_alw', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
-    { title: t('incidentPage.others'), dataIndex: 'others', key: 'others', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
-    { title: t('incidentPage.religiousAlw'), dataIndex: 'religious_alw', key: 'religious_alw', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
-    { title: t('incidentPage.rapelBasicSal'), dataIndex: 'rapel_basic_salary', key: 'rapel_basic_salary', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
-    { title: t('incidentPage.rapelJmstkAlw'), dataIndex: 'rapel_jmstk_alw', key: 'rapel_jmstk_alw', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
-    { title: t('incidentPage.acting'), dataIndex: 'acting', key: 'acting', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
-    { title: t('incidentPage.performanceAlw'), dataIndex: 'performance_alw', key: 'performance_alw', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
-    { title: t('incidentPage.tripAlw'), dataIndex: 'trip_alw', key: 'trip_alw', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
-    { title: t('incidentPage.mandahAlw'), dataIndex: 'mandah_alw', key: 'mandah_alw', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
-    { title: t('incidentPage.incentiveAlw'), dataIndex: 'incentive_alw', key: 'incentive_alw', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    // { title: t('incidentPage.leaveComp'), dataIndex: 'leave_comp', key: 'leave_comp', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    // { title: t('incidentPage.medAlw'), dataIndex: 'med_alw', key: 'med_alw', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    // { title: t('incidentPage.others'), dataIndex: 'others', key: 'others', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    // { title: t('incidentPage.religiousAlw'), dataIndex: 'religious_alw', key: 'religious_alw', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    // { title: t('incidentPage.rapelBasicSal'), dataIndex: 'rapel_basic_salary', key: 'rapel_basic_salary', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    // { title: t('incidentPage.rapelJmstkAlw'), dataIndex: 'rapel_jmstk_alw', key: 'rapel_jmstk_alw', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    // { title: t('incidentPage.acting'), dataIndex: 'acting', key: 'acting', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    // { title: t('incidentPage.performanceAlw'), dataIndex: 'performance_alw', key: 'performance_alw', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    // { title: t('incidentPage.tripAlw'), dataIndex: 'trip_alw', key: 'trip_alw', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    // { title: t('incidentPage.mandahAlw'), dataIndex: 'mandah_alw', key: 'mandah_alw', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    // { title: t('incidentPage.incentiveAlw'), dataIndex: 'incentive_alw', key: 'incentive_alw', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
     
-    { title: t('incidentPage.mealAlwAdd'), dataIndex: 'meal_alw_add', key: 'meal_alw_add', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
-    { title: t('incidentPage.transpAlwAdd'), dataIndex: 'transp_alw_add', key: 'transp_alw_add', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
-    { title: t('incidentPage.otAdd'), dataIndex: 'ot_add', key: 'ot_add', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
-    { title: t('incidentPage.ewAdd'), dataIndex: 'ew_add', key: 'ew_add', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
-    { title: t('incidentPage.ewDrv'), dataIndex: 'ew_drv', key: 'ew_drv', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
-    { title: t('incidentPage.otDrv'), dataIndex: 'ot_drv', key: 'ot_drv', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    // { title: t('incidentPage.mealAlwAdd'), dataIndex: 'meal_alw_add', key: 'meal_alw_add', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    // { title: t('incidentPage.transpAlwAdd'), dataIndex: 'transp_alw_add', key: 'transp_alw_add', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    // { title: t('incidentPage.otAdd'), dataIndex: 'ot_add', key: 'ot_add', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    // { title: t('incidentPage.ewAdd'), dataIndex: 'ew_add', key: 'ew_add', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    // { title: t('incidentPage.ewDrv'), dataIndex: 'ew_drv', key: 'ew_drv', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    // { title: t('incidentPage.otDrv'), dataIndex: 'ot_drv', key: 'ot_drv', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
 
-    // { title: t('incidentPage.otWages2'), dataIndex: 'ot2_wages', key: 'ot2_wages', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
-    // { title: t('incidentPage.otWages3'), dataIndex: 'ot3_wages', key: 'ot3_wages', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
-    { title: t('incidentPage.compPhk'), dataIndex: 'comp_phk', key: 'comp_phk', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
-    { title: t('incidentPage.taxAlwPhk'), dataIndex: 'tax_alw_phk', key: 'tax_alw_phk', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
-    { title: t('incidentPage.absentDed2'), dataIndex: 'absent_ded2', key: 'absent_ded2', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
-    { title: t('incidentPage.incentiveDed'), dataIndex: 'incentive_ded', key: 'incentive_ded', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
-    { title: t('incidentPage.loanDed'), dataIndex: 'loan_ded', key: 'loan_ded', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
-    { title: t('incidentPage.correctAdd'), dataIndex: 'correct_add', key: 'correct_add', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
-    { title: t('incidentPage.correctSub'), dataIndex: 'correct_sub', key: 'correct_sub', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
-    { title: t('incidentPage.taxDedPhk'), dataIndex: 'tax_ded_phk', key: 'tax_ded_phk', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
-    // { title: t('incidentPage.jp3'), dataIndex: 'jp_3', key: 'jp_3', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
-    { title: t('incidentPage.bpjs5'), dataIndex: 'bpjs_5', key: 'bpjs_5', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    // // { title: t('incidentPage.otWages2'), dataIndex: 'ot2_wages', key: 'ot2_wages', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    // // { title: t('incidentPage.otWages3'), dataIndex: 'ot3_wages', key: 'ot3_wages', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    // { title: t('incidentPage.compPhk'), dataIndex: 'comp_phk', key: 'comp_phk', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    // { title: t('incidentPage.taxAlwPhk'), dataIndex: 'tax_alw_phk', key: 'tax_alw_phk', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    // { title: t('incidentPage.absentDed2'), dataIndex: 'absent_ded2', key: 'absent_ded2', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    // { title: t('incidentPage.incentiveDed'), dataIndex: 'incentive_ded', key: 'incentive_ded', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    // { title: t('incidentPage.loanDed'), dataIndex: 'loan_ded', key: 'loan_ded', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    // { title: t('incidentPage.correctAdd'), dataIndex: 'correct_add', key: 'correct_add', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    // { title: t('incidentPage.correctSub'), dataIndex: 'correct_sub', key: 'correct_sub', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    // { title: t('incidentPage.taxDedPhk'), dataIndex: 'tax_ded_phk', key: 'tax_ded_phk', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    // // { title: t('incidentPage.jp3'), dataIndex: 'jp_3', key: 'jp_3', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    // { title: t('incidentPage.bpjs5'), dataIndex: 'bpjs_5', key: 'bpjs_5', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    { title: t('incidentPage.thr'), dataIndex: 'thr', key: 'thr', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    { title: t('incidentPage.bonus'), dataIndex: 'bonus', key: 'bonus', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    { title: t('incidentPage.compensation'), dataIndex: 'compensation', key: 'compensation', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    { title: t('incidentPage.actingAllowance'), dataIndex: 'acting_alw', key: 'acting_alw', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    { title: t('incidentPage.salaryProrate'), dataIndex: 'salary_prorate', key: 'salary_prorate', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    { title: t('incidentPage.rapel'), dataIndex: 'rapel', key: 'rapel', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    { title: t('incidentPage.taxAlw'), dataIndex: 'tax_alw', key: 'tax_alw', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    { title: t('incidentPage.taxDed'), dataIndex: 'tax_ded', key: 'tax_ded', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    { title: t('incidentPage.otherAdd'), dataIndex: 'other_add', key: 'other_add', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
+    { title: t('incidentPage.otherDed'), dataIndex: 'other_ded', key: 'other_ded', width: 120, render: (text) => text > 0 ? <ScientificNumberDisplay value={text} /> : 0 },
     
     // 添加操作列---暂时隐藏
     // {
@@ -850,11 +850,24 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
   }
 
   return (
-    <div style={{ padding: '0px' }}>
+    <div className="flex flex-col p-1">
        {contextHolder}
        {messageContextHolder}           
-      <Card >
-       <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+      <Card className="border-blue-500/10 shadow-lg shadow-blue-500/5 overflow-hidden" styles={{ body: { padding: '12px' } }}>
+        <style>{`
+          .ant-table-wrapper .ant-table-thead > tr > th {
+            background: linear-gradient(135deg, #f8faff, #eef2ff) !important;
+            color: #1e293b !important;
+            font-weight: 600 !important;
+            border-bottom: 1px solid #c7d2fe !important;
+          }
+          .ant-card {
+            border-radius: 12px !important;
+          }
+          .ant-table-wrapper table { border-collapse: separate; border-spacing: 0; }
+          .ant-table-tbody > tr { transition: background-color 0.15s ease; }
+        `}</style>
+       <div className="page-header flex items-center justify-between bg-gradient-to-r from-blue-50/60 to-indigo-50/60 rounded-lg px-4 py-3 border border-blue-500/10 mb-3">
                <div className="header-actions">
 
                 {/* 筛选表单 */}
@@ -916,16 +929,16 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
                     {t('common.batchDelete')} ({selectedRowKeys.length})
                   </Button>
                 )} */}
-                <Button type="primary" icon={<UploadOutlined />} onClick={() => setImportModalVisible(true)}>
+                <Button type="primary" icon={<UploadOutlined />} onClick={() => setImportModalVisible(true)} className="shadow-sm shadow-blue-500/20">
                   {t('incidentPage.import')}
                 </Button>
-                <Button type="primary" onClick={handleExportToExcel} style={{ marginLeft: 8 }}>
+                <Button type="primary" onClick={handleExportToExcel} className="ml-2 shadow-sm shadow-blue-500/20">
                   {t('incidentPage.exportToExcel')}
                 </Button>
               </div>
              </div> 
                         {/* 操作栏 */}
-                <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+                <div className="mb-4 flex items-center gap-2">
                   <Button
                     type="primary"
                     danger
@@ -951,7 +964,7 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
           columns={columns} 
           dataSource={incidentsData} 
           rowKey="id"
-          style={{ width: '100%' }}
+          className="w-full"
           pagination={false}
           scroll={{ x: 'max-content', y: 'calc(100vh - 450px)' }}
         />
@@ -968,7 +981,7 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
             setPageSize(size)
             setCurrentPage(1)
           }}
-          style={{ marginTop: 20, textAlign: 'center' }}
+          className="mt-5 text-center"
         />
       </Card>
       

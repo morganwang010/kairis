@@ -19,66 +19,33 @@ func NewIncidentHandler(incidentService *service.IncidentService) *IncidentHandl
 }
 
 type CreateIncidentRequest struct {
-	EmployeeID       string `json:"employee_id" binding:"required"`
-	ProjectID        string `json:"project_id" binding:"required"`
-	Month            string `json:"month" binding:"required"`
-	LeaveComp        string `json:"leave_comp"`
-	MedAlw           string `json:"med_alw"`
-	Others           string `json:"others"`
-	ReligiousAlw     string `json:"religious_alw"`
-	RapelBasicSalary string `json:"rapel_basic_salary"`
-	RapelJmstkAlw    string `json:"rapel_jmstk_alw"`
-	IncentiveAlw     string `json:"incentive_alw"`
-	Acting           string `json:"acting"`
-	PerformanceAlw   string `json:"performance_alw"`
-	TripAlw          string `json:"trip_alw"`
-	Ot2Wages         string `json:"ot2_wages"`
-	Ot3Wages         string `json:"ot3_wages"`
-	CompPhk          string `json:"comp_phk"`
-	TaxAlwPhk        string `json:"tax_alw_phk"`
-	AbsentDed        string `json:"absent_ded"`
-	AbsentDed2       string `json:"absent_ded2"`
-	CorrectAdd       string `json:"correct_add"`
-	CorrectSub       string `json:"correct_sub"`
-	IncentiveDed     string `json:"incentive_ded"`
-	LoanDed          string `json:"loan_ded"`
-	TaxDedPhk        string `json:"tax_ded_phk"`
-	MandahAlw        string `json:"mandah_alw"`
-	Jp3              string `json:"jp_3"`
-	Bpjs5            string `json:"bpjs_5"`
+	EmployeeID      string  `json:"employee_id" binding:"required"`
+	ProjectID       string  `json:"project_id" binding:"required"`
+	Month           string  `json:"month" binding:"required"`
+	Thr             float64 `json:"thr"`
+	Bonus           float64 `json:"bonus"`
+	Compensation    float64 `json:"compensation"`
+	ActingAllowance float64 `json:"acting_alw"`
+	SalaryProrate   float64 `json:"salary_prorate"`
+	Rapel           float64 `json:"rapel"`
+	TaxAlw          float64 `json:"tax_alw"`
+	TaxDed          float64 `json:"tax_ded"`
+	OtherAdd        float64 `json:"other_add"`
+	OtherDed        float64 `json:"other_ded"`
 }
 
 type UpdateIncidentRequest struct {
-	LeaveComp        float64 `json:"leave_comp"`
-	MedAlw           float64 `json:"med_alw"`
-	Others           float64 `json:"others"`
-	ReligiousAlw     float64 `json:"religious_alw"`
-	RapelBasicSalary float64 `json:"rapel_basic_salary"`
-	RapelJmstkAlw    float64 `json:"rapel_jmstk_alw"`
-	IncentiveAlw     float64 `json:"incentive_alw"`
-	Acting           float64 `json:"acting"`
-	PerformanceAlw   float64 `json:"performance_alw"`
-	TripAlw          float64 `json:"trip_alw"`
-	Ot2Wages         float64 `json:"ot2_wages"`
-	Ot3Wages         float64 `json:"ot3_wages"`
-	CompPhk          float64 `json:"comp_phk"`
-	TaxAlwPhk        float64 `json:"tax_alw_phk"`
-	AbsentDed        float64 `json:"absent_ded"`
-	AbsentDed2       float64 `json:"absent_ded2"`
-	CorrectAdd       float64 `json:"correct_add"`
-	CorrectSub       float64 `json:"correct_sub"`
-	IncentiveDed     float64 `json:"incentive_ded"`
-	LoanDed          float64 `json:"loan_ded"`
-	TaxDedPhk        float64 `json:"tax_ded_phk"`
-	MandahAlw        float64 `json:"mandah_alw"`
-	OtAdd            float64 `json:"ot_add"`
-	EwAdd            float64 `json:"ew_add"`
-	EwDrv            float64 `json:"ew_drv"`
-	OtDrv            float64 `json:"ot_drv"`
-	MealAlwAdd       float64 `json:"meal_alw_add"`
-	TranspAlwAdd     float64 `json:"transp_alw_add"`
-	Jp3              float64 `json:"jp_3"`
-	Bpjs5            float64 `json:"bpjs_5"`
+	LeaveComp       float64 `json:"leave_comp"`
+	Thr             float64 `json:"thr"`
+	Bonus           float64 `json:"bonus"`
+	Compensation    float64 `json:"compensation"`
+	ActingAllowance float64 `json:"acting_alw"`
+	SalaryProrate   float64 `json:"salary_prorate"`
+	Rapel           float64 `json:"rapel"`
+	TaxAlw          float64 `json:"tax_alw"`
+	TaxDed          float64 `json:"tax_ded"`
+	OtherAdd        float64 `json:"other_add"`
+	OtherDed        float64 `json:"other_ded"`
 }
 
 func (h *IncidentHandler) Create(c *gin.Context) {
@@ -96,179 +63,19 @@ func (h *IncidentHandler) Create(c *gin.Context) {
 
 	// 创建 incident 实例
 	incident := &model.Incidents{
-		EmployeeID: req.EmployeeID,
-		ProjectID:  projectID,
-		Month:      req.Month,
-	}
-
-	// 转换数值字段
-	if req.LeaveComp != "" {
-		if val, ok := StringToFloat64(c, req.LeaveComp, "leave_comp"); ok {
-			incident.LeaveComp = val
-		} else {
-			return
-		}
-	}
-	if req.MedAlw != "" {
-		if val, ok := StringToFloat64(c, req.MedAlw, "med_alw"); ok {
-			incident.MedAlw = val
-		} else {
-			return
-		}
-	}
-	if req.Others != "" {
-		if val, ok := StringToFloat64(c, req.Others, "others"); ok {
-			incident.Others = val
-		} else {
-			return
-		}
-	}
-	if req.ReligiousAlw != "" {
-		if val, ok := StringToFloat64(c, req.ReligiousAlw, "religious_alw"); ok {
-			incident.ReligiousAlw = val
-		} else {
-			return
-		}
-	}
-	if req.RapelBasicSalary != "" {
-		if val, ok := StringToFloat64(c, req.RapelBasicSalary, "rapel_basic_salary"); ok {
-			incident.RapelBasicSalary = val
-		} else {
-			return
-		}
-	}
-	if req.RapelJmstkAlw != "" {
-		if val, ok := StringToFloat64(c, req.RapelJmstkAlw, "rapel_jmstk_alw"); ok {
-			incident.RapelJmstkAlw = val
-		} else {
-			return
-		}
-	}
-	if req.IncentiveAlw != "" {
-		if val, ok := StringToFloat64(c, req.IncentiveAlw, "incentive_alw"); ok {
-			incident.IncentiveAlw = val
-		} else {
-			return
-		}
-	}
-	if req.Acting != "" {
-		if val, ok := StringToFloat64(c, req.Acting, "acting"); ok {
-			incident.Acting = val
-		} else {
-			return
-		}
-	}
-	if req.PerformanceAlw != "" {
-		if val, ok := StringToFloat64(c, req.PerformanceAlw, "performance_alw"); ok {
-			incident.PerformanceAlw = val
-		} else {
-			return
-		}
-	}
-	if req.TripAlw != "" {
-		if val, ok := StringToFloat64(c, req.TripAlw, "trip_alw"); ok {
-			incident.TripAlw = val
-		} else {
-			return
-		}
-	}
-	if req.Ot2Wages != "" {
-		if val, ok := StringToFloat64(c, req.Ot2Wages, "ot2_wages"); ok {
-			incident.Ot2Wages = val
-		} else {
-			return
-		}
-	}
-	if req.Ot3Wages != "" {
-		if val, ok := StringToFloat64(c, req.Ot3Wages, "ot3_wages"); ok {
-			incident.Ot3Wages = val
-		} else {
-			return
-		}
-	}
-	if req.CompPhk != "" {
-		if val, ok := StringToFloat64(c, req.CompPhk, "comp_phk"); ok {
-			incident.CompPhk = val
-		} else {
-			return
-		}
-	}
-	if req.TaxAlwPhk != "" {
-		if val, ok := StringToFloat64(c, req.TaxAlwPhk, "tax_alw_phk"); ok {
-			incident.TaxAlwPhk = val
-		} else {
-			return
-		}
-	}
-	if req.AbsentDed != "" {
-		if val, ok := StringToFloat64(c, req.AbsentDed, "absent_ded"); ok {
-			incident.AbsentDed = val
-		} else {
-			return
-		}
-	}
-	if req.AbsentDed2 != "" {
-		if val, ok := StringToFloat64(c, req.AbsentDed2, "absent_ded2"); ok {
-			incident.AbsentDed2 = val
-		} else {
-			return
-		}
-	}
-	if req.CorrectAdd != "" {
-		if val, ok := StringToFloat64(c, req.CorrectAdd, "correct_add"); ok {
-			incident.CorrectAdd = val
-		} else {
-			return
-		}
-	}
-	if req.CorrectSub != "" {
-		if val, ok := StringToFloat64(c, req.CorrectSub, "correct_sub"); ok {
-			incident.CorrectSub = val
-		} else {
-			return
-		}
-	}
-	if req.IncentiveDed != "" {
-		if val, ok := StringToFloat64(c, req.IncentiveDed, "incentive_ded"); ok {
-			incident.IncentiveDed = val
-		} else {
-			return
-		}
-	}
-	if req.LoanDed != "" {
-		if val, ok := StringToFloat64(c, req.LoanDed, "loan_ded"); ok {
-			incident.LoanDed = val
-		} else {
-			return
-		}
-	}
-	if req.TaxDedPhk != "" {
-		if val, ok := StringToFloat64(c, req.TaxDedPhk, "tax_ded_phk"); ok {
-			incident.TaxDedPhk = val
-		} else {
-			return
-		}
-	}
-	if req.MandahAlw != "" {
-		if val, ok := StringToFloat64(c, req.MandahAlw, "mandah_alw"); ok {
-			incident.MandahAlw = val
-		} else {
-			return
-		}
-	}
-	if req.Jp3 != "" {
-		if val, ok := StringToFloat64(c, req.Jp3, "jp_3"); ok {
-			incident.Jp3 = val
-		} else {
-			return
-		}
-	}
-	if req.Bpjs5 != "" {
-		if val, ok := StringToFloat64(c, req.Bpjs5, "bpjs_5"); ok {
-			incident.Bpjs5 = val
-		} else {
-			return
-		}
+		EmployeeID:      req.EmployeeID,
+		ProjectID:       projectID,
+		Month:           req.Month,
+		Thr:             req.Thr,
+		Bonus:           req.Bonus,
+		Compensation:    req.Compensation,
+		ActingAllowance: req.ActingAllowance,
+		SalaryProrate:   req.SalaryProrate,
+		Rapel:           req.Rapel,
+		TaxAlw:          req.TaxAlw,
+		TaxDed:          req.TaxDed,
+		OtherAdd:        req.OtherAdd,
+		OtherDed:        req.OtherDed,
 	}
 
 	if err := h.incidentService.CreateIncident(incident); err != nil {
@@ -345,66 +152,66 @@ func (h *IncidentHandler) Update(c *gin.Context) {
 		return
 	}
 	//将updateIncidentRequest的值赋值给incident
-	if req.LeaveComp > 0 {
-		incident.LeaveComp = req.LeaveComp
-	}
-	if req.MedAlw > 0 {
-		incident.MedAlw = req.MedAlw
-	}
-	if req.Others > 0 {
-		incident.Others = req.Others
-	}
-	if req.ReligiousAlw > 0 {
-		incident.ReligiousAlw = req.ReligiousAlw
-	}
-	if req.RapelBasicSalary > 0 {
-		incident.RapelBasicSalary = req.RapelBasicSalary
-	}
-	if req.RapelJmstkAlw > 0 {
-		incident.RapelJmstkAlw = req.RapelJmstkAlw
-	}
-	if req.IncentiveAlw > 0 {
-		incident.IncentiveAlw = req.IncentiveAlw
-	}
-	if req.IncentiveDed > 0 {
-		incident.IncentiveDed = req.IncentiveDed
-	}
+	// if req.LeaveComp > 0 {
+	// 	incident.LeaveComp = req.LeaveComp
+	// }
+	// if req.MedAlw > 0 {
+	// 	incident.MedAlw = req.MedAlw
+	// }
+	// if req.Others > 0 {
+	// 	incident.Others = req.Others
+	// }
+	// if req.ReligiousAlw > 0 {
+	// 	incident.ReligiousAlw = req.ReligiousAlw
+	// }
+	// if req.RapelBasicSalary > 0 {
+	// 	incident.RapelBasicSalary = req.RapelBasicSalary
+	// }
+	// if req.RapelJmstkAlw > 0 {
+	// 	incident.RapelJmstkAlw = req.RapelJmstkAlw
+	// }
+	// if req.IncentiveAlw > 0 {
+	// 	incident.IncentiveAlw = req.IncentiveAlw
+	// }
+	// if req.IncentiveDed > 0 {
+	// 	incident.IncentiveDed = req.IncentiveDed
+	// }
 
-	if req.LoanDed > 0 {
-		incident.LoanDed = req.LoanDed
+	// if req.LoanDed > 0 {
+	// 	incident.LoanDed = req.LoanDed
 
-	}
-	if req.TaxDedPhk > 0 {
-		incident.TaxDedPhk = req.TaxDedPhk
-	}
+	// }
+	// if req.TaxDedPhk > 0 {
+	// 	incident.TaxDedPhk = req.TaxDedPhk
+	// }
 
-	if req.MandahAlw > 0 {
-		incident.MandahAlw = req.MandahAlw
-	}
-	if req.CorrectSub > 0 {
-		incident.CorrectSub = req.CorrectSub
-	}
-	if req.CorrectAdd > 0 {
-		incident.CorrectAdd = req.CorrectAdd
-	}
-	if req.OtAdd > 0 {
-		incident.OtAdd = req.OtAdd
-	}
-	if req.EwAdd > 0 {
-		incident.EwAdd = req.EwAdd
-	}
-	if req.EwDrv > 0 {
-		incident.EwDrv = req.EwDrv
-	}
-	if req.OtDrv > 0 {
-		incident.OtDrv = req.OtDrv
-	}
-	if req.MealAlwAdd > 0 {
-		incident.MealAlwAdd = req.MealAlwAdd
-	}
-	if req.TranspAlwAdd > 0 {
-		incident.TranspAlwAdd = req.TranspAlwAdd
-	}
+	// if req.MandahAlw > 0 {
+	// 	incident.MandahAlw = req.MandahAlw
+	// }
+	// if req.CorrectSub > 0 {
+	// 	incident.CorrectSub = req.CorrectSub
+	// }
+	// if req.CorrectAdd > 0 {
+	// 	incident.CorrectAdd = req.CorrectAdd
+	// }
+	// if req.OtAdd > 0 {
+	// 	incident.OtAdd = req.OtAdd
+	// }
+	// if req.EwAdd > 0 {
+	// 	incident.EwAdd = req.EwAdd
+	// }
+	// if req.EwDrv > 0 {
+	// 	incident.EwDrv = req.EwDrv
+	// }
+	// if req.OtDrv > 0 {
+	// 	incident.OtDrv = req.OtDrv
+	// }
+	// if req.MealAlwAdd > 0 {
+	// 	incident.MealAlwAdd = req.MealAlwAdd
+	// }
+	// if req.TranspAlwAdd > 0 {
+	// 	incident.TranspAlwAdd = req.TranspAlwAdd
+	// }
 
 	if err := h.incidentService.UpdateIncident(incident); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
@@ -458,39 +265,19 @@ func (h *IncidentHandler) DeleteByIDs(c *gin.Context) {
 func (h *IncidentHandler) Import(c *gin.Context) {
 	var req struct {
 		Records []struct {
-			EmployeeID       string `json:"employee_id"`
-			ProjectID        string `json:"project_id"`
-			Month            string `json:"month"`
-			LeaveComp        string `json:"leave_comp"`
-			MedAlw           string `json:"med_alw"`
-			Others           string `json:"others"`
-			ReligiousAlw     string `json:"religious_alw"`
-			RapelBasicSalary string `json:"rapel_basic_salary"`
-			RapelJmstkAlw    string `json:"rapel_jmstk_alw"`
-			IncentiveAlw     string `json:"incentive_alw"`
-			Acting           string `json:"acting"`
-			PerformanceAlw   string `json:"performance_alw"`
-			TripAlw          string `json:"trip_alw"`
-			Ot2Wages         string `json:"ot2_wages"`
-			Ot3Wages         string `json:"ot3_wages"`
-			CompPhk          string `json:"comp_phk"`
-			TaxAlwPhk        string `json:"tax_alw_phk"`
-			AbsentDed        string `json:"absent_ded"`
-			AbsentDed2       string `json:"absent_ded2"`
-			CorrectAdd       string `json:"correct_add"`
-			CorrectSub       string `json:"correct_sub"`
-			IncentiveDed     string `json:"incentive_ded"`
-			LoanDed          string `json:"loan_ded"`
-			TaxDedPhk        string `json:"tax_ded_phk"`
-			MandahAlw        string `json:"mandah_alw"`
-			MealAlwAdd       string `json:"meal_alw_add"`
-			TranspAlwAdd     string `json:"transp_alw_add"`
-			EwDrv            string `json:"ew_drv"`
-			OtDrv            string `json:"ot_drv"`
-			OtAdd            string `json:"ot_add"`
-			EwAdd            string `json:"ew_add"`
-			Jp3              string `json:"jp_3"`
-			Bpjs5            string `json:"bpjs_5"`
+			EmployeeID      string `json:"employee_id"`
+			ProjectID       string `json:"project_id"`
+			Month           string `json:"month"`
+			Thr             string `json:"thr"`
+			Bonus           string `json:"bonus"`
+			Compensation    string `json:"compensation"`
+			ActingAllowance string `json:"acting_alw"`
+			SalaryProrate   string `json:"salary_prorate"`
+			Rapel           string `json:"rapel"`
+			TaxAlw          string `json:"tax_alw"`
+			TaxDed          string `json:"tax_ded"`
+			OtherAdd        string `json:"other_add"`
+			OtherDed        string `json:"other_ded"`
 		} `json:"records"`
 	}
 	slog.Info("Before binding", "req", &req)
@@ -511,162 +298,61 @@ func (h *IncidentHandler) Import(c *gin.Context) {
 		}
 
 		// 转换所有字段为float64类型
-		leaveComp, ok := StringToFloat64(c, item.LeaveComp, "leave_comp")
+		thr, ok := StringToFloat64(c, item.Thr, "thr")
 		if !ok {
 			return
 		}
-		medAlw, ok := StringToFloat64(c, item.MedAlw, "med_alw")
+		bonus, ok := StringToFloat64(c, item.Bonus, "bonus")
 		if !ok {
 			return
 		}
-		// 其他字段的转换...
-		others, ok := StringToFloat64(c, item.Others, "others")
+		compensation, ok := StringToFloat64(c, item.Compensation, "compensation")
 		if !ok {
 			return
 		}
-		religiousAlw, ok := StringToFloat64(c, item.ReligiousAlw, "religious_alw")
+		actingAllowance, ok := StringToFloat64(c, item.ActingAllowance, "acting_alw")
 		if !ok {
 			return
 		}
-		rapelBasicSalary, ok := StringToFloat64(c, item.RapelBasicSalary, "rapel_basic_salary")
+		salaryProrate, ok := StringToFloat64(c, item.SalaryProrate, "salary_prorate")
 		if !ok {
 			return
 		}
-		rapelJmstkAlw, ok := StringToFloat64(c, item.RapelJmstkAlw, "rapel_jmstk_alw")
+		rapel, ok := StringToFloat64(c, item.Rapel, "rapel")
 		if !ok {
 			return
 		}
-		incentiveAlw, ok := StringToFloat64(c, item.IncentiveAlw, "incentive_alw")
+		taxAlw, ok := StringToFloat64(c, item.TaxAlw, "tax_alw")
 		if !ok {
 			return
 		}
-		acting, ok := StringToFloat64(c, item.Acting, "acting")
+		taxDed, ok := StringToFloat64(c, item.TaxDed, "tax_ded")
 		if !ok {
 			return
 		}
-		performanceAlw, ok := StringToFloat64(c, item.PerformanceAlw, "performance_alw")
+		otherAdd, ok := StringToFloat64(c, item.OtherAdd, "other_add")
 		if !ok {
 			return
 		}
-		tripAlw, ok := StringToFloat64(c, item.TripAlw, "trip_alw")
-		if !ok {
-			return
-		}
-		ot2Wages, ok := StringToFloat64(c, item.Ot2Wages, "ot2_wages")
-		if !ok {
-			return
-		}
-		ot3Wages, ok := StringToFloat64(c, item.Ot3Wages, "ot3_wages")
-		if !ok {
-			return
-		}
-		compPhk, ok := StringToFloat64(c, item.CompPhk, "comp_phk")
-		if !ok {
-			return
-		}
-		taxAlwPhk, ok := StringToFloat64(c, item.TaxAlwPhk, "tax_alw_phk")
-		if !ok {
-			return
-		}
-		absentDed, ok := StringToFloat64(c, item.AbsentDed, "absent_ded")
-		if !ok {
-			return
-		}
-		absentDed2, ok := StringToFloat64(c, item.AbsentDed2, "absent_ded2")
-		if !ok {
-			return
-		}
-		correctAdd, ok := StringToFloat64(c, item.CorrectAdd, "correct_add")
-		if !ok {
-			return
-		}
-		correctSub, ok := StringToFloat64(c, item.CorrectSub, "correct_sub")
-		if !ok {
-			return
-		}
-		incentiveDed, ok := StringToFloat64(c, item.IncentiveDed, "incentive_ded")
-		if !ok {
-			return
-		}
-		loanDed, ok := StringToFloat64(c, item.LoanDed, "loan_ded")
-		if !ok {
-			return
-		}
-		taxDedPhk, ok := StringToFloat64(c, item.TaxDedPhk, "tax_ded_phk")
-		if !ok {
-			return
-		}
-		mandahAlw, ok := StringToFloat64(c, item.MandahAlw, "mandah_alw")
-		if !ok {
-			return
-		}
-		mealAlwAdd, ok := StringToFloat64(c, item.MealAlwAdd, "meal_alw_add")
-		if !ok {
-			return
-		}
-		transpAlwAdd, ok := StringToFloat64(c, item.TranspAlwAdd, "transp_alw_add")
-		if !ok {
-			return
-		}
-		ewDrv, ok := StringToFloat64(c, item.EwDrv, "ew_drv")
-		if !ok {
-			return
-		}
-		otDrv, ok := StringToFloat64(c, item.OtDrv, "ot_drv")
-		if !ok {
-			return
-		}
-		otAdd, ok := StringToFloat64(c, item.OtAdd, "ot_add")
-		if !ok {
-			return
-		}
-		ewAdd, ok := StringToFloat64(c, item.EwAdd, "ew_add")
-		if !ok {
-			return
-		}
-		jp3, ok := StringToFloat64(c, item.Jp3, "jp_3")
-		if !ok {
-			return
-		}
-		bpjs5, ok := StringToFloat64(c, item.Bpjs5, "bpjs_5")
+		otherDed, ok := StringToFloat64(c, item.OtherDed, "other_ded")
 		if !ok {
 			return
 		}
 
 		importReq.Incidents[i] = service.ImportIncidentItem{
-			EmployeeID:       item.EmployeeID,
-			ProjectID:        projectID,
-			Month:            item.Month,
-			LeaveComp:        leaveComp,
-			MedAlw:           medAlw,
-			Others:           others,
-			ReligiousAlw:     religiousAlw,
-			RapelBasicSalary: rapelBasicSalary,
-			RapelJmstkAlw:    rapelJmstkAlw,
-			IncentiveAlw:     incentiveAlw,
-			Acting:           acting,
-			PerformanceAlw:   performanceAlw,
-			TripAlw:          tripAlw,
-			Ot2Wages:         ot2Wages,
-			Ot3Wages:         ot3Wages,
-			CompPhk:          compPhk,
-			TaxAlwPhk:        taxAlwPhk,
-			AbsentDed:        absentDed,
-			AbsentDed2:       absentDed2,
-			CorrectAdd:       correctAdd,
-			CorrectSub:       correctSub,
-			IncentiveDed:     incentiveDed,
-			LoanDed:          loanDed,
-			TaxDedPhk:        taxDedPhk,
-			MandahAlw:        mandahAlw,
-			MealAlwAdd:       mealAlwAdd,
-			TranspAlwAdd:     transpAlwAdd,
-			EwDrv:            ewDrv,
-			OtDrv:            otDrv,
-			OtAdd:            otAdd,
-			EwAdd:            ewAdd,
-			Jp3:              jp3,
-			Bpjs5:            bpjs5,
+			EmployeeID:      item.EmployeeID,
+			ProjectID:       projectID,
+			Month:           item.Month,
+			Thr:             thr,
+			Bonus:           bonus,
+			Compensation:    compensation,
+			ActingAllowance: actingAllowance,
+			SalaryProrate:   salaryProrate,
+			Rapel:           rapel,
+			TaxAlw:          taxAlw,
+			TaxDed:          taxDed,
+			OtherAdd:        otherAdd,
+			OtherDed:        otherDed,
 		}
 	}
 

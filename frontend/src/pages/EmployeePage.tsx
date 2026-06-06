@@ -43,6 +43,27 @@ interface Employee {
   project_name: string // 项目名称
   location_name: string // 位置名称
   ot_status: string // OT状态
+  bpjs_health_tambahan_status: string // BPJS健康附加状态
+  date_of_birth: string // 出生日期
+  post_function_alw_month: number // 岗位职能津贴月
+  phone_alw_month: number // 电话津贴月
+  internet_alw_month: number // 网络津贴月
+  incentive_month: number // 激励月
+  operational_alw_month: number // 运营津贴月
+  housing_alw_month: number // 住房津贴月
+  seniority_alw_month: number // 工龄津贴月
+  transport_alw_month: number // 交通津贴月
+  field_alw_month: number // 外勤津贴月
+  accomodation_alw_month: number // 住宿津贴月
+  work_day: number // 工作日
+  on_day: number // 在岗日
+  bt_day: number // BT日
+  oa_day: number // OA日
+  travell_day: number // 出行日
+  tnt_day: number // TNT日
+  st_day: number // ST日
+  tr_day: number // TR日
+
 }
 
 const EmployeePage: FC<EmployeePageProps> = ({ projectId }) => {
@@ -221,46 +242,6 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId }) => {
     loadEmployees({})
   }
 
-  // const openEditDialog = (row: Employee) => {
-  //   setEditingEmployee(row)
-  //   // 将日期字符串转换为 dayjs 对象
-  //   const formattedRow = {
-  //     ...row,
-  //     join_date: row.join_date ? dayjs(row.join_date) : null,
-  //     resign_date: row.resign_date ? dayjs(row.resign_date) : null
-  //   }
-  //   form.setFieldsValue(formattedRow)
-  //   setDialogVisible(true)
-  // }
-
-  // const handleDelete = async (id: number) => {
-  //     // setIsEditMode(false);
-  //     // setIsModalVisible(true);
-  //     console.log("ssssssssssssssssssthe delete project id is: "+id);
-  //     modal.confirm({
-  //       title: t('projectPage.confirmDelete'),
-  //       content: t('employeePage.confirmDelete'),
-  //       onOk: async () => {
-  //         try {
-  //           // 调用删除项目API
-  //           console.log("start delete project id is: "+id);
-  //           await deleteEmployee(id.toString());
-  //           setEmployeesData(prev => prev.filter(emp => emp.id !== id));
-  //           // deleteProjects({ project_id: parseInt(id) }).then(() => {
-  //           //   // 刷新项目列表
-  //           //   console.log("end delete project id is: "+id);
-  //           //   loadProjects();
-  //           // });
-  //           // setProjects(projects.filter(project => project.id !== id));
-  //           messageApi.success(t('employeePage.deleteSuccess'));
-  //         } catch (error) {
-  //           console.error(t('employeePage.deleteEmployeeError'), error);
-  //           messageApi.error(t('employeePage.deleteError'));
-  //         }
-  //       },
-  //     });
-  //   };
-
 
   // 文件上传处理
   const handleUpload = ({ file }: any) => {
@@ -334,25 +315,61 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId }) => {
               console.log('表头映射:', headerMapping);
             }
             
+            // Excel日期序列号转换函数
+            const excelDateToString = (excelDate: number): string => {
+              // Excel日期从1900年1月1日开始，需要减去25569天转换为Unix时间戳
+              const date = new Date((excelDate - 25569) * 86400 * 1000);
+              const year = date.getFullYear();
+              const month = String(date.getMonth() + 1).padStart(2, '0');
+              const day = String(date.getDate()).padStart(2, '0');
+              return `${year}-${month}-${day}`;
+            };
+
+            // 检查是否为日期列（根据列名判断）
+            const dateColumns = ['join_date', 'resign', 'date_of_birth', 'Join Date', 'Resign', 'Date Of Birth', '入职日期', '离职日期', '出生日期'];
+
             // 处理数据行
             const processedData: any[] = [];
             for (let i = 1; i < jsonData.length; i++) {
               const row = jsonData[i];
               const processedRow: any = {};
               let hasData = false;
-              
+
               Object.keys(headerMapping).forEach((key, index) => {
                 const headerName = headerMapping[key];
                 const cellValue = (row as any[])[index];
-               
+
                 if (headerName && cellValue !== undefined && cellValue !== null) {
-                  processedRow[headerName] = cellValue;
+                  // 检查是否为日期列且值为数字（Excel日期序列号）
+                  const isDateColumn = dateColumns.some(col =>
+                    headerName.toLowerCase().replace(/[_\s]/g, '') === col.toLowerCase().replace(/[_\s]/g, '')
+                  );
+
+                  if (isDateColumn && typeof cellValue === 'number') {
+                    // Excel日期序列号转换
+                    processedRow[headerName] = excelDateToString(cellValue);
+                  } else if (isDateColumn && typeof cellValue === 'string') {
+                    // 如果已经是字符串格式，尝试标准化为YYYY-MM-DD
+                    const dateStr = cellValue.replace(/\//g, '-');
+                    const parts = dateStr.split('-');
+                    if (parts.length === 3) {
+                      const year = parts[0].length === 4 ? parts[0] : parts[2];
+                      const month = parts[0].length === 4 ? parts[1].padStart(2, '0') : parts[0].padStart(2, '0');
+                      const day = parts[0].length === 4 ? parts[2].padStart(2, '0') : parts[1].padStart(2, '0');
+                      processedRow[headerName] = `${year}-${month}-${day}`;
+                    } else {
+                      processedRow[headerName] = cellValue;
+                    }
+                  } else {
+                    processedRow[headerName] = cellValue;
+                  }
+
                   if (cellValue !== '') {
                     hasData = true;
                   }
                 }
               });
-              
+
               if (hasData || Object.keys(processedRow).length > 0) {
                 processedData.push(processedRow);
               }
@@ -634,99 +651,100 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId }) => {
     { title: t('employeePage.employeeName'), dataIndex: 'employee_name', key: 'employee_name', width: 150 },
     { title: t('employeePage.employeeId'), dataIndex: 'employee_id', key: 'employee_id', width: 120 },
     { title: t('employeePage.taxStatus'), dataIndex: 'tax_type', key: 'tax_type', width: 80 },
-    { title: t('employeePage.idCard'), dataIndex: 'id_card', key: 'id_card', width: 150 },
-    { title: t('employeePage.npwp'), dataIndex: 'npwp', key: 'npwp', width: 150 },
-    { title: t('employeePage.hierarchyId'), dataIndex: 'hierarchy_id', key: 'hierarchy_id', width: 120 },
-    { title: t('employeePage.hierarchyName'), dataIndex: 'hierarchy_name', key: 'hierarchy_name', width: 150 },
-    { title: t('employeePage.workLocation'), dataIndex: 'location_name', key: 'location_name', width: 150 },
+    // { title: t('employeePage.idCard'), dataIndex: 'id_card', key: 'id_card', width: 150 },
+    // { title: t('employeePage.npwp'), dataIndex: 'npwp', key: 'npwp', width: 150 },
+    // { title: t('employeePage.hierarchyId'), dataIndex: 'hierarchy_id', key: 'hierarchy_id', width: 120 },
+    // { title: t('employeePage.hierarchyName'), dataIndex: 'hierarchy_name', key: 'hierarchy_name', width: 150 },
+    // { title: t('employeePage.workLocation'), dataIndex: 'location_name', key: 'location_name', width: 150 },
     { title: t('employeePage.hireDate'), dataIndex: 'join_date', key: 'join_date', width: 120, render: (text: string) => text !== "-" ? dayjs(text,'YYYY-MM-DD').format('YYYY-MM-DD') : '-' },
     { title: t('employeePage.resignDate'), dataIndex: 'resign_date', key: 'resign_date', width: 120, render: (text: string) => text !== "0001-01-01T00:00:00Z" ? dayjs(text,'YYYY-MM-DD').format('YYYY-MM-DD') : '-' },
-    { title: t('employeePage.idStatus'), dataIndex: 'id_status', key: 'id_status', width: 120 },
-    { title: t('employeePage.otStatus'), dataIndex: 'ot_status', key: 'ot_status', width: 120 },
+    // { title: t('employeePage.idStatus'), dataIndex: 'id_status', key: 'id_status', width: 120 },
+    // { title: t('employeePage.otStatus'), dataIndex: 'ot_status', key: 'ot_status', width: 120 },
     
-    { title: t('employeePage.position'), dataIndex: 'position', key: 'position', width: 120 },
+    // { title: t('employeePage.position'), dataIndex: 'position', key: 'position', width: 120 },
     { title: t('employeePage.email'), dataIndex: 'email', key: 'email', width: 180 },
     { title: t('employeePage.basicSalary'), dataIndex: 'basic_salary', key: 'basic_salary', width: 120, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
-    { title: t('employeePage.housingAllowance'), dataIndex: 'housing_alw', key: 'housing_alw', width: 120, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
-    { title: t('employeePage.positionAllowance'), dataIndex: 'position_alw', key: 'position_alw', width: 120, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
-    { title: t('employeePage.fieldAllowance'), dataIndex: 'field_alw', key: 'field_alw', width: 100, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
-    // { title: t('employeePage.fixedAllowance'), dataIndex: 'fix_alw', key: 'fix_alw', width: 100, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
-    // { title: t('employeePage.incentiveAllowance'), dataIndex: 'incentive_alw', key: 'incentive_alw', width: 100, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
-    { title: t('employeePage.housingAllowanceTetap'), dataIndex: 'housing_alw_tetap', key: 'housing_alw_tetap', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
-    { title: t('employeePage.phoneAllowanceMonth'), dataIndex: 'pulsa_alw_month', key: 'pulsa_alw_month', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
-    { title: t('employeePage.mealAllowanceDay'), dataIndex: 'meal_alw_day', key: 'meal_alw_day', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
-    { title: t('employeePage.transportAllowanceDay'), dataIndex: 'transp_alw_day', key: 'transp_alw_day', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
-    // { title: t('employeePage.mealAllowanceMonth'), dataIndex: 'meal_alw_month', key: 'meal_alw_month', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
-    // { title: t('employeePage.transportAllowanceMonth'), dataIndex: 'transp_alw_month', key: 'transp_alw_month', width: 160, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+    // { title: t('employeePage.housingAllowance'), dataIndex: 'housing_alw', key: 'housing_alw', width: 120, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+    // { title: t('employeePage.positionAllowance'), dataIndex: 'position_alw', key: 'position_alw', width: 120, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+    // { title: t('employeePage.fieldAllowance'), dataIndex: 'field_alw', key: 'field_alw', width: 100, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+    // { title: t('employeePage.housingAllowanceTetap'), dataIndex: 'housing_alw_tetap', key: 'housing_alw_tetap', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+    // { title: t('employeePage.phoneAllowanceMonth'), dataIndex: 'pulsa_alw_month', key: 'pulsa_alw_month', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+    // { title: t('employeePage.mealAllowanceDay'), dataIndex: 'meal_alw_day', key: 'meal_alw_day', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+    // { title: t('employeePage.transportAllowanceDay'), dataIndex: 'transp_alw_day', key: 'transp_alw_day', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+ 
+    // { title: t('employeePage.phoneAllowanceDay'), dataIndex: 'pulsa_alw_day', key: 'pulsa_alw_day', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
    
-    { title: t('employeePage.phoneAllowanceDay'), dataIndex: 'pulsa_alw_day', key: 'pulsa_alw_day', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
-    { title: t('employeePage.attendanceAllowanceDay'), dataIndex: 'att_alw_day', key: 'att_alw_day', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+    // { title: t('employeePage.attendanceAllowanceDay'), dataIndex: 'att_alw_day', key: 'att_alw_day', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+    { title: t('employeePage.bpjsHealthTambahanStatus'), dataIndex: 'bpjs_health_tambahan_status', key: 'bpjs_health_tambahan_status', width: 150 },
+    { title: t('employeePage.dateOfBirth'), dataIndex: 'date_of_birth', key: 'date_of_birth', width: 150 },
+    { title: t('employeePage.postFunctionAlwMonth'), dataIndex: 'post_function_alw_month', key: 'post_function_alw_month', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+    { title: t('employeePage.phoneAlwMonth'), dataIndex: 'phone_alw_month', key: 'phone_alw_month', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+    { title: t('employeePage.internetAlwMonth'), dataIndex: 'internet_alw_month', key: 'internet_alw_month', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+    { title: t('employeePage.incentiveMonth'), dataIndex: 'incentive_month', key: 'incentive_month', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+    { title: t('employeePage.operationalAlwMonth'), dataIndex: 'operational_alw_month', key: 'operational_alw_month', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+    { title: t('employeePage.housingAlwMonth'), dataIndex: 'housing_alw_month', key: 'housing_alw_month', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+    { title: t('employeePage.seniorityAlwMonth'), dataIndex: 'seniority_alw_month', key: 'seniority_alw_month', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+    { title: t('employeePage.transportAlwMonth'), dataIndex: 'transport_alw_month', key: 'transport_alw_month', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+    { title: t('employeePage.fieldAlwMonth'), dataIndex: 'field_alw_month', key: 'field_alw_month', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+    { title: t('employeePage.accommodationAlwMonth'), dataIndex: 'accommodation_alw_month', key: 'accommodation_alw_month', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
+    { title: t('employeePage.workDay'), dataIndex: 'work_day', key: 'work_day', width: 100 },
+    { title: t('employeePage.onDay'), dataIndex: 'on_day', key: 'on_day', width: 100 },
+    { title: t('employeePage.btDay'), dataIndex: 'bt_day', key: 'bt_day', width: 100 },
+    { title: t('employeePage.oaDay'), dataIndex: 'oa_day', key: 'oa_day', width: 100 },
+    { title: t('employeePage.travellDay'), dataIndex: 'travell_day', key: 'travell_day', width: 100 },
+    { title: t('employeePage.tntDay'), dataIndex: 'tnt_day', key: 'tnt_day', width: 100 },
+    { title: t('employeePage.stDay'), dataIndex: 'st_day', key: 'st_day', width: 100 },
+    { title: t('employeePage.trDay'), dataIndex: 'tr_day', key: 'tr_day', width: 100 },
+   
 
-    // {
-    //   title: t('common.action'),
-    //   key: 'action',
-    //   width: 180,
-    //   // fixed: 'right',
-    //   render: (_, record) => (
-    //     <span>
-    //       <Button 
-    //         type="primary" 
-    //         size="small" 
-    //         icon={<EditOutlined />} 
-    //         onClick={() => openEditDialog(record)}
-    //         style={{ marginRight: 8 }}
-    //       >
-    //         {t('common.edit')}
-    //       </Button>
-    //       <Button 
-    //         type="primary" 
-    //         size="small" 
-    //          danger
-    //         icon={<DeleteOutlined />}
-    //         onClick={() => handleDelete(record.id)}
-    //       >
-    //         {t('common.delete')}
-    //       </Button>
-    //     </span>
-    //   ),
-    // },
   ]
 
   return (
     
-    <div style={{ padding: '5px', height: 'calc(100vh - 64px)', display: 'flex', flexDirection: 'column' }}>
+    <div className="flex flex-col p-1" style={{ height: 'calc(100vh - 64px)' }}>
        {contextHolder}
        {messageContextHolder}
-      <Card style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <Card className="flex-1 flex flex-col border-blue-500/10 shadow-lg shadow-blue-500/5 overflow-hidden" styles={{ body: { flex: 1, display: 'flex', flexDirection: 'column', padding: '12px' } }}>
         <style>
           {`
             .table-row-light {
               background-color: #ffffff;
+              transition: background-color 0.15s ease;
             }
             .table-row-light:hover {
-              background-color: #f5f5f5 !important;
+              background-color: #eef2ff !important;
             }
             .table-row-dark {
-              background-color: #ebeff5ff;
+              background-color: #f1f5f9;
+              transition: background-color 0.15s ease;
             }
             .table-row-dark:hover {
-              background-color: #f5f5f5 !important;
+              background-color: #e0e7ff !important;
             }
+
+            .ant-table-wrapper .ant-table-thead > tr > th {
+              background: linear-gradient(135deg, #f8faff, #eef2ff) !important;
+              color: #1e293b !important;
+              font-weight: 600 !important;
+              border-bottom: 1px solid #c7d2fe !important;
+            }
+            .ant-card {
+              border-radius: 12px !important;
+            }
+
+            .ant-table-wrapper .ant-table-thead > tr > th {
+              background: linear-gradient(135deg, #f8faff, #eef2ff) !important;
+              color: #1e293b !important;
+              font-weight: 600 !important;
+              border-bottom: 1px solid #c7d2fe !important;
+            }
+            .ant-card { border-radius: 12px !important; }
           `}
         </style>
-        <div style={{ marginBottom: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          {/* <h2>{t('employeePage.employeeManagement')}</h2> */}
-          <>
-            {/* <Button type="primary" icon={<PlusOutlined />} onClick={openAddDialog} style={{ marginLeft: 10 }}>{t('employeePage.addEmployee')}</Button> */}
-          </>
-        </div>
-        
-
-
         {/* 筛选表单 */}
         <div style={{ marginBottom: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <div style={{ flex: 1 }}>
-          <Form form={filterForm} layout="inline" style={{ marginBottom: 20 }}>
+          <div className="flex items-start justify-between bg-gradient-to-r from-blue-50/60 to-indigo-50/60 rounded-lg px-4 py-3 border border-blue-500/10"><div className="flex-1"><Form form={filterForm} layout="inline" className="mb-0">
             <Form.Item name="employee_id" label={t('employeePage.employeeId')}>
               <Input placeholder={t('employeePage.enterEmployeeId')} />
             </Form.Item>
@@ -748,7 +766,7 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId }) => {
           </Form>
           </div>
           <div style={{ marginLeft: 16, display: 'flex', alignItems: 'center' }}>
-           <Button type="primary" icon={<UploadOutlined />} onClick={() => setImportModalVisible(true)}>{t('employeePage.importEmployee')}</Button>
+           <Button type="primary" icon={<UploadOutlined />} onClick={() => setImportModalVisible(true)} className="shadow-sm shadow-blue-500/20">{t('employeePage.importEmployee')}</Button></div></div>
           </div>          
 
         </div>
@@ -770,15 +788,15 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId }) => {
           dataSource={employeesData} 
           rowKey="id"
           rowClassName={(_, index) => (index % 2 === 0 ? 'table-row-light' : 'table-row-dark')}
-          style={{ width: '100%', flex: 1 }}
+          className="w-full flex-1"
           pagination={false}
-          scroll={{ x: 'calc(700px + 50%)', y: 'calc(100vh - 400px)' }}
+          scroll={{ x: 'calc(700px + 50%)', y: 'calc(100vh - 380px)' }}
         />
         
         <Pagination
           current={currentPage}
           pageSize={pageSize}
-          pageSizeOptions={['50', '100','200']}
+          pageSizeOptions={['50', '100', '200']}
           showSizeChanger
           showTotal={(total) => t('common.totalRecords', { count: total })}
           total={total}
@@ -787,7 +805,7 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId }) => {
             setPageSize(size)
             setCurrentPage(1) // 改变每页条数时回到第一页
           }}
-          style={{ marginTop: 20, textAlign: 'center' }}
+          className="mt-5 text-center"
         />
       </Card>
       
@@ -926,13 +944,13 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId }) => {
         width={900}
         footer={null}
       >
-        <div style={{ marginBottom: 20, textAlign: 'center' }}>
+        <div className="mb-5 text-center">
           <Upload.Dragger {...uploadProps}>
             <p className="ant-upload-drag-icon">
               <UploadOutlined />
             </p>
             <p className="ant-upload-text">{t('common.clickOrDragToUpload')}</p>
-            <p className="ant-upload-hint">
+            <p className="ant-upload-hint text-slate-400">
               {t('common.supportSingleExcelUpload')}
             </p>
           </Upload.Dragger>
@@ -940,9 +958,9 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId }) => {
 
         {parsedSheets.length > 0 ? (
           <div>
-            <div style={{ marginBottom: 20, textAlign: 'center' }}>
+            <div className="mb-5 text-center">
               <Button
-                type="primary"
+                type="primary" className="shadow-sm shadow-blue-500/20"
                 icon={<SyncOutlined />}
                 onClick={handleImportAll}
                 loading={importLoading}
@@ -954,17 +972,14 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId }) => {
               activeKey={activeTabKey}
               onChange={setActiveTabKey}
               items={tabItems}
-              style={{ width: '100%' }}
+              className="w-full"
             />
           </div>
         ) : (
-          <div style={{ 
-            textAlign: 'center', 
-            padding: 60, 
-            backgroundColor: '#f5f5f5', 
-            borderRadius: 8,
-            color: '#999'
-          }}>
+          <div className="text-center py-16 px-8 bg-slate-50/80 rounded-xl border border-dashed border-slate-200">
+            <div className="text-slate-300 text-4xl mb-3">
+              <UploadOutlined />
+            </div>
             <p>{t('common.noData')}</p>
           </div>
         )}

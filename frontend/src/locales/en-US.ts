@@ -48,9 +48,22 @@ export default {
   },
   dashboard: {
     welcome: 'Welcome',
+    description: 'This is your management console. View system data and activities in real-time.',
     totalUsers: 'Total Users',
     totalRoles: 'Total Roles',
     totalMenus: 'Total Menus',
+    growth: 'Growth Rate',
+    recentActivity: 'Recent Activity',
+    userCreated: 'User Created',
+    roleUpdated: 'Role Updated',
+    menuAdded: 'Menu Added',
+    permissionChanged: 'Permission Changed',
+    userDeleted: 'User Deleted',
+    quickStats: 'Quick Stats',
+    activeUsers: 'Active Users',
+    pendingTasks: 'Pending Tasks',
+    completedToday: 'Completed Today',
+    averageResponse: 'Avg Response Time',
   },
   user: {
     title: 'User Management',
@@ -93,6 +106,15 @@ export default {
     type: 'Type',
     menu: 'Menu',
     button: 'Button',
+  },
+  employeePage: {
+   
+  },
+  incidentPage: {
+
+  },
+  newAttendancePage: {
+    
   },
 
 };

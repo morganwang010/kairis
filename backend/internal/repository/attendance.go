@@ -79,7 +79,7 @@ func (r *AttendanceRepository) DeleteByIDs(ids []uint) error {
 
 func (r *AttendanceRepository) GetByEmployeeIDAndMonth(employeeID, month string, projectID int) ([]model.Attendances, error) {
 	var attendance []model.Attendances
-	err := r.db.Where("employee_id = ? AND month = ? AND project_id = ?", employeeID, month, projectID).First(&attendance).Error
+	err := r.db.Where("employee_id = ? AND month = ? AND project_id = ?", employeeID, month, projectID).Find(&attendance).Error
 	if err != nil {
 		return nil, err
 	}

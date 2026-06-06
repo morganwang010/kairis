@@ -38,6 +38,28 @@ interface AttendanceRecord {
   days: Record<number, string> // day number to status (W, O, etc.)
   ot1_hours: number
   ew_hours: number
+  w: number // W
+  on: number // On
+  os_oa: number // OS/OA
+  ot: number // OT
+  ovt: number // OVT
+  bt: number // BT
+  t: number // T
+  tnt: number // TNT
+  al: number // AL
+  rot: number // ROT
+  tr: number // TR
+  st: number // ST
+  ls: number // LS
+  q: number // Q
+  wfh: number // WFH
+  pl: number // PL
+  l: number // L
+  sc: number // SC
+  sc1: number // SC1
+  co: number // CO
+  pm: number // PM
+  na: number // NA
 }
 
 interface SheetData {
@@ -284,23 +306,31 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
         project_name: trimmedRecord['Project_Name'] || projectName,
         month: trimmedRecord['Month'] || new Date().toISOString().slice(0, 7),
         work: trimmedRecord['In'] || "0",
-        off: trimmedRecord['Off'] || "0",
-        permission: trimmedRecord['Permission'] || "0",
-        unpresent: trimmedRecord['Unpresent'] || "0",
-        sick: trimmedRecord['Sick'] || "0",
-        standby: trimmedRecord['SB'] || trimmedRecord['Standby'] || "0",
-        leave_replc: trimmedRecord['Leave_Replc'] || trimmedRecord['AnnualLeave'] || "0",
-        absent: trimmedRecord['A'] || trimmedRecord['Absent'] || "0",
-        ew: trimmedRecord['EW'] || trimmedRecord['ExtraWork'] || "0",
-        ot1: trimmedRecord['OT1'] || trimmedRecord['OT1'] || "0",
-        ot2: trimmedRecord['OT2'] || trimmedRecord['OT2'] || "0",
-        ot3: trimmedRecord['OT3'] || trimmedRecord['OT3'] || "0",
-        ew1: trimmedRecord['EW1'] || trimmedRecord['ExtraWork1'] || "0",
-        ew2: trimmedRecord['EW2'] || trimmedRecord['ExtraWork2'] || "0",
-        ew3: trimmedRecord['EW3'] || trimmedRecord['ExtraWork3'] || "0",
-        ot1_hours: trimmedRecord['OT1_Hours'] || trimmedRecord['OT1Hours'] || "0",
-        ew_hours: trimmedRecord['EW_Hours'] || trimmedRecord['EWHours'] || "0",
-        days: {}
+        off: trimmedRecord['OFF'] || "0",
+        w: trimmedRecord['W'] || "0",
+        ons: trimmedRecord['ON'] || "0",
+        os_oa: trimmedRecord['OS/OA'] || "0",
+        ot: trimmedRecord['OT'] || "0",
+        ovt: trimmedRecord['OVT'] || "0",
+        bt: trimmedRecord['BT'] || "0",
+        t: trimmedRecord['T'] || "0",
+        tnt: trimmedRecord['TNT'] || "0",
+        al: trimmedRecord['AL'] || "0",
+        rot: trimmedRecord['ROT'] || "0",
+        tr: trimmedRecord['TR'] || "0",
+        sc1: trimmedRecord['SC1'] || "0",
+        co: trimmedRecord['CO'] || "0",
+        pm: trimmedRecord['PM'] || "0",
+        na: trimmedRecord['NA'] || "0",
+        st: trimmedRecord['ST'] || "0",
+        ls: trimmedRecord['LS'] || "0",
+        q: trimmedRecord['Q'] || "0",
+        wfh: trimmedRecord['WFH'] || "0",
+        pl: trimmedRecord['PL'] || "0",
+        l: trimmedRecord['L'] || "0",
+        sc: trimmedRecord['SC'] || "0",
+
+        // days: {}
         }
       }).filter(record => record.employee_id)
       
@@ -616,6 +646,28 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
           permission: record.permission || 0,
           ot1_hours: record.ot1_hours || 0,
           ew_hours: record.ew_hours || 0,
+          w: record.w ||0 , // W
+          on: record.on || 0, // On
+          os_oa: record.os_oa || 0, // OS/OA
+          ot: record.ot || 0, // OT
+          ovt: record.ovt || 0, // OVT
+          bt: record.bt || 0, // BT
+          t: record.t || 0, // T
+          tnt: record.tnt || 0, // TNT
+          al: record.al || 0, // AL
+          rot: record.rot || 0, // ROT
+          tr: record.tr || 0, // TR
+          st: record.st || 0, // ST
+          ls: record.ls || 0, // LS
+          q: record.q || 0, // Q
+          wfh: record.wfh || 0, // WFH
+          pl: record.pl || 0, // PL
+          l: record.l || 0, // L
+          sc: record.sc || 0, // SC
+          sc1: record.sc1 || 0, // SC1
+          co: record.co || 0, // CO
+          pm: record.pm || 0, // PM
+          na: record.na || 0, // NA
         }))
         console.log('formattedAttendanceRecords', formattedRecords)
          setData(formattedRecords)
@@ -684,12 +736,12 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
         key: 'employee_name',
         width: 100,
       },
-      {
-        title: t('newAttendancePage.position'),
-        dataIndex: 'position',
-        key: 'position',
-        width: 120,
-      },
+      // {
+      //   title: t('newAttendancePage.position'),
+      //   dataIndex: 'position',
+      //   key: 'position',
+      //   width: 120,
+      // },
       {
         title: t('newAttendancePage.work'),
         dataIndex: 'work',
@@ -702,54 +754,54 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
         key: 'off',
         width: 100,
       },
-      {
-        title: t('newAttendancePage.permission'),
-        dataIndex: 'permission',
-        key: 'permission',
-        width: 100,
-      },
-      {
-        title: t('newAttendancePage.unpresent'),
-        dataIndex: 'unpresent',
-        key: 'unpresent',
-        width: 100,
-      },
-      {
-        title: t('newAttendancePage.sick'),
-        dataIndex: 'sick',
-        key: 'sick',
-        width: 100,
-      },
-      {
-        title: t('newAttendancePage.standby'),
-        dataIndex: 'standby',
-        key: 'standby',
-        width: 100,
-      },
-      {
-        title: t('newAttendancePage.extrawork'),
-        dataIndex: 'ew',
-        key: 'ew',
-        width: 100,
-      },
-      {
-        title: t('newAttendancePage.leaveReplc'),
-        dataIndex: 'leave_replc',
-        key: 'leave_replc',
-        width: 100,
-      },
-      {
-        title: t('newAttendancePage.ot1Hours'),
-        dataIndex: 'ot1_hours',
-        key: 'ot1_hours',
-        width: 100,
-      },
-      {
-        title: t('newAttendancePage.ewHours'),
-        dataIndex: 'ew_hours',
-        key: 'ew_hours',
-        width: 100,
-      },
+      // {
+      //   title: t('newAttendancePage.permission'),
+      //   dataIndex: 'permission',
+      //   key: 'permission',
+      //   width: 100,
+      // },
+      // {
+      //   title: t('newAttendancePage.unpresent'),
+      //   dataIndex: 'unpresent',
+      //   key: 'unpresent',
+      //   width: 100,
+      // },
+      // {
+      //   title: t('newAttendancePage.sick'),
+      //   dataIndex: 'sick',
+      //   key: 'sick',
+      //   width: 100,
+      // },
+      // {
+      //   title: t('newAttendancePage.standby'),
+      //   dataIndex: 'standby',
+      //   key: 'standby',
+      //   width: 100,
+      // },
+      // {
+      //   title: t('newAttendancePage.extrawork'),
+      //   dataIndex: 'ew',
+      //   key: 'ew',
+      //   width: 100,
+      // },
+      // {
+      //   title: t('newAttendancePage.leaveReplc'),
+      //   dataIndex: 'leave_replc',
+      //   key: 'leave_replc',
+      //   width: 100,
+      // },
+      // {
+      //   title: t('newAttendancePage.ot1Hours'),
+      //   dataIndex: 'ot1_hours',
+      //   key: 'ot1_hours',
+      //   width: 100,
+      // },
+      // {
+      //   title: t('newAttendancePage.ewHours'),
+      //   dataIndex: 'ew_hours',
+      //   key: 'ew_hours',
+      //   width: 100,
+      // },
       // {
       //   title: t('newAttendancePage.ot1'),
       //   dataIndex: 'ot1',
@@ -773,7 +825,139 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
       //   dataIndex: 'ew3',
       //   key: 'ew3',
       //   width: 100,
-      // },                 
+      // },
+      {
+        title: t('newAttendancePage.w'),
+        dataIndex: 'w',
+        key: 'w',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.on'),
+        dataIndex: 'on',
+        key: 'on',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.osOa'),
+        dataIndex: 'os_oa',
+        key: 'os_oa',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.ot'),
+        dataIndex: 'ot',
+        key: 'ot',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.ovt'),
+        dataIndex: 'ovt',
+        key: 'ovt',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.bt'),
+        dataIndex: 'bt',
+        key: 'bt',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.t'),
+        dataIndex: 't',
+        key: 't',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.tnt'),
+        dataIndex: 'tnt',
+        key: 'tnt',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.al'),
+        dataIndex: 'al',
+        key: 'al',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.rot'),
+        dataIndex: 'rot',
+        key: 'rot',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.tr'),
+        dataIndex: 'tr',
+        key: 'tr',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.st'),
+        dataIndex: 'st',
+        key: 'st',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.ls'),
+        dataIndex: 'ls',
+        key: 'ls',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.q'),
+        dataIndex: 'q',
+        key: 'q',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.wfh'),
+        dataIndex: 'wfh',
+        key: 'wfh',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.pl'),
+        dataIndex: 'pl',
+        key: 'pl',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.l'),
+        dataIndex: 'l',
+        key: 'l',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.sc'),
+        dataIndex: 'sc',
+        key: 'sc',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.sc1'),
+        dataIndex: 'sc1',
+        key: 'sc1',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.co'),
+        dataIndex: 'co',
+        key: 'co',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.pm'),
+        dataIndex: 'pm',
+        key: 'pm',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.na'),
+        dataIndex: 'na',
+        key: 'na',
+        width: 100,
+      },
     ]
 
     
@@ -917,21 +1101,44 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
             leave_replc: values.leave_replc || 0,
             ot1_hours: values.ot1_hours || 0,
             ew_hours: values.ew_hours || 0,
+            w: values.w ||0 , // W
+            on: values.on || 0, // On
+            os_oa: values.os_oa || 0, // OS/OA
+            ot: values.ot || 0, // OT
+            ovt: values.ovt || 0, // OVT
+            bt: values.bt || 0, // BT
+            t: values.t || 0, // T
+            tnt: values.tnt || 0, // TNT
+            al: values.al || 0, // AL
+            rot: values.rot || 0, // ROT
+            tr: values.tr || 0, // TR
+            st: values.st || 0, // ST
+            ls: values.ls || 0, // LS
+            q: values.q || 0, // Q
+            wfh: values.wfh || 0, // WFH
+            pl: values.pl || 0, // PL
+            l: values.l || 0, // L
+            sc: values.sc || 0, // SC
+            sc1: values.sc1 || 0, // SC1
+            co: values.co || 0, // CO
+            pm: values.pm || 0, // PM
+            na: values.na || 0, // NA
+            
           }
 
           // 初始化天数记录
-          if (!editingRecord) {
-            const daysData: Record<string, string> = {}
-            for (let i = 1; i <= 31; i++) {
-              const date = dayjs(`${values.month.format('YYYY-MM')}-${i.toString().padStart(2, '0')}`)
-              if (date.day() === 0 || date.day() === 6) {
-                daysData[i.toString()] = 'O'
-              } else {
-                daysData[i.toString()] = 'W'
-              }
-            }
-            recordData.days = daysData
-          }
+          // if (!editingvalues) {
+          //   const daysData: Record<string, string> = {}
+          //   for (let i = 1; i <= 31; i++) {
+          //     const date = dayjs(`${values.month.format('YYYY-MM')}-${i.toString().padStart(2, '0')}`)
+          //     if (date.day() === 0 || date.day() === 6) {
+          //       daysData[i.toString()] = 'O'
+          //     } else {
+          //       daysData[i.toString()] = 'W'
+          //     }
+          //   }
+          //   recordData.days = daysData
+          // }
 
           if (editingRecord) {
             // 更新记录
@@ -1044,6 +1251,29 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
               permission: record.permission || 0,
               ot1_hours: record.ot1_hours || 0,
               ew_hours: record.ew_hours || 0,
+              w: record.w ||0 , // W
+              on: record.on || 0, // On
+              os_oa: record.os_oa || 0, // OS/OA
+              ot: record.ot || 0, // OT
+              ovt: record.ovt || 0, // OVT
+              bt: record.bt || 0, // BT
+              t: record.t || 0, // T
+              tnt: record.tnt || 0, // TNT
+              al: record.al || 0, // AL
+              rot: record.rot || 0, // ROT
+              tr: record.tr || 0, // TR
+              st: record.st || 0, // ST
+              ls: record.ls || 0, // LS
+              q: record.q || 0, // Q
+              wfh: record.wfh || 0, // WFH
+              pl: record.pl || 0, // PL
+              l: record.l || 0, // L
+              sc: record.sc || 0, // SC
+              sc1: record.sc1 || 0, // SC1
+              co: record.co || 0, // CO
+              pm: record.pm || 0, // PM
+              na: record.na || 0, // NA
+
             }))
              setData(formattedRecords)
           
@@ -1083,24 +1313,31 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
 
   return (
     // <div style={{ padding: '5px', height: 'calc(100vh - 64px)', display: 'flex', flexDirection: 'column' }}>
-    <div style={{ padding: '0px' }}>
+    <div className="flex flex-col p-1">
       {contextHolder}
       {msgContextHolder}
-      <Card >
-        <style>
-          {`
-            .table-row-light {
-              background-color: #ffffff;
-            }
-            .table-row-dark {
-              background-color: #fafafa;
-            }
-            .ant-table-tbody > tr:hover > td {
-              background-color: #f5f5f5 !important;
-            }
-          `}
-        </style>
-        <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 }}>
+      <Card className="border-blue-500/10 shadow-lg shadow-blue-500/5 overflow-hidden" styles={{ body: { padding: '12px' } }}>
+        <style>{`
+          .table-row-light {
+            background-color: #ffffff;
+            transition: background-color 0.15s ease;
+          }
+          .table-row-dark {
+            background-color: #f1f5f9;
+            transition: background-color 0.15s ease;
+          }
+          .ant-table-tbody > tr:hover > td {
+            background-color: #eef2ff !important;
+          }
+          .ant-table-wrapper .ant-table-thead > tr > th {
+            background: linear-gradient(135deg, #f8faff, #eef2ff) !important;
+            color: #1e293b !important;
+            font-weight: 600 !important;
+            border-bottom: 1px solid #c7d2fe !important;
+          }
+          .ant-card { border-radius: 12px !important; }
+        `}</style>
+        <div className="flex items-center justify-between bg-gradient-to-r from-blue-50/60 to-indigo-50/60 rounded-lg px-4 py-3 border border-blue-500/10 mb-1">
           <div className="header-actions">
 
     {/* 筛选表单 */}
@@ -1157,7 +1394,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
           
         </div>
                 {/* 操作栏 */}
-        <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+        <div className="mb-4 flex items-center gap-2">
           <Button
             type="primary"
             danger
@@ -1230,7 +1467,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
             setPageSize(pageSize)
             setCurrentPage(1) // 改变每页条数时回到第一页
           }}
-          style={{ marginTop: 20, textAlign: 'center' }}
+          className="mt-5 text-center"
         />
 
 
@@ -1390,7 +1627,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
           <div>
             <div style={{ marginBottom: 20, textAlign: 'center' }}>
               <Button
-                type="primary"
+                type="primary" className="shadow-sm shadow-blue-500/20"
                 icon={<SyncOutlined />}
                 onClick={handleImportAll}
                 loading={importLoading}

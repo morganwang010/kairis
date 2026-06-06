@@ -20,35 +20,55 @@ func NewEmployeeHandler(employeeService *service.EmployeeService) *EmployeeHandl
 
 func (h *EmployeeHandler) Create(c *gin.Context) {
 	var req struct {
-		EmployeeID      string  `json:"employee_id"`
-		ProjectID       string  `json:"project_id"`
-		EmployeeName    string  `json:"employee_name"`
-		Department      string  `json:"department"`
-		Position        string  `json:"position"`
-		Salary          float64 `json:"salary"`
-		TaxStatus       float64 `json:"tax_status"`
-		IdCard          string  `json:"id_card"`
-		Npwp            string  `json:"npwp"`
-		HierarchyID     string  `json:"hierarchy_id"`
-		HierarchyName   string  `json:"hierarchy_name"`
-		JoinDate        string  `json:"join_date"`
-		ResignDate      string  `json:"resign_date"`
-		Email           string  `json:"email"`
-		Phone           string  `json:"phone"`
-		BasicSalary     float64 `json:"basic_salary"`
-		HousingAlw      float64 `json:"housing_alw"`
-		PositionAlw     float64 `json:"position_alw"`
-		FieldAlw        float64 `json:"field_alw"`
-		FixAlw          float64 `json:"fix_alw"`
-		MealAlwDay      float64 `json:"meal_alw_day"`
-		TranspAlwDay    float64 `json:"transp_alw_day"`
-		PulsaAlwDay     float64 `json:"pulsa_alw_day"`
-		AttAlwDay       float64 `json:"att_alw_day"`
-		TaxType         string  `json:"tax_type"`
-		LocationName    string  `json:"location_name"`
-		PulsaAlwMonth   float64 `json:"pulsa_alw_month"`
-		HousingAlwTetap float64 `json:"housing_alw_tetap"`
-		DeleteFlag      string  `json:"delete_flag"`
+		EmployeeID               string  `json:"employee_id"`
+		ProjectID                string  `json:"project_id"`
+		EmployeeName             string  `json:"employee_name"`
+		Department               string  `json:"department"`
+		Position                 string  `json:"position"`
+		Salary                   float64 `json:"salary"`
+		TaxStatus                float64 `json:"tax_status"`
+		IdCard                   string  `json:"id_card"`
+		Npwp                     string  `json:"npwp"`
+		HierarchyID              string  `json:"hierarchy_id"`
+		HierarchyName            string  `json:"hierarchy_name"`
+		JoinDate                 string  `json:"join_date"`
+		ResignDate               string  `json:"resign_date"`
+		Email                    string  `json:"email"`
+		Phone                    string  `json:"phone"`
+		BasicSalary              float64 `json:"basic_salary"`
+		HousingAlw               float64 `json:"housing_alw"`
+		PositionAlw              float64 `json:"position_alw"`
+		FieldAlw                 float64 `json:"field_alw"`
+		FixAlw                   float64 `json:"fix_alw"`
+		MealAlwDay               float64 `json:"meal_alw_day"`
+		TranspAlwDay             float64 `json:"transp_alw_day"`
+		PulsaAlwDay              float64 `json:"pulsa_alw_day"`
+		AttAlwDay                float64 `json:"att_alw_day"`
+		TaxType                  string  `json:"tax_type"`
+		LocationName             string  `json:"location_name"`
+		PulsaAlwMonth            float64 `json:"pulsa_alw_month"`
+		HousingAlwTetap          float64 `json:"housing_alw_tetap"`
+		DeleteFlag               string  `json:"delete_flag"`
+		BPJSHealthTambahanStatus string  `json:"bpjs_health_tambahan_status"` // INTEGER default 0
+		DateOfBirth              string  `json:"date_of_birth"`
+		PostFunctionAlwMonth     float64 `json:"post_function_alw_month"`
+		PhoneAlwMonth            float64 `json:"phone_alw_month"`
+		InternetAlwMonth         float64 `json:"internet_alw_month"`
+		IncentiveMonth           float64 `json:"incentive_month"`
+		OperationalAlwMonth      float64 `json:"operational_alw_month"`
+		HousingAlwMonth          float64 `json:"housing_alw_month"`
+		SeniorityAlwMonth        float64 `json:"seniority_alw_month"`
+		TransportAlwMonth        float64 `json:"transport_alw_month"`
+		FieldAlwMonth            float64 `json:"field_alw_month"`
+		AccommodationAlwMonth    float64 `json:"accommodation_alw_month"`
+		WorkDay                  float64 `json:"work_day"`
+		OnDay                    float64 `json:"on_day"`
+		BTDay                    float64 `json:"bt_day"`
+		OADay                    float64 `json:"oa_day"`
+		TravellDay               float64 `json:"travell_day"`
+		TnTDay                   float64 `json:"tnt_day"`
+		STDay                    float64 `json:"st_day"`
+		TRDay                    float64 `json:"tr_day"`
 	}
 
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -75,26 +95,35 @@ func (h *EmployeeHandler) Create(c *gin.Context) {
 		Department:   req.Department,
 		Position:     req.Position,
 		// Salary:          req.Salary,
-		TaxStatus:     req.TaxStatus,
-		IdCard:        req.IdCard,
-		Npwp:          req.Npwp,
-		HierarchyID:   req.HierarchyID,
-		HierarchyName: req.HierarchyName,
-		Email:         req.Email,
-		BasicSalary:   req.BasicSalary,
-		HousingAlw:    req.HousingAlw,
-		PositionAlw:   req.PositionAlw,
-		FieldAlw:      req.FieldAlw,
-		// FixAlw:          req.FixAlw,
-		MealAlwDay:      req.MealAlwDay,
-		TranspAlwDay:    req.TranspAlwDay,
-		PulsaAlwDay:     req.PulsaAlwDay,
-		AttAlwDay:       req.AttAlwDay,
-		TaxType:         req.TaxType,
-		LocationName:    req.LocationName,
-		PulsaAlwMonth:   req.PulsaAlwMonth,
-		HousingAlwTetap: req.HousingAlwTetap,
-		DeleteFlag:      deleteFlag,
+		TaxStatus:                req.TaxStatus,
+		IdCard:                   req.IdCard,
+		Npwp:                     req.Npwp,
+		HierarchyID:              req.HierarchyID,
+		HierarchyName:            req.HierarchyName,
+		Email:                    req.Email,
+		BasicSalary:              req.BasicSalary,
+		TaxType:                  req.TaxType,
+		DeleteFlag:               deleteFlag,
+		BPJSHealthTambahanStatus: req.BPJSHealthTambahanStatus,
+		DateOfBirth:              req.DateOfBirth,
+		PostFunctionAlwMonth:     req.PostFunctionAlwMonth,
+		PhoneAlwMonth:            req.PhoneAlwMonth,
+		InternetAlwMonth:         req.InternetAlwMonth,
+		IncentiveMonth:           req.IncentiveMonth,
+		OperationalAlwMonth:      req.OperationalAlwMonth,
+		HousingAlwMonth:          req.HousingAlwMonth,
+		SeniorityAlwMonth:        req.SeniorityAlwMonth,
+		TransportAlwMonth:        req.TransportAlwMonth,
+		FieldAlwMonth:            req.FieldAlwMonth,
+		AccommodationAlwMonth:    req.AccommodationAlwMonth,
+		WorkDay:                  req.WorkDay,
+		OnDay:                    req.OnDay,
+		BTDay:                    req.BTDay,
+		OADay:                    req.OADay,
+		TravellDay:               req.TravellDay,
+		TnTDay:                   req.TnTDay,
+		STDay:                    req.STDay,
+		TRDay:                    req.TRDay,
 	}
 
 	if err := h.employeeService.Create(employee); err != nil {
@@ -232,35 +261,55 @@ func (h *EmployeeHandler) Update(c *gin.Context) {
 		return
 	}
 	var req struct {
-		EmployeeID      string  `json:"employee_id"`
-		ProjectID       string  `json:"project_id"`
-		EmployeeName    string  `json:"employee_name"`
-		Department      string  `json:"department"`
-		Position        string  `json:"position"`
-		Salary          float64 `json:"salary"`
-		TaxStatus       float64 `json:"tax_status"`
-		IdCard          string  `json:"id_card"`
-		Npwp            string  `json:"npwp"`
-		HierarchyID     string  `json:"hierarchy_id"`
-		HierarchyName   string  `json:"hierarchy_name"`
-		JoinDate        string  `json:"join_date"`
-		ResignDate      string  `json:"resign_date"`
-		Email           string  `json:"email"`
-		Phone           string  `json:"phone"`
-		BasicSalary     float64 `json:"basic_salary"`
-		HousingAlw      float64 `json:"housing_alw"`
-		PositionAlw     float64 `json:"position_alw"`
-		FieldAlw        float64 `json:"field_alw"`
-		FixAlw          float64 `json:"fix_alw"`
-		MealAlwDay      float64 `json:"meal_alw_day"`
-		TranspAlwDay    float64 `json:"transp_alw_day"`
-		PulsaAlwDay     float64 `json:"pulsa_alw_day"`
-		AttAlwDay       float64 `json:"att_alw_day"`
-		TaxType         string  `json:"tax_type"`
-		LocationName    string  `json:"location_name"`
-		PulsaAlwMonth   float64 `json:"pulsa_alw_month"`
-		HousingAlwTetap float64 `json:"housing_alw_tetap"`
-		DeleteFlag      string  `json:"delete_flag"`
+		EmployeeID               string  `json:"employee_id"`
+		ProjectID                string  `json:"project_id"`
+		EmployeeName             string  `json:"employee_name"`
+		Department               string  `json:"department"`
+		Position                 string  `json:"position"`
+		Salary                   float64 `json:"salary"`
+		TaxStatus                float64 `json:"tax_status"`
+		IdCard                   string  `json:"id_card"`
+		Npwp                     string  `json:"npwp"`
+		HierarchyID              string  `json:"hierarchy_id"`
+		HierarchyName            string  `json:"hierarchy_name"`
+		JoinDate                 string  `json:"join_date"`
+		ResignDate               string  `json:"resign_date"`
+		Email                    string  `json:"email"`
+		Phone                    string  `json:"phone"`
+		BasicSalary              float64 `json:"basic_salary"`
+		HousingAlw               float64 `json:"housing_alw"`
+		PositionAlw              float64 `json:"position_alw"`
+		FieldAlw                 float64 `json:"field_alw"`
+		FixAlw                   float64 `json:"fix_alw"`
+		MealAlwDay               float64 `json:"meal_alw_day"`
+		TranspAlwDay             float64 `json:"transp_alw_day"`
+		PulsaAlwDay              float64 `json:"pulsa_alw_day"`
+		AttAlwDay                float64 `json:"att_alw_day"`
+		TaxType                  string  `json:"tax_type"`
+		LocationName             string  `json:"location_name"`
+		PulsaAlwMonth            float64 `json:"pulsa_alw_month"`
+		HousingAlwTetap          float64 `json:"housing_alw_tetap"`
+		DeleteFlag               string  `json:"delete_flag"`
+		BPJSHealthTambahanStatus string  `json:"bpjs_health_tambahan_status"` // INTEGER default 0
+		DateOfBirth              string  `json:"date_of_birth"`
+		PostFunctionAlwMonth     float64 `json:"post_function_alw_month"`
+		PhoneAlwMonth            float64 `json:"phone_alw_month"`
+		InternetAlwMonth         float64 `json:"internet_alw_month"`
+		IncentiveMonth           float64 `json:"incentive_month"`
+		OperationalAlwMonth      float64 `json:"operational_alw_month"`
+		HousingAlwMonth          float64 `json:"housing_alw_month"`
+		SeniorityAlwMonth        float64 `json:"seniority_alw_month"`
+		TransportAlwMonth        float64 `json:"transport_alw_month"`
+		FieldAlwMonth            float64 `json:"field_alw_month"`
+		AccommodationAlwMonth    float64 `json:"accommodation_alw_month"`
+		WorkDay                  float64 `json:"work_day"`
+		OnDay                    float64 `json:"on_day"`
+		BTDay                    float64 `json:"bt_day"`
+		OADay                    float64 `json:"oa_day"`
+		TravellDay               float64 `json:"travell_day"`
+		TnTDay                   float64 `json:"tnt_day"`
+		STDay                    float64 `json:"st_day"`
+		TRDay                    float64 `json:"tr_day"`
 	}
 
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -281,33 +330,42 @@ func (h *EmployeeHandler) Update(c *gin.Context) {
 	}
 
 	employee := &model.Employee{
-		ID:            uint(id),
-		EmployeeID:    req.EmployeeID,
-		ProjectID:     projectID,
-		EmployeeName:  req.EmployeeName,
-		Department:    req.Department,
-		Position:      req.Position,
-		Salary:        req.Salary,
-		TaxStatus:     req.TaxStatus,
-		IdCard:        req.IdCard,
-		Npwp:          req.Npwp,
-		HierarchyID:   req.HierarchyID,
-		HierarchyName: req.HierarchyName,
-		Email:         req.Email,
-		BasicSalary:   req.BasicSalary,
-		HousingAlw:    req.HousingAlw,
-		PositionAlw:   req.PositionAlw,
-		FieldAlw:      req.FieldAlw,
-		// FixAlw:          req.FixAlw,
-		MealAlwDay:      req.MealAlwDay,
-		TranspAlwDay:    req.TranspAlwDay,
-		PulsaAlwDay:     req.PulsaAlwDay,
-		AttAlwDay:       req.AttAlwDay,
-		TaxType:         req.TaxType,
-		LocationName:    req.LocationName,
-		PulsaAlwMonth:   req.PulsaAlwMonth,
-		HousingAlwTetap: req.HousingAlwTetap,
-		DeleteFlag:      deleteFlag,
+		ID:                       uint(id),
+		EmployeeID:               req.EmployeeID,
+		ProjectID:                projectID,
+		EmployeeName:             req.EmployeeName,
+		Department:               req.Department,
+		Position:                 req.Position,
+		Salary:                   req.Salary,
+		TaxStatus:                req.TaxStatus,
+		IdCard:                   req.IdCard,
+		Npwp:                     req.Npwp,
+		HierarchyID:              req.HierarchyID,
+		HierarchyName:            req.HierarchyName,
+		Email:                    req.Email,
+		BasicSalary:              req.BasicSalary,
+		TaxType:                  req.TaxType,
+		DeleteFlag:               deleteFlag,
+		BPJSHealthTambahanStatus: req.BPJSHealthTambahanStatus,
+		DateOfBirth:              req.DateOfBirth,
+		PostFunctionAlwMonth:     req.PostFunctionAlwMonth,
+		PhoneAlwMonth:            req.PhoneAlwMonth,
+		InternetAlwMonth:         req.InternetAlwMonth,
+		IncentiveMonth:           req.IncentiveMonth,
+		OperationalAlwMonth:      req.OperationalAlwMonth,
+		HousingAlwMonth:          req.HousingAlwMonth,
+		SeniorityAlwMonth:        req.SeniorityAlwMonth,
+		TransportAlwMonth:        req.TransportAlwMonth,
+		FieldAlwMonth:            req.FieldAlwMonth,
+		AccommodationAlwMonth:    req.AccommodationAlwMonth,
+		WorkDay:                  req.WorkDay,
+		OnDay:                    req.OnDay,
+		BTDay:                    req.BTDay,
+		OADay:                    req.OADay,
+		TravellDay:               req.TravellDay,
+		TnTDay:                   req.TnTDay,
+		STDay:                    req.STDay,
+		TRDay:                    req.TRDay,
 	}
 
 	if err := h.employeeService.Update(employee); err != nil {
@@ -336,38 +394,47 @@ func (h *EmployeeHandler) Delete(c *gin.Context) {
 func (h *EmployeeHandler) Import(c *gin.Context) {
 	var req struct {
 		Records []struct {
-			EmployeeID    string `json:"employee_id"`
-			ProjectID     string `json:"project_id"`
-			Name          string `json:"employee_name"`
-			Department    string `json:"department"`
-			Position      string `json:"position"`
-			Salary        string `json:"salary"`
-			IdCard        string `json:"idcard_number"`
-			Npwp          string `json:"npwp"`
-			HierarchyID   string `json:"hierarchy_id"`
-			HierarchyName string `json:"hierarchy_name"`
-			JoinDate      string `json:"join"`
-			ResignDate    string `json:"resign"`
-			Email         string `json:"email"`
-			BasicSalary   string `json:"basic_salary"`
-			HousingAlw    string `json:"housing_alw"`
-			PositionAlw   string `json:"position_alw"`
-			FieldAlw      string `json:"field_alw"`
-			// FixAlw          string `json:"fix_alw"`
-			MealAlwDay     string `json:"meal_alw/day"`
-			TranspAlwDay   string `json:"transp_alw/day"`
-			MealAlwMonth   string `json:"meal_alw/month"`
-			TranspAlwMonth string `json:"transp_alw/month"`
-
-			PulsaAlwDay     string `json:"pulsa_alw/day"`
-			AttAlwDay       string `json:"att_alw/day"`
-			TaxType         string `json:"tax_status"`
-			LocationName    string `json:"location_name"`
-			PulsaAlwMonth   string `json:"pulsa_alw/month"`
-			HousingAlwTetap string `json:"housing_alw/TJ_Tidak_Tetap"`
-			DeleteFlag      string `json:"delete_flag"`
-			IdStatus        string `json:"id_status"`
-			OtStatus        string `json:"ot_status"`
+			EmployeeID               string `json:"employee_id"`
+			ProjectID                string `json:"project_id"`
+			Name                     string `json:"employee_name"`
+			Department               string `json:"department"`
+			Position                 string `json:"position"`
+			Salary                   string `json:"salary"`
+			IdCard                   string `json:"idcard_number"`
+			Npwp                     string `json:"npwp"`
+			HierarchyID              string `json:"hierarchy_id"`
+			HierarchyName            string `json:"hierarchy_name"`
+			JoinDate                 string `json:"join_date"`
+			ResignDate               string `json:"resign"`
+			Email                    string `json:"email"`
+			BasicSalary              string `json:"basic_salary/month"`
+			MealAlwMonth             string `json:"meal_alw/month"`
+			TranspAlwMonth           string `json:"transp_alw/month"`
+			TaxType                  string `json:"tax_status"`
+			LocationName             string `json:"location_name"`
+			DeleteFlag               string `json:"delete_flag"`
+			IdStatus                 string `json:"id_status"`
+			OtStatus                 string `json:"ot_status"`
+			BPJSHealthTambahanStatus string `json:"bpjs_health_tambahan_status"` // INTEGER default 0
+			DateOfBirth              string `json:"date_of_birth"`
+			PostFunctionAlwMonth     string `json:"post_function_alw/month"`
+			PhoneAlwMonth            string `json:"phone_alw/month"`
+			InternetAlwMonth         string `json:"internet_alw/month"`
+			IncentiveMonth           string `json:"incentive/month"`
+			OperationalAlwMonth      string `json:"operational_alw/month"`
+			HousingAlwMonth          string `json:"housing_alw/month"`
+			SeniorityAlwMonth        string `json:"seniority_alw/month"`
+			TransportAlwMonth        string `json:"transport_alw/month"`
+			FieldAlwMonth            string `json:"field_alw/month"`
+			AccommodationAlwMonth    string `json:"accommodation_alw/month"`
+			WorkDay                  string `json:"work/day"`
+			OnDay                    string `json:"on/day"`
+			BTDay                    string `json:"bt/day"`
+			OADay                    string `json:"oa/day"`
+			TravellDay               string `json:"travell/day"`
+			TnTDay                   string `json:"tnt/day"`
+			STDay                    string `json:"st/day"`
+			TRDay                    string `json:"tr/day"`
 		} `json:"records"`
 	}
 	// slog.Info("Before binding", "req", &req)
@@ -400,115 +467,132 @@ func (h *EmployeeHandler) Import(c *gin.Context) {
 				return
 			}
 		}
-		// 转换Salary为float64类型
-		// salary, ok := StringToFloat64(c, item.Salary, "salary")
-		// if !ok {
-		// 	return
-		// }
-		basicSalary, ok := StringToFloat64(c, item.BasicSalary, "basic_salary")
+		basicSalary, ok := StringToFloat64(c, item.BasicSalary, "basic_salary/month")
 		if !ok {
 			return
 		}
 		// 转换HousingAlw为float64类型
-		housingAlw, ok := StringToFloat64(c, item.HousingAlw, "housing_alw")
+		housingAlw, ok := StringToFloat64(c, item.HousingAlwMonth, "housing_alw/month")
 		if !ok {
 			return
 		}
 		// 转换PositionAlw为float64类型
-		positionAlw, ok := StringToFloat64(c, item.PositionAlw, "position_alw")
-		if !ok {
-			return
-		}
 		// 转换FieldAlw为float64类型
-		fieldAlw, ok := StringToFloat64(c, item.FieldAlw, "field_alw")
+		postFunctionAlwMonth, ok := StringToFloat64(c, item.PostFunctionAlwMonth, "post_function_alw/month")
 		if !ok {
 			return
 		}
-		// 转换FixAlw为float64类型
-		// fixAlw, ok := StringToFloat64(c, item.FixAlw, "fix_alw")
-		// if !ok {
-		// 	return
-		// }
-		// 转换MealAlwDay为float64类型
-		mealAlwDay, ok := StringToFloat64(c, item.MealAlwDay, "meal_alw_day")
+		phoneAlwMonth, ok := StringToFloat64(c, item.PhoneAlwMonth, "phone_alw/month")
 		if !ok {
 			return
 		}
-		// 转换TranspAlwDay为float64类型
-		transpAlwDay, ok := StringToFloat64(c, item.TranspAlwDay, "transp_alw_day")
+		internetAlwMonth, ok := StringToFloat64(c, item.InternetAlwMonth, "internet_alw/month")
 		if !ok {
 			return
 		}
-		// // 转换MealAlwMonth为float64类型
-		// slog.Info("meal_alw_month", "meal_alw_month", item.MealAlwMonth)
+		incentiveMonth, ok := StringToFloat64(c, item.IncentiveMonth, "incentive/month")
+		if !ok {
+			return
+		}
+		operationalAlwMonth, ok := StringToFloat64(c, item.OperationalAlwMonth, "operational_alw/month")
+		if !ok {
+			return
+		}
+		seniorityAlwMonth, ok := StringToFloat64(c, item.SeniorityAlwMonth, "seniority_alw/month")
+		if !ok {
+			return
+		}
+		transportAlwMonth, ok := StringToFloat64(c, item.TransportAlwMonth, "transport_alw/month")
+		if !ok {
+			return
+		}
+		fieldAlwMonth, ok := StringToFloat64(c, item.FieldAlwMonth, "field_alw/month")
+		if !ok {
+			return
+		}
+		accommodationAlwMonth, ok := StringToFloat64(c, item.AccommodationAlwMonth, "accommodation_alw/month")
+		if !ok {
+			return
+		}
+		slog.Info("accommodation_alw_month", "accommodation_alw_month", accommodationAlwMonth)
+		workDay, ok := StringToFloat64(c, item.WorkDay, "work/day")
+		if !ok {
+			return
+		}
+		onDay, ok := StringToFloat64(c, item.OnDay, "on/day")
+		if !ok {
+			return
+		}
+		btDay, ok := StringToFloat64(c, item.BTDay, "bt/day")
+		if !ok {
+			return
+		}
+		oADay, ok := StringToFloat64(c, item.OADay, "oa/day")
+		if !ok {
+			return
+		}
+		travellDay, ok := StringToFloat64(c, item.TravellDay, "travell/day")
+		if !ok {
+			return
+		}
+		tnTDay, ok := StringToFloat64(c, item.TnTDay, "tnt/day")
+		if !ok {
+			return
+		}
+		stDay, ok := StringToFloat64(c, item.STDay, "st/day")
+		if !ok {
+			return
+		}
+		trDay, ok := StringToFloat64(c, item.TRDay, "tr/day")
+		if !ok {
+			return
+		}
 
-		// mealAlwMonth, ok := StringToFloat64(c, item.MealAlwMonth, "meal_alw_month")
-		// if !ok {
-		// 	return
-		// }
-		mealAlwMonth := 0.0
-		transpAlwMonth := 0.0
-		// 转换TranspAlwMonth为float64类型
-		// transpAlwMonth, ok := StringToFloat64(c, item.TranspAlwMonth, "transp_alw_month")
-		// if !ok {
-		// 	return
-		// }
-
+		housingAlwMonth, ok := StringToFloat64(c, item.HousingAlwMonth, "housing_alw/month")
+		if !ok {
+			return
+		}
+		slog.Info("housing_alw_month", "housing_alw_month", housingAlwMonth)
 		// 转换PulsaAlwDay为float64类型
-		pulsaAlwDay, ok := StringToFloat64(c, item.PulsaAlwDay, "pulsa_alw/day")
-		if !ok {
-			return
-		}
-		// 转换AttAlwDay为float64类型
-		attAlwDay, ok := StringToFloat64(c, item.AttAlwDay, "att_alw_day")
-		if !ok {
-			return
-		}
-		// 转换PulsaAlwMonth为float64类型
-		pulsaAlwMonth, ok := StringToFloat64(c, item.PulsaAlwMonth, "pulsa_alw/month")
-		if !ok {
-			return
-		}
-		// 转换HousingAlwTetap为float64类型
-		housingAlwTetap, ok := StringToFloat64(c, item.HousingAlwTetap, "housing_alw/TJ_Tidak_Tetap")
-		if !ok {
-			return
-		}
 
 		importReq.Employees[i] = service.ImportEmployeeItem{
-			EmployeeID:   item.EmployeeID,
-			ProjectID:    projectID,
-			EmployeeName: item.Name,
-			Department:   item.Department,
-			Position:     item.Position,
-			// HireDate:     item.HireDate,
-			// LeaveDate:    item.LeaveDate,
-			// Salary:          salary,
-			IdCard:        item.IdCard,
-			Npwp:          item.Npwp,
-			HierarchyID:   item.HierarchyID,
-			HierarchyName: item.HierarchyName,
-			JoinDate:      item.JoinDate,
-			ResignDate:    item.ResignDate,
-			Email:         item.Email,
-			BasicSalary:   basicSalary,
-			HousingAlw:    housingAlw,
-			PositionAlw:   positionAlw,
-			FieldAlw:      fieldAlw,
-			// FixAlw:          fixAlw,
-			MealAlwDay:      mealAlwDay,
-			TranspAlwDay:    transpAlwDay,
-			MealAlwMonth:    mealAlwMonth,
-			TranspAlwMonth:  transpAlwMonth,
-			PulsaAlwDay:     pulsaAlwDay,
-			AttAlwDay:       attAlwDay,
-			TaxType:         item.TaxType,
-			LocationName:    item.LocationName,
-			PulsaAlwMonth:   pulsaAlwMonth,
-			HousingAlwTetap: housingAlwTetap,
-			DeleteFlag:      deleteFlag,
-			IdStatus:        item.IdStatus,
-			OtStatus:        item.OtStatus,
+			EmployeeID:               item.EmployeeID,
+			ProjectID:                projectID,
+			EmployeeName:             item.Name,
+			Department:               item.Department,
+			Position:                 item.Position,
+			IdCard:                   item.IdCard,
+			Npwp:                     item.Npwp,
+			HierarchyID:              item.HierarchyID,
+			HierarchyName:            item.HierarchyName,
+			JoinDate:                 item.JoinDate,
+			ResignDate:               item.ResignDate,
+			Email:                    item.Email,
+			BasicSalary:              basicSalary,
+			HousingAlw:               housingAlw,
+			TaxType:                  item.TaxType,
+			LocationName:             item.LocationName,
+			DeleteFlag:               deleteFlag,
+			BPJSHealthTambahanStatus: item.BPJSHealthTambahanStatus,
+			DateOfBirth:              item.DateOfBirth,
+			PostFunctionAlwMonth:     postFunctionAlwMonth,
+			PhoneAlwMonth:            phoneAlwMonth,
+			InternetAlwMonth:         internetAlwMonth,
+			IncentiveMonth:           incentiveMonth,
+			OperationalAlwMonth:      operationalAlwMonth,
+			HousingAlwMonth:          housingAlwMonth,
+			SeniorityAlwMonth:        seniorityAlwMonth,
+			TransportAlwMonth:        transportAlwMonth,
+			FieldAlwMonth:            fieldAlwMonth,
+			AccommodationAlwMonth:    accommodationAlwMonth,
+			WorkDay:                  workDay,
+			OnDay:                    onDay,
+			BTDay:                    btDay,
+			OADay:                    oADay,
+			TravellDay:               travellDay,
+			TnTDay:                   tnTDay,
+			STDay:                    stDay,
+			TRDay:                    trDay,
 		}
 	}
 

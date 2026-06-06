@@ -98,37 +98,17 @@ type Incidents struct {
 	Month      string `gorm:"column:month;not null" json:"month"`             // TEXT NOT NULL
 
 	// 薪资相关字段（默认值 0.00）
-	LeaveComp        float64 `gorm:"column:leave_comp;default:0.00" json:"leave_comp"`
-	MedAlw           float64 `gorm:"column:med_alw;default:0.00" json:"med_alw"`
-	Others           float64 `gorm:"column:others;default:0.00" json:"others"`
-	ReligiousAlw     float64 `gorm:"column:religious_alw;default:0.00" json:"religious_alw"`
-	RapelBasicSalary float64 `gorm:"column:rapel_basic_salary;default:0.00" json:"rapel_basic_salary"`
-	RapelJmstkAlw    float64 `gorm:"column:rapel_jmstk_alw;default:0.00" json:"rapel_jmstk_alw"`
-	IncentiveAlw     float64 `gorm:"column:incentive_alw;default:0.00" json:"incentive_alw"`
-	Acting           float64 `gorm:"column:acting;default:0.00" json:"acting"`
-	PerformanceAlw   float64 `gorm:"column:performance_alw;default:0.00" json:"performance_alw"`
-	TripAlw          float64 `gorm:"column:trip_alw;default:0.00" json:"trip_alw"`
-	Ot2Wages         float64 `gorm:"column:ot2_wages;default:0.00" json:"ot2_wages"`
-	Ot3Wages         float64 `gorm:"column:ot3_wages;default:0.00" json:"ot3_wages"`
-	CompPhk          float64 `gorm:"column:comp_phk;default:0.00" json:"comp_phk"`
-	TaxAlwPhk        float64 `gorm:"column:tax_alw_phk;default:0.00" json:"tax_alw_phk"`
-	AbsentDed        float64 `gorm:"column:absent_ded;default:0.00" json:"absent_ded"`
-	AbsentDed2       float64 `gorm:"column:absent_ded2;default:0.00" json:"absent_ded2"`
-	CorrectAdd       float64 `gorm:"column:correct_add;default:0.00" json:"correct_add"`
-	CorrectSub       float64 `gorm:"column:correct_sub;default:0.00" json:"correct_sub"`
-	IncentiveDed     float64 `gorm:"column:incentive_ded;default:0.00" json:"incentive_ded"`
-	LoanDed          float64 `gorm:"column:loan_ded;default:0.00" json:"loan_ded"`
-	TaxDedPhk        float64 `gorm:"column:tax_ded_phk;default:0.00" json:"tax_ded_phk"`
-	MandahAlw        float64 `gorm:"column:mandah_alw;default:0.00" json:"mandah_alw"`
-	MealAlwAdd       float64 `gorm:"column:meal_alw_add;default:0.00" json:"meal_alw_add"`
-	TranspAlwAdd     float64 `gorm:"column:transp_alw_add;default:0.00" json:"transp_alw_add"`
-	EwDrv            float64 `gorm:"column:ew_drv;default:0.00" json:"ew_drv"`
-	OtDrv            float64 `gorm:"column:ot_drv;default:0.00" json:"ot_drv"`
-	OtAdd            float64 `gorm:"column:ot_add;default:0.00" json:"ot_add"`
-	EwAdd            float64 `gorm:"column:ew_add;default:0.00" json:"ew_add"`
-	Jp3              float64 `gorm:"column:jp_3;default:0.00" json:"jp_3"`
-	Bpjs5            float64 `gorm:"column:bpjs_5;default:0.00" json:"bpjs_5"`
 
+	Thr             float64 `gorm:"column:thr;default:0.00" json:"thr"`
+	Bonus           float64 `gorm:"column:bonus;default:0.00" json:"bonus"`
+	Compensation    float64 `gorm:"column:compensation;default:0.00" json:"compensation"`
+	ActingAllowance float64 `gorm:"column:acting_alw;default:0.00" json:"acting_alw"`
+	SalaryProrate   float64 `gorm:"column:salary_prorate;default:0.00" json:"salary_prorate"`
+	Rapel           float64 `gorm:"column:rapel;default:0.00" json:"rapel"`
+	TaxAlw          float64 `gorm:"column:tax_alw;default:0.00" json:"tax_alw"`
+	TaxDed          float64 `gorm:"column:tax_ded;default:0.00" json:"tax_ded"`
+	OtherAdd        float64 `gorm:"column:other_add;default:0.00" json:"other_add"`
+	OtherDed        float64 `gorm:"column:other_ded;default:0.00" json:"other_ded"`
 	// 时间字段
 	CreateTime time.Time `gorm:"column:create_time;default:CURRENT_TIMESTAMP" json:"create_time"`
 	UpdateTime time.Time `gorm:"column:update_time;default:CURRENT_TIMESTAMP;autoUpdateTime" json:"update_time"`
@@ -137,125 +117,90 @@ type Incidents struct {
 type Attendances struct {
 	ID         uint    `gorm:"column:id;primaryKey;autoIncrement" json:"id"`
 	EmployeeID string  `gorm:"column:employee_id;not null" json:"employee_id"`
-	Day1       string  `gorm:"column:day1;default:'0'" json:"day1"`
-	Day2       string  `gorm:"column:day2;default:'0'" json:"day2"`
-	Day3       string  `gorm:"column:day3;default:'0'" json:"day3"`
-	Day4       string  `gorm:"column:day4;default:'0'" json:"day4"`
-	Day5       string  `gorm:"column:day5;default:'0'" json:"day5"`
-	Day6       string  `gorm:"column:day6;default:'0'" json:"day6"`
-	Day7       string  `gorm:"column:day7;default:'0'" json:"day7"`
-	Day8       string  `gorm:"column:day8;default:'0'" json:"day8"`
-	Day9       string  `gorm:"column:day9;default:'0'" json:"day9"`
-	Day10      string  `gorm:"column:day10;default:'0'" json:"day10"`
-	Day11      string  `gorm:"column:day11;default:'0'" json:"day11"`
-	Day12      string  `gorm:"column:day12;default:'0'" json:"day12"`
-	Day13      string  `gorm:"column:day13;default:'0'" json:"day13"`
-	Day14      string  `gorm:"column:day14;default:'0'" json:"day14"`
-	Day15      string  `gorm:"column:day15;default:'0'" json:"day15"`
-	Day16      string  `gorm:"column:day16;default:'0'" json:"day16"`
-	Day17      string  `gorm:"column:day17;default:'0'" json:"day17"`
-	Day18      string  `gorm:"column:day18;default:'0'" json:"day18"`
-	Day19      string  `gorm:"column:day19;default:'0'" json:"day19"`
-	Day20      string  `gorm:"column:day20;default:'0'" json:"day20"`
-	Day21      string  `gorm:"column:day21;default:'0'" json:"day21"`
-	Day22      string  `gorm:"column:day22;default:'0'" json:"day22"`
-	Day23      string  `gorm:"column:day23;default:'0'" json:"day23"`
-	Day24      string  `gorm:"column:day24;default:'0'" json:"day24"`
-	Day25      string  `gorm:"column:day25;default:'0'" json:"day25"`
-	Day26      string  `gorm:"column:day26;default:'0'" json:"day26"`
-	Day27      string  `gorm:"column:day27;default:'0'" json:"day27"`
-	Day28      string  `gorm:"column:day28;default:'0'" json:"day28"`
-	Day29      string  `gorm:"column:day29;default:'0'" json:"day29"`
-	Day30      string  `gorm:"column:day30;default:'0'" json:"day30"`
-	Day31      string  `gorm:"column:day31;default:'0'" json:"day31"`
 	Work       int     `gorm:"column:work;default:0" json:"work"`
 	ProjectID  int     `gorm:"column:project_id;default:NULL" json:"project_id"`
 	Permission int     `gorm:"column:permission;default:0" json:"permission"`
-	Off        int     `gorm:"column:off;default:0" json:"off"`
-	Absent     int     `gorm:"column:absent;default:0" json:"absent"`
-	Sick       int     `gorm:"column:sick;default:0" json:"sick"`
-	Standby    int     `gorm:"column:standby;default:0" json:"standby"`
-	Ew         float64 `gorm:"column:ew;default:0" json:"ew"`
+	Off        float64 `gorm:"column:off;default:0" json:"off"`
 	Month      string  `gorm:"column:month;not null" json:"month"`
-	Ot1        float64 `gorm:"column:ot1;default:0" json:"ot1"`
-	Ew1        float64 `gorm:"column:ew1;default:0" json:"ew1"`
-	Ew2        float64 `gorm:"column:ew2;default:0" json:"ew2"`
-	Ew3        float64 `gorm:"column:ew3;default:0" json:"ew3"`
-	Ot2        float64 `gorm:"column:ot2;default:0" json:"ot2"`
-	Ot3        float64 `gorm:"column:ot3;default:0" json:"ot3"`
-	LeaveReplc float64 `gorm:"column:leave_replc;default:0" json:"leave_replc"`
-	Unpresent  float64 `gorm:"column:unpresent;default:0" json:"unpresent"`
-	TotalDays  int     `gorm:"column:total_days;default:0" json:"total_days"`
-	Ot1Hours   float64 `gorm:"column:ot1_hours;default:0" json:"ot1_hours"`
-	EwHours    float64 `gorm:"column:ew_hours;default:0" json:"ew_hours"`
+
+	W    float64 `gorm:"column:w;default:0" json:"w"`
+	Ons  float64 `gorm:"column:ons;default:0" json:"ons"`
+	OsOa float64 `gorm:"column:os_oa;default:0" json:"os_oa"`
+	Ot   float64 `gorm:"column:ot;default:0" json:"ot"`
+	Ovt  float64 `gorm:"column:ovt;default:0" json:"ovt"`
+	Bt   float64 `gorm:"column:bt;default:0" json:"bt"`
+	T    float64 `gorm:"column:t;default:0" json:"t"`
+	Tnt  float64 `gorm:"column:tnt;default:0" json:"tnt"`
+	Al   float64 `gorm:"column:al;default:0" json:"al"`
+	Rot  float64 `gorm:"column:rot;default:0" json:"rot"`
+	Tr   float64 `gorm:"column:tr;default:0" json:"tr"`
+	St   float64 `gorm:"column:st;default:0" json:"st"`
+	Ls   float64 `gorm:"column:ls;default:0" json:"ls"`
+	Q    float64 `gorm:"column:q;default:0" json:"q"`
+	Wfh  float64 `gorm:"column:wfh;default:0" json:"wfh"`
+	Pl   float64 `gorm:"column:pl;default:0" json:"pl"`
+	L    float64 `gorm:"column:l;default:0" json:"l"`
+	Sc   float64 `gorm:"column:sc;default:0" json:"sc"`
+	Sc1  float64 `gorm:"column:sc1;default:0" json:"sc1"`
+	Co   float64 `gorm:"column:co;default:0" json:"co"`
+	Pm   float64 `gorm:"column:pm;default:0" json:"pm"`
+	Na   float64 `gorm:"column:na;default:0" json:"na"`
 }
 
 // Salaries 对应 salaries 数据表的 GORM 模型
 type Salaries struct {
-	ID               uint      `gorm:"column:id;primaryKey;autoIncrement" json:"id"`
-	Month            string    `gorm:"column:month;not null" json:"month"`
-	ProjectID        int       `gorm:"column:project_id;default:0" json:"project_id"`
-	EmployeeID       string    `gorm:"column:employee_id;not null" json:"employee_id"`
-	TaxStatus        float64   `gorm:"column:tax_status;default:0" json:"tax_status"`
-	BasicSalary      float64   `gorm:"column:basic_salary;default:0.00" json:"basic_salary"`
-	HousingAlw       float64   `gorm:"column:housing_alw;default:0.00" json:"housing_alw"`
-	PositionAlw      float64   `gorm:"column:position_alw;default:0.00" json:"position_alw"`
-	FieldAlw         float64   `gorm:"column:field_alw;default:0.00" json:"field_alw"`
-	FixAlw           float64   `gorm:"column:fix_alw;default:0.00" json:"fix_alw"`
-	JmstkAlw         float64   `gorm:"column:jmstk_alw;default:0.00" json:"jmstk_alw"`
-	PensionAlw       float64   `gorm:"column:pension_alw;default:0.00" json:"pension_alw"`
-	MealAlw          float64   `gorm:"column:meal_alw;default:0.00" json:"meal_alw"`
-	TranspAlw        float64   `gorm:"column:transp_alw;default:0.00" json:"transp_alw"`
-	TaxAlwSalary     float64   `gorm:"column:tax_alw_salary;default:0.00" json:"tax_alw_salary"`
-	TaxAlwPhk        float64   `gorm:"column:tax_alw_phk;default:0.00" json:"tax_alw_phk"`
-	CompPhk          float64   `gorm:"column:comp_phk;default:0.00" json:"comp_phk"`
-	AskesBpjsAlw     float64   `gorm:"column:askes_bpjs_alw;default:0.00" json:"askes_bpjs_alw"`
-	MedAlw           float64   `gorm:"column:med_alw;default:0.00" json:"med_alw"`
-	PulsaAlw         float64   `gorm:"column:pulsa_alw;default:0.00" json:"pulsa_alw"`
-	Others           float64   `gorm:"column:others;default:0.00" json:"others"`
-	AttAlw           float64   `gorm:"column:att_alw;default:0.00" json:"att_alw"`
-	HousingAlwTetap  float64   `gorm:"column:housing_alw_tetap;default:0.00" json:"housing_alw_tetap"`
-	ReligiousAlw     float64   `gorm:"column:religious_alw;default:0.00" json:"religious_alw"`
-	RapelBasicSalary float64   `gorm:"column:rapel_basic_salary;default:0.00" json:"rapel_basic_salary"`
-	RapelJmstkAlw    float64   `gorm:"column:rapel_jmstk_alw;default:0.00" json:"rapel_jmstk_alw"`
-	IncentiveAlw     float64   `gorm:"column:incentive_alw;default:0.00" json:"incentive_alw"`
-	Acting           float64   `gorm:"column:acting;default:0.00" json:"acting"`
-	PerformanceAlw   float64   `gorm:"column:performance_alw;default:0.00" json:"performance_alw"`
-	TripAlw          float64   `gorm:"column:trip_alw;default:0.00" json:"trip_alw"`
-	Ot1Wages         float64   `gorm:"column:ot1_wages;default:0.00" json:"ot1_wages"`
-	Ot1Hour          float64   `gorm:"column:ot1_hour;default:0.00" json:"ot1_hour"`
-	Ew1Hour          float64   `gorm:"column:ew1_hour;default:0.00" json:"ew1_hour"`
-	Ew1Wages         float64   `gorm:"column:ew1_wages;default:0.00" json:"ew1_wages"`
-	Ew2Hour          float64   `gorm:"column:ew2_hour;default:0.00" json:"ew2_hour"`
-	Ew2Wages         float64   `gorm:"column:ew2_wages;default:0.00" json:"ew2_wages"`
-	Ew3Hour          float64   `gorm:"column:ew3_hour;default:0.00" json:"ew3_hour"`
-	Ew3Wages         float64   `gorm:"column:ew3_wages;default:0.00" json:"ew3_wages"`
-	CorrectAdd       float64   `gorm:"column:correct_add;default:0.00" json:"correct_add"`
-	CorrectSub       float64   `gorm:"column:correct_sub;default:0.00" json:"correct_sub"`
-	LeavComp         float64   `gorm:"column:leav_comp;default:0.00" json:"leav_comp"`
-	TotalAccept      float64   `gorm:"column:total_accept;default:0.00" json:"total_accept"`
-	JmstkFee         float64   `gorm:"column:jmstk_fee;default:0.00" json:"jmstk_fee"`
-	PensionDed       float64   `gorm:"column:pension_ded;default:0.00" json:"pension_ded"`
-	TaxDedSalary     float64   `gorm:"column:tax_ded_salary;default:0.00" json:"tax_ded_salary"`
-	TaxDedPhk        float64   `gorm:"column:tax_ded_phk;default:0.00" json:"tax_ded_phk"`
-	AskesBpjsDed     float64   `gorm:"column:askes_bpjs_ded;default:0.00" json:"askes_bpjs_ded"`
-	IncentiveDed     float64   `gorm:"column:incentive_ded;default:0.00" json:"incentive_ded"`
-	LoanDed          float64   `gorm:"column:loan_ded;default:0.00" json:"loan_ded"`
-	AbsentDed        float64   `gorm:"column:absent_ded;default:0.00" json:"absent_ded"`
-	AbsentDed2       float64   `gorm:"column:absent_ded2;default:0.00" json:"absent_ded2"`
-	NetAccept        float64   `gorm:"column:net_accept;default:0.00" json:"net_accept"`
-	RoundOffSalary   float64   `gorm:"column:round_off_salary;default:0.00" json:"round_off_salary"`
-	CreateTime       time.Time `gorm:"column:create_time;default:CURRENT_TIMESTAMP" json:"create_time"`
-	UpdateTime       time.Time `gorm:"column:update_time;default:CURRENT_TIMESTAMP;autoUpdateTime" json:"update_time"`
-	TotalNetWages    float64   `gorm:"column:total_net_wages;default:0.00" json:"total_net_wages"`
-	SalarySlipStatus string    `gorm:"column:salary_slip_status;default:'0'" json:"salary_slip_status"`
-	PulsaAlwMonth    float64   `gorm:"column:pulsa_alw_month;default:0.00" json:"pulsa_alw_month"`
-	MandahAlw        float64   `gorm:"column:mandah_alw;default:0.00" json:"mandah_alw"`
-	OtHours          float64   `gorm:"column:ot_hours;default:0" json:"ot_hours"`
-	IsCalculate      int       `gorm:"column:is_calculate;default:1" json:"is_calculate"`
-	DeleteFlag       int       `gorm:"column:delete_flag;default:0" json:"delete_flag"`
-	OtWages          float64   `gorm:"column:ot_wages;default:0.00" json:"ot_wages"`
-	EwWages          float64   `gorm:"column:ew_wages;default:0.00" json:"ew_wages"`
+	ID          uint    `gorm:"column:id;primaryKey;autoIncrement" json:"id"`
+	Month       string  `gorm:"column:month;not null" json:"month"`
+	ProjectID   int     `gorm:"column:project_id;default:0" json:"project_id"`
+	EmployeeID  string  `gorm:"column:employee_id;not null" json:"employee_id"`
+	TaxStatus   float64 `gorm:"column:tax_status;default:0" json:"tax_status"`
+	BasicSalary float64 `gorm:"column:basic_salary;default:0.00" json:"basic_salary"`
+
+	CreateTime         time.Time `gorm:"column:create_time;default:CURRENT_TIMESTAMP" json:"create_time"`
+	UpdateTime         time.Time `gorm:"column:update_time;default:CURRENT_TIMESTAMP;autoUpdateTime" json:"update_time"`
+	SalarySlipStatus   string    `gorm:"column:salary_slip_status;default:'0'" json:"salary_slip_status"`
+	PulsaAlwMonth      float64   `gorm:"column:pulsa_alw_month;default:0.00" json:"pulsa_alw_month"`
+	IsCalculate        int       `gorm:"column:is_calculate;default:1" json:"is_calculate"`
+	DeleteFlag         int       `gorm:"column:delete_flag;default:0" json:"delete_flag"`
+	Age                float64   `gorm:"column:age;default:0" json:"age"`
+	TotalFixedAlw      float64   `gorm:"column:total_fixed_alw;default:0" json:"total_fixed_alw"`
+	WorkAlw            float64   `gorm:"column:work_alw;default:0" json:"work_alw"`
+	OnAlw              float64   `gorm:"column:on_alw;default:0" json:"on_alw"`
+	OsOaAlw            float64   `gorm:"column:osoa_alw;default:0" json:"osoa_alw"`
+	OtAlw              float64   `gorm:"column:ot_alw;default:0" json:"ot_alw"`
+	OvtAlw             float64   `gorm:"column:ovt_alw;default:0" json:"ovt_alw"`
+	BtAlw              float64   `gorm:"column:bt_alw;default:0" json:"bt_alw"`
+	TAlw               float64   `gorm:"column:t_alw;default:0" json:"t_alw"`
+	TntAlw             float64   `gorm:"column:tnt_alw;default:0" json:"tnt_alw"`
+	AlAlw              float64   `gorm:"column:al_alw;default:0" json:"al_alw"`
+	RotAlw             float64   `gorm:"column:rot_alw;default:0" json:"rot_alw"`
+	TrAlw              float64   `gorm:"column:tr_alw;default:0" json:"tr_alw"`
+	StAlw              float64   `gorm:"column:st_alw;default:0" json:"st_alw"`
+	LsAlw              float64   `gorm:"column:ls_alw;default:0" json:"ls_alw"`
+	TotalNonFixedAlw   float64   `gorm:"column:total_non_fixed_alw;default:0" json:"total_non_fixed_alw"`
+	QDed               float64   `gorm:"column:q_ded;default:0" json:"q_ded"`
+	PlDed              float64   `gorm:"column:pl_ded;default:0" json:"pl_ded"`
+	LateDed            float64   `gorm:"column:late_ded;default:0" json:"late_ded"`
+	ScDed              float64   `gorm:"column:sc_ded;default:0" json:"sc_ded"`
+	Sc1Ded             float64   `gorm:"column:sc1_ded;default:0" json:"sc1_ded"`
+	CoDed              float64   `gorm:"column:co_ded;default:0" json:"co_ded"`
+	PmDed              float64   `gorm:"column:pm_ded;default:0" json:"pm_ded"`
+	NaDed              float64   `gorm:"column:na_ded;default:0" json:"na_ded"`
+	SalaryDed          float64   `gorm:"column:salary_ded;default:0" json:"salary_ded"`
+	JkkAlw             float64   `gorm:"column:jkk_alw;default:0" json:"jkk_alw"`
+	JkmAlw             float64   `gorm:"column:jkm_alw;default:0" json:"jkm_alw"`
+	JhtAlw             float64   `gorm:"column:jht_alw;default:0" json:"jht_alw"`
+	JpAlw              float64   `gorm:"column:jp_alw;default:0" json:"jp_alw"`
+	BpjsManpowerAlw    float64   `gorm:"column:bpjs_manpower_alw;default:0" json:"bpjs_manpower_alw"`
+	BpjsHealthAlw      float64   `gorm:"column:bpjs_health_alw;default:0" json:"bpjs_health_alw"`
+	GrossSalary        float64   `gorm:"column:gross_salary;default:0" json:"gross_salary"`
+	JhtDed             float64   `gorm:"column:jht_ded;default:0" json:"jht_ded"`
+	JpDed              float64   `gorm:"column:jp_ded;default:0" json:"jp_ded"`
+	BpjsWorkDed        float64   `gorm:"column:bpjs_work_ded;default:0" json:"bpjs_work_ded"`
+	BpjsHealthDed      float64   `gorm:"column:bpjs_health_ded;default:0" json:"bpjs_health_ded"`
+	BpjsHealthTambahan float64   `gorm:"column:bpjs_health_tambahan;default:0" json:"bpjs_health_tambahan"`
+	TotalDeduction     float64   `gorm:"column:total_deduction;default:0" json:"total_deduction"`
+	FinalStaffReceive  float64   `gorm:"column:final_staff_receive;default:0" json:"final_staff_receive"`
 }
 
 // Employee 对应 employees 数据表的 GORM 模型
@@ -264,40 +209,45 @@ type Employee struct {
 	ID uint `gorm:"column:id;primaryKey;autoIncrement" json:"id"` // SERIAL PRIMARY KEY
 
 	// 核心业务字段
-	EmployeeID      string    `gorm:"column:employee_id;not null" json:"employee_id"`              // TEXT NOT NULL
-	ProjectID       int       `gorm:"column:project_id;default:0" json:"project_id"`               // INTEGER default 0
-	EmployeeName    string    `gorm:"column:employee_name;not null" json:"employee_name"`          // TEXT NOT NULL
-	Department      string    `gorm:"column:department" json:"department"`                         // TEXT
-	Position        string    `gorm:"column:position" json:"position"`                             // TEXT                                     // TEXT
-	Salary          float64   `gorm:"column:salary;default:0.00" json:"salary"`                    // NUMERIC default 0.00
-	TaxStatus       float64   `gorm:"column:tax_status;default:0.00" json:"tax_status"`            // NUMERIC default 0.00
-	IdCard          string    `gorm:"column:id_card;default:'000000000000000000'" json:"id_card"`  // TEXT default
-	Npwp            string    `gorm:"column:npwp;default:'123'" json:"npwp"`                       // TEXT default
-	HierarchyID     string    `gorm:"column:hierarchy_id;default:'0'" json:"hierarchy_id"`         // TEXT default
-	HierarchyName   string    `gorm:"column:hierarchy_name" json:"hierarchy_name"`                 // TEXT
-	JoinDate        time.Time `gorm:"column:join_date;default:CURRENT_TIMESTAMP" json:"join_date"` // TIMESTAMP
-	ResignDate      time.Time `gorm:"column:resign_date;default:CURRENT_TIMESTAMP" json:"resign_date"`
-	IdStatus        string    `gorm:"column:id_status;default:''" json:"id_status"`
-	OtStatus        string    `gorm:"column:ot_status;default:''" json:"ot_status"`         // TEXT default
-	Email           string    `gorm:"column:email;default:''" json:"email"`                 // TEXT default
-	BasicSalary     float64   `gorm:"column:basic_salary;default:0.00" json:"basic_salary"` // NUMERIC default 0.00
-	HousingAlw      float64   `gorm:"column:housing_alw;default:0.00" json:"housing_alw"`   // NUMERIC default 0.00
-	PositionAlw     float64   `gorm:"column:position_alw;default:0.00" json:"position_alw"` // NUMERIC default 0.00
-	FieldAlw        float64   `gorm:"column:field_alw;default:0.00" json:"field_alw"`       // NUMERIC default 0.00
-	FixAlw          float64   `gorm:"column:fix_alw;default:0.00" json:"fix_alw"`           // NUMERIC default 0.00
-	MealAlwDay      float64   `gorm:"column:meal_alw_day;default:0.00" json:"meal_alw_day"` // NUMERIC default 0.00
-	TranspAlwDay    float64   `gorm:"column:transp_alw_day;default:0.00" json:"transp_alw_day"`
-	MealAlwMonth    float64   `gorm:"column:meal_alw_month;default:0.00" json:"meal_alw_month"`
-	TranspAlwMonth  float64   `gorm:"column:transp_alw_month;default:0.00" json:"transp_alw_month"`
-	PulsaAlwDay     float64   `gorm:"column:pulsa_alw_day;default:0.00" json:"pulsa_alw_day"`                       // NUMERIC default 0.00
-	AttAlwDay       float64   `gorm:"column:att_alw_day;default:0.00" json:"att_alw_day"`                           // NUMERIC default 0.00
-	CreatedAt       time.Time `gorm:"column:created_at;default:CURRENT_TIMESTAMP" json:"created_at"`                // TIMESTAMP
-	UpdatedAt       time.Time `gorm:"column:updated_at;default:CURRENT_TIMESTAMP;autoUpdateTime" json:"updated_at"` // TIMESTAMP
-	TaxType         string    `gorm:"column:tax_type;default:'TK/0'" json:"tax_type"`                               // TEXT default
-	LocationName    string    `gorm:"column:location_name;default:'Jakarta'" json:"location_name"`                  // TEXT default
-	PulsaAlwMonth   float64   `gorm:"column:pulsa_alw_month;default:0.00" json:"pulsa_alw_month"`                   // NUMERIC default 0.00
-	HousingAlwTetap float64   `gorm:"column:housing_alw_tetap;default:0.00" json:"housing_alw_tetap"`               // NUMERIC default 0.00
-	DeleteFlag      int       `gorm:"column:delete_flag;default:0" json:"delete_flag"`                              // INTEGER default 0
+	EmployeeID               string    `gorm:"column:employee_id;not null" json:"employee_id"`              // TEXT NOT NULL
+	ProjectID                int       `gorm:"column:project_id;default:0" json:"project_id"`               // INTEGER default 0
+	EmployeeName             string    `gorm:"column:employee_name;not null" json:"employee_name"`          // TEXT NOT NULL
+	Department               string    `gorm:"column:department" json:"department"`                         // TEXT
+	Position                 string    `gorm:"column:position" json:"position"`                             // TEXT                                     // TEXT
+	Salary                   float64   `gorm:"column:salary;default:0.00" json:"salary"`                    // NUMERIC default 0.00
+	TaxStatus                float64   `gorm:"column:tax_status;default:0.00" json:"tax_status"`            // NUMERIC default 0.00
+	IdCard                   string    `gorm:"column:id_card;default:'000000000000000000'" json:"id_card"`  // TEXT default
+	Npwp                     string    `gorm:"column:npwp;default:'123'" json:"npwp"`                       // TEXT default
+	HierarchyID              string    `gorm:"column:hierarchy_id;default:'0'" json:"hierarchy_id"`         // TEXT default
+	HierarchyName            string    `gorm:"column:hierarchy_name" json:"hierarchy_name"`                 // TEXT
+	JoinDate                 time.Time `gorm:"column:join_date;default:CURRENT_TIMESTAMP" json:"join_date"` // TIMESTAMP
+	ResignDate               time.Time `gorm:"column:resign_date;default:CURRENT_TIMESTAMP" json:"resign_date"`
+	Email                    string    `gorm:"column:email;default:''" json:"email"`                                         // TEXT default
+	BasicSalary              float64   `gorm:"column:basic_salary;default:0.00" json:"basic_salary"`                         // NUMERIC default 0.00
+	CreatedAt                time.Time `gorm:"column:created_at;default:CURRENT_TIMESTAMP" json:"created_at"`                // TIMESTAMP
+	UpdatedAt                time.Time `gorm:"column:updated_at;default:CURRENT_TIMESTAMP;autoUpdateTime" json:"updated_at"` // TIMESTAMP
+	TaxType                  string    `gorm:"column:tax_type;default:'TK/0'" json:"tax_type"`                               // TEXT default
+	DeleteFlag               int       `gorm:"column:delete_flag;default:0" json:"delete_flag"`
+	BPJSHealthTambahanStatus string    `gorm:"column:bpjs_health_tambahan_status;default:0" json:"bpjs_health_tambahan_status"` // INTEGER default 0
+	DateOfBirth              string    `gorm:"column:date_of_birth;default:CURRENT_TIMESTAMP" json:"date_of_birth"`
+	PostFunctionAlwMonth     float64   `gorm:"column:post_function_alw_month;default:0.00" json:"post_function_alw_month"` // NUMERIC default 0.00
+	PhoneAlwMonth            float64   `gorm:"column:phone_alw_month;default:0.00" json:"phone_alw_month"`                 // NUMERIC default 0.00
+	InternetAlwMonth         float64   `gorm:"column:internet_alw_month;default:0.00" json:"internet_alw_month"`           // NUMERIC default 0.00
+	IncentiveMonth           float64   `gorm:"column:incentive_month;default:0.00" json:"incentive_month"`                 // NUMERIC default 0.00
+	OperationalAlwMonth      float64   `gorm:"column:operational_alw_month;default:0.00" json:"operational_alw_month"`     // NUMERIC default 0.00
+	HousingAlwMonth          float64   `gorm:"column:housing_alw_month;default:0.00" json:"housing_alw_month"`             // NUMERIC default 0.00
+	SeniorityAlwMonth        float64   `gorm:"column:seniority_alw_month;default:0.00" json:"seniority_alw_month"`         // NUMERIC default 0.00
+	TransportAlwMonth        float64   `gorm:"column:transport_alw_month;default:0.00" json:"transport_alw_month"`         // NUMERIC default 0.00
+	FieldAlwMonth            float64   `gorm:"column:field_alw_month;default:0.00" json:"field_alw_month"`                 // NUMERIC default 0.00
+	AccommodationAlwMonth    float64   `gorm:"column:accommodation_alw_month;default:0.00" json:"accommodation_alw_month"` // NUMERIC default 0.00
+	WorkDay                  float64   `gorm:"column:work_day;default:0" json:"work_day"`                                  // INTEGER default 0
+	OnDay                    float64   `gorm:"column:on_day;default:0" json:"on_day"`                                      // INTEGER default 0
+	BTDay                    float64   `gorm:"column:bt_day;default:0" json:"bt_day"`                                      // INTEGER default 0
+	OADay                    float64   `gorm:"column:oa_day;default:0" json:"oa_day"`                                      // INTEGER default 0
+	TravellDay               float64   `gorm:"column:travell_day;default:0" json:"travell_day"`                            // INTEGER default 0
+	TnTDay                   float64   `gorm:"column:tnt_day;default:0" json:"tnt_day"`                                    // INTEGER default 0
+	STDay                    float64   `gorm:"column:st_day;default:0" json:"st_day"`                                      // INTEGER default 0
+	TRDay                    float64   `gorm:"column:tr_day;default:0" json:"tr_day"`                                      // INTEGER default 0
 }
 
 type TaxRates struct {

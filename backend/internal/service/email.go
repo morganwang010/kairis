@@ -109,35 +109,35 @@ func (s *EmailService) GeneratePDF(salary *repository.SalaryWithEmployee) ([]byt
 		}
 	}
 
-	addRow("Basic_Salary", salary.BasicSalary, "Field_Alw", salary.FieldAlw)
-	addRow("Housing_Alw", salary.HousingAlw, "Position_Alw", salary.PositionAlw)
-	addRow("TOTAL_NET_WAGES", salary.TotalNetWages, "Fix_Alw", salary.FixAlw)
-	addRow("Housing_ALW_Tetap", salary.HousingAlwTetap, "Meal_Alw", salary.MealAlw)
-	addRow("Pulsa_Alw_Month", salary.PulsaAlwMonth, "Transp_Alw", salary.TranspAlw)
-	addRow("Jmstk_Alw", salary.JmstkAlw, "Tax_Alw_Salary", salary.TaxAlwSalary)
-	addRow("Pension_Alw", salary.PensionAlw, "Askes_Bpjs_Alw", salary.AskesBpjsAlw)
-	addRow("OT1_Wages", salary.Ot1Wages, "EW1_Wages", salary.Ew1Wages)
-	addRow("EW2_Wages", salary.Ew2Wages, "EW3_Wages", salary.Ew3Wages)
-	addRow("Pulsa_Alw", salary.PulsaAlw, "Med_Alw", salary.MedAlw)
-	addRow("Att_Alw", salary.AttAlw, "Leave_Comp", salary.LeavComp)
-	addRow("Mandah_Alw", salary.MandahAlw, "Religious_Alw", salary.ReligiousAlw)
-	addRow("Incentive_Alw", salary.IncentiveAlw, "Rapel_Basic_Salary", salary.RapelBasicSalary)
-	addRow("Performance_Alw", salary.PerformanceAlw, "Rapel_Jmstk_Alw", salary.RapelJmstkAlw)
-	addRow("Comp_PHK", salary.CompPhk, "Trip_Alw", salary.TripAlw)
-	addRow("Tax_Alw_PHK", salary.TaxAlwPhk, "Acting", salary.Acting)
-	addRow("Others", salary.Others, "Correct_Add", salary.CorrectAdd)
-	addRow("Tax_Ded_PHK", salary.TaxDedPhk, "Incentive_Ded", salary.IncentiveDed)
-	addRow("Absent_Ded", salary.AbsentDed, "Loan_Ded", salary.LoanDed)
-	addRow("Absent_Ded2", salary.AbsentDed2, "Correct_Sub", salary.CorrectSub)
-	if salary.TotalAccept != 0 {
-		salaryDetails = append(salaryDetails, salaryRow{"Total_Accept", formatAmount(salary.TotalAccept), "", ""})
-	}
-	addRow("JMSTK_Fee", salary.JmstkFee, "Tax_Ded_Salary", salary.TaxDedSalary)
-	addRow("Pension_Ded", salary.PensionDed, "Askes_Bpjs_Ded", salary.AskesBpjsDed)
-	if salary.RoundOffSalary != 0 {
-		salaryDetails = append(salaryDetails, salaryRow{"Round_Off_Salary", formatAmount(salary.RoundOffSalary), "", ""})
-		salaryDetails = append(salaryDetails, salaryRow{"TOT TRANSFER", formatAmount(salary.RoundOffSalary), "", ""})
-	}
+	addRow("Basic_Salary", salary.BasicSalary, "Field_Alw", salary.BasicSalary)
+	// addRow("Housing_Alw", salary.HousingAlw, "Position_Alw", salary.PositionAlw)
+	// addRow("TOTAL_NET_WAGES", salary.TotalNetWages, "Fix_Alw", salary.FixAlw)
+	// addRow("Housing_ALW_Tetap", salary.HousingAlwTetap, "Meal_Alw", salary.MealAlw)
+	// addRow("Pulsa_Alw_Month", salary.PulsaAlwMonth, "Transp_Alw", salary.TranspAlw)
+	// addRow("Jmstk_Alw", salary.JmstkAlw, "Tax_Alw_Salary", salary.TaxAlwSalary)
+	// addRow("Pension_Alw", salary.PensionAlw, "Askes_Bpjs_Alw", salary.AskesBpjsAlw)
+	// addRow("OT1_Wages", salary.Ot1Wages, "EW1_Wages", salary.Ew1Wages)
+	// addRow("EW2_Wages", salary.Ew2Wages, "EW3_Wages", salary.Ew3Wages)
+	// addRow("Pulsa_Alw", salary.PulsaAlw, "Med_Alw", salary.MedAlw)
+	// addRow("Att_Alw", salary.AttAlw, "Leave_Comp", salary.LeavComp)
+	// addRow("Mandah_Alw", salary.MandahAlw, "Religious_Alw", salary.ReligiousAlw)
+	// addRow("Incentive_Alw", salary.IncentiveAlw, "Rapel_Basic_Salary", salary.RapelBasicSalary)
+	// addRow("Performance_Alw", salary.PerformanceAlw, "Rapel_Jmstk_Alw", salary.RapelJmstkAlw)
+	// addRow("Comp_PHK", salary.CompPhk, "Trip_Alw", salary.TripAlw)
+	// addRow("Tax_Alw_PHK", salary.TaxAlwPhk, "Acting", salary.Acting)
+	// addRow("Others", salary.Others, "Correct_Add", salary.CorrectAdd)
+	// addRow("Tax_Ded_PHK", salary.TaxDedPhk, "Incentive_Ded", salary.IncentiveDed)
+	// addRow("Absent_Ded", salary.AbsentDed, "Loan_Ded", salary.LoanDed)
+	// addRow("Absent_Ded2", salary.AbsentDed2, "Correct_Sub", salary.CorrectSub)
+	// if salary.TotalAccept != 0 {
+	// 	salaryDetails = append(salaryDetails, salaryRow{"Total_Accept", formatAmount(salary.TotalAccept), "", ""})
+	// }
+	// addRow("JMSTK_Fee", salary.JmstkFee, "Tax_Ded_Salary", salary.TaxDedSalary)
+	// addRow("Pension_Ded", salary.PensionDed, "Askes_Bpjs_Ded", salary.AskesBpjsDed)
+	// if salary.RoundOffSalary != 0 {
+	// 	salaryDetails = append(salaryDetails, salaryRow{"Round_Off_Salary", formatAmount(salary.RoundOffSalary), "", ""})
+	// 	salaryDetails = append(salaryDetails, salaryRow{"TOT TRANSFER", formatAmount(salary.RoundOffSalary), "", ""})
+	// }
 
 	// 绘制薪资详情表格
 	currentY := pdf.GetY() + 5
