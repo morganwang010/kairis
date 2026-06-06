@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { UserOutlined, TeamOutlined, MenuOutlined, TrendingUpOutlined } from '@ant-design/icons';
+import { UserOutlined, TeamOutlined, MenuOutlined } from '@ant-design/icons';
 
 const Dashboard = () => {
   const { t } = useTranslation();
@@ -32,15 +32,15 @@ const Dashboard = () => {
       iconBg: 'bg-green-100',
       iconColor: 'text-green-600',
     },
-    {
-      title: t('dashboard.growth'),
-      value: '+23.5%',
-      icon: TrendingUpOutlined,
-      color: 'from-orange-500 to-amber-500',
-      bgColor: 'bg-orange-50',
-      iconBg: 'bg-orange-100',
-      iconColor: 'text-orange-600',
-    },
+    // {
+    //   title: t('dashboard.growth'),
+    //   value: '+23.5%',
+    //   icon: TrendingUpOutlined,
+    //   color: 'from-orange-500 to-amber-500',
+    //   bgColor: 'bg-orange-50',
+    //   iconBg: 'bg-orange-100',
+    //   iconColor: 'text-orange-600',
+    // },
   ];
 
   return (
