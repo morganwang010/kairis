@@ -66,7 +66,7 @@ interface Employee {
 
 }
 
-const EmployeePage: FC<EmployeePageProps> = ({ projectId }) => {
+const EmployeePage: FC<EmployeePageProps> = ({ projectId ,projectName}) => {
   const [dialogVisible, setDialogVisible] = useState(false)
   const [importModalVisible, setImportModalVisible] = useState(false)
   const [form] = Form.useForm()
@@ -648,9 +648,10 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId }) => {
       width: 80,
       render: (_, __, index) => (currentPage - 1) * pageSize + index + 1,
     },
+    { title: t('employeePage.projectName'), dataIndex: 'project_name', key: 'project_name', width: 150, render: () => projectName || '-' },
     { title: t('employeePage.employeeName'), dataIndex: 'employee_name', key: 'employee_name', width: 150 },
     { title: t('employeePage.employeeId'), dataIndex: 'employee_id', key: 'employee_id', width: 120 },
-    { title: t('employeePage.taxStatus'), dataIndex: 'tax_type', key: 'tax_type', width: 80 },
+    { title: t('employeePage.taxStatus'), dataIndex: 'tax_type', key: 'tax_type', width: 120 },
     { title: t('employeePage.bpjsHealthTambahanStatus'), dataIndex: 'bpjs_health_tambahan_status', key: 'bpjs_health_tambahan_status', width: 150 },
     { title: t('employeePage.position'), dataIndex: 'position', key: 'position', width: 120 },
 

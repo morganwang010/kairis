@@ -26,7 +26,9 @@ const SalaryMainPage = () => {
       const loadProjectInfo = async () => {
         try {
           // 查找特定ID的项目
-          const projects = await getProjects()
+          const projectData = await getProjects()
+          // 处理不同的API响应结构
+          const projects = projectData.list || projectData.data?.list || projectData.data || projectData
           const foundProject = projects.find((p: any) => p.id.toString() === params.projectId)
           if (foundProject) {
             setProjectName(foundProject.project_abbr || foundProject.project_name)

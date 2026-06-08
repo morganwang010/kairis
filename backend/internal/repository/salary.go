@@ -635,7 +635,7 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 func (r *SalaryRepository) Total() (float64, error) {
 	var total float64
 	// GORM Sum 方法正确用法：Sum("列名", &接收变量)
-	if err := r.db.Model(&model.Salaries{}).Select("COALESCE(SUM(round_off_salary), 0)").Scan(&total).Error; err != nil {
+	if err := r.db.Model(&model.Salaries{}).Select("COALESCE(SUM(final_staff_receive), 0)").Scan(&total).Error; err != nil {
 		return 0, err
 	}
 	return total, nil
