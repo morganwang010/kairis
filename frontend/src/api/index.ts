@@ -786,9 +786,9 @@ export const createProject = async (data: any) => {
       manager: data.responsiblePerson || '',
       project_desc: data.description || '',
       status: data.status || 'active',
-      askes_alw: data.askesAlwByNation || '1',
-      ot_hours_on: data.otHoursOn ?? 0,
-      ew_hours_on: data.ewHoursOn ?? 0,
+      askes_alw: Number(data.askesAlwByNation) || 1,
+      ot_hours_on: Number(data.otHoursOn) || 0,
+      ew_hours_on: Number(data.ewHoursOn) || 0,
     };
 
     const response = await apiClient.post('/projects', queryParams);
@@ -806,9 +806,9 @@ export const updateProject = async (data: any) => {
       project_id: data.id,
       project_name: data.projectName,
       project_abbr: data.projectShortName,
-      ot_hours_on: data.otHoursOn ?? 0,
-      ew_hours_on: data.ewHoursOn ?? 0,
-      askes_alw: data.askesAlwByNation ?? 0,
+      ot_hours_on: Number(data.otHoursOn) || 0,
+      ew_hours_on: Number(data.ewHoursOn) || 0,
+      askes_alw: Number(data.askesAlwByNation) || 0,
     };
 
     // 只传递存在的可选参数

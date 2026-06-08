@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, InputNumber, Space, message, Tag, Card } from 'antd';
+import { Table, Button, Modal, Form, Input, InputNumber, Space, message, Tag, Card, Pagination } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
@@ -47,26 +47,33 @@ const ProjectPage: React.FC = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const [projects, setProjects] = useState<Project[]>([]);
   const [modal, modalContextHolder] = Modal.useModal();
-  // 加载项目数据
-  useEffect(() => {
-    loadProjects();
-  }, []);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [total, setTotal] = useState(0);
   
   const loadProjects = async () => {
     try {
-      const response = await getProjects();
+      const response = await getProjects({
+        page: currentPage,
+        page_size: pageSize
+      });
       console.log(t('common.loadProjectData'), ':', response);
       
       // 处理不同的API响应结构
       let projectList: any[] = [];
+      let totalCount = 0;
       if (Array.isArray(response)) {
         projectList = response;
+        totalCount = response.length;
       } else if (response && Array.isArray(response.data)) {
         projectList = response.data;
+        totalCount = response.total || response.data.length;
       } else if (response && Array.isArray(response.list)) {
         projectList = response.list;
+        totalCount = response.total || response.list.length;
       } else if (response && response.data && Array.isArray(response.data.list)) {
         projectList = response.data.list;
+        totalCount = response.data.total || response.data.list.length;
       }
       
       // 转换后端数据格式为前端需要的格式
@@ -87,11 +94,17 @@ const ProjectPage: React.FC = () => {
         ewHoursOn: item.ew_hours_on,
       }));
       setProjects(formattedProjects);
+      setTotal(totalCount);
     } catch (error) {
       console.error(t('common.loadProjectDataFailed'), ':', error);
       messageApi.error(t('common.loadProjectDataFailedRetry'));
     }
   };
+  
+  // 加载项目数据
+  useEffect(() => {
+    loadProjects();
+  }, [currentPage, pageSize]);
   
 
   
@@ -104,8 +117,14 @@ const ProjectPage: React.FC = () => {
 
   // 表格列定义
   const columns: ColumnsType<Project> = [
+     {
+      title: t('common.no'),
+      key: 'serial',
+      width: 80,
+      render: (_, __, index) => (currentPage - 1) * pageSize + index + 1,
+    },
     {
-      title: t('projectPage.projectName'),
+      title: t('common.projectName'),
       dataIndex: 'projectName',
       key: 'projectName',
       width: 200,
@@ -128,12 +147,12 @@ const ProjectPage: React.FC = () => {
     //   key: 'endTime',
     //   width: 120,
     // },
-    {
-      title: t('projectPage.askesBpjsAlw'),
-      dataIndex: 'askesAlwByNation',
-      key: 'askesAlwByNation',
-      width: 120,
-    },
+    // {
+    //   title: t('projectPage.askesBpjsAlw'),
+    //   dataIndex: 'askesAlwByNation',
+    //   key: 'askesAlwByNation',
+    //   width: 120,
+    // },
     // {
     //   title: t('projectPage.otHoursOn'),
     //   dataIndex: 'otHoursOn',
@@ -146,17 +165,17 @@ const ProjectPage: React.FC = () => {
     //   key: 'ewHoursOn',
     //   width: 120,
     // },
-    {
-      title: t('projectPage.status'),
-      dataIndex: 'status',
-      key: 'status',
-      width: 100,
-      render: (status: string) => {
-        if (status === 'active') return <Tag color="green">{t('projectPage.statusActive')}</Tag>;
-        if (status === 'completed') return <Tag color="blue">{t('projectPage.statusCompleted')}</Tag>;
-        return <Tag color="gray">{status}</Tag>;
-      }
-    },
+    // {
+    //   title: t('projectPage.status'),
+    //   dataIndex: 'status',
+    //   key: 'status',
+    //   width: 100,
+    //   render: (status: string) => {
+    //     if (status === 'active') return <Tag color="green">{t('projectPage.statusActive')}</Tag>;
+    //     if (status === 'completed') return <Tag color="blue">{t('projectPage.statusCompleted')}</Tag>;
+    //     return <Tag color="gray">{status}</Tag>;
+    //   }
+    // },
     
     {
       title: t('common.action'),
@@ -237,12 +256,10 @@ const ProjectPage: React.FC = () => {
         try {
           // 调用删除项目API
           console.log(t('common.startDeleteProject'), id);
-          deleteProjects(id).then(() => {
-            // 刷新项目列表
-             console.log(t('common.endDeleteProject'), id);
-            loadProjects();
-          });
-          setProjects(projects.filter(project => project.id !== id));
+          await deleteProjects(id);
+          // 刷新项目列表
+          console.log(t('common.endDeleteProject'), id);
+          loadProjects();
           messageApi.success(t('projectPage.deleteSuccess'));
         } catch (error) {
           console.error(t('common.deleteProjectFailed'), ':', error);
@@ -349,8 +366,23 @@ const ProjectPage: React.FC = () => {
         columns={columns}
         dataSource={filteredProjects}
         rowKey="id"
-        pagination={{ pageSize: 10 }}
+        pagination={false}
         scroll={{ x: 1200 }}
+      />
+
+      <Pagination
+        current={currentPage}
+        pageSize={pageSize}
+        pageSizeOptions={['10', '20', '50']}
+        showSizeChanger
+        showTotal={(total) => t('common.totalRecords', { count: total })}
+        total={total}
+        onChange={(page) => setCurrentPage(page)}
+        onShowSizeChange={(_current, size) => {
+          setPageSize(size);
+          setCurrentPage(1);
+        }}
+        className="mt-5 text-center"
       />
 
             </Card>
@@ -383,13 +415,13 @@ const ProjectPage: React.FC = () => {
           >
             <Input placeholder={t('projectPage.projectShortNamePlaceholder')} />
           </Form.Item>
-          <Form.Item
+          {/* <Form.Item
             label={t('projectPage.askesBpjsAlw')}
             name="askesAlwByNation"
             rules={[{ required: true, message: t('projectPage.askesAlwByNationRequired') }]}
           >
             <InputNumber min={0} max={1} placeholder={t('projectPage.askesAlwPlaceholder')} />
-          </Form.Item>
+          </Form.Item> */}
           {/* <Form.Item
             label={t('projectPage.otHoursOn')}
             name="otHoursOn"
