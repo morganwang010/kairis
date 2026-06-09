@@ -157,7 +157,7 @@ interface ParsedSheet {
   columns: ColumnsType<SheetData>
 }
 
-const NewSalaryPage: React.FC<NewSalaryPageProps> = ({ projectId = 'all',  }) => {
+const NewSalaryPage: React.FC<NewSalaryPageProps> = ({ projectId = 'all', projectName }) => {
   const { t } = useTranslation()
   const [modal, contextHolder] = Modal.useModal()
   const [messageApi, messageContextHolder] = message.useMessage();
@@ -849,6 +849,7 @@ const loadData = async () => {
       key: 'serialNo',
       render: (_, __, index) => (currentPage - 1) * pageSize + index + 1,
     },
+     { title: t('employeePage.projectName'), dataIndex: 'project_name', key: 'project_name', width: 150, render: () => projectName || '-' },
     {
       title: t('newSalaryPage.month'),
       dataIndex: 'month',
@@ -1287,6 +1288,12 @@ const loadData = async () => {
   dataIndex: 'bpjs_health_tambahan',
   key: 'bpjs_health_tambahan',
   render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.totalBpjsHealthDeduction'),
+  dataIndex: 'total_bpjs_health_ded',
+  key: 'total_bpjs_health_ded',
+  render: (_: any, record: any) => <ScientificNumberDisplay value={(Number(record.bpjs_health_ded) || 0) + (Number(record.bpjs_health_tambahan) || 0)} />
 },
 {
   title: t('newSalaryPage.totalDeduction'),

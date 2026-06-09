@@ -395,7 +395,8 @@
   "bpjsHealthDeduction": "BPJS_Health_Ded",
   "bpjsHealthTambahan": "BPJS_Health_Tambahan",
   "totalDeduction": "Total_Deduction",
-  "finalStaffReceive": "Final_Staff_Receive"
+  "finalStaffReceive": "Final_Staff_Receive",
+  "totalBpjsHealthDeduction": "Total_BPJS_Health_Ded"
   },
   "homePage": {
     "dashboard": "Dashboard",

@@ -718,6 +718,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
         width: 80,
         render: (_, __, index) => (currentPage - 1) * pageSize + index + 1,
       }, 
+       { title: t('employeePage.projectName'), dataIndex: 'project_name', key: 'project_name', width: 150, render: () => projectName || '-' },
       {
         title: t('common.month'),
         dataIndex: 'month',

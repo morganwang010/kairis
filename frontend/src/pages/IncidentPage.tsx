@@ -81,7 +81,7 @@ interface ParsedSheet {
   columns: ColumnsType<SheetData>
 }
 
-const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
+const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all', projectName }) => {
   const { t } = useTranslation()
   const [dialogVisible, setDialogVisible] = useState(false)
   const [importModalVisible, setImportModalVisible] = useState(false)
@@ -688,6 +688,7 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all' }) => {
       width: 80,
       render: (_, __, index) => (currentPage - 1) * pageSize + index + 1,
     },
+     { title: t('employeePage.projectName'), dataIndex: 'project_name', key: 'project_name', width: 150, render: () => projectName || '-' },
     { title: t('incidentPage.month'), dataIndex: 'month', key: 'month', width: 120 },
     { title: t('incidentPage.employeeName'), dataIndex: 'employee_name', key: 'employee_name', width: 120 },
     { title: t('incidentPage.employeeId'), dataIndex: 'employee_id', key: 'employee_id', width: 120 },

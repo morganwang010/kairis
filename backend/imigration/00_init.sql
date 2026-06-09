@@ -286,6 +286,7 @@ CREATE TABLE IF NOT EXISTS salaries (
     bpjs_work_ded NUMERIC DEFAULT 0,
     bpjs_health_ded NUMERIC DEFAULT 0,
     bpjs_health_tambahan NUMERIC DEFAULT 0,
+    total_bpjs_health_ded NUMERIC DEFAULT 0,
     total_deduction NUMERIC DEFAULT 0,
     final_staff_receive NUMERIC DEFAULT 0,
   UNIQUE (project_id, employee_id, month)
