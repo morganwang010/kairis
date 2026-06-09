@@ -22,7 +22,7 @@ type CreateProjectRequest struct {
 	ProjectName string `json:"project_name" binding:"required"`
 	ProjectAbbr string `json:"project_abbr" binding:"required"`
 	// Description string `json:"description"`
-	AskesAlw int `json:"askes_alw"`
+	AskesAlw  int `json:"askes_alw"`
 	OtHoursOn int `json:"ot_hours_on"`
 	EwHoursOn int `json:"ew_hours_on"`
 }
@@ -31,7 +31,7 @@ type UpdateProjectRequest struct {
 	ProjectName string `json:"project_name" binding:"required"`
 	ProjectAbbr string `json:"project_abbr" binding:"required"`
 	// Description string `json:"description"`
-	AskesAlw int `json:"askes_alw"`
+	AskesAlw  int `json:"askes_alw"`
 	OtHoursOn int `json:"ot_hours_on"`
 	EwHoursOn int `json:"ew_hours_on"`
 }
@@ -73,7 +73,7 @@ func (h *ProjectHandler) Get(c *gin.Context) {
 
 func (h *ProjectHandler) List(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
-	pageSize, _ := strconv.Atoi(c.DefaultQuery("pageSize", "10"))
+	pageSize, _ := strconv.Atoi(c.DefaultQuery("page_size", "10"))
 
 	offset := (page - 1) * pageSize
 

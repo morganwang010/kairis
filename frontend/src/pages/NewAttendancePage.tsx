@@ -39,7 +39,7 @@ interface AttendanceRecord {
   ot1_hours: number
   ew_hours: number
   w: number // W
-  on: number // On
+  ons: number // On
   os_oa: number // OS/OA
   ot: number // OT
   ovt: number // OVT
@@ -647,7 +647,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId , projectN
           ot1_hours: record.ot1_hours || 0,
           ew_hours: record.ew_hours || 0,
           w: record.w ||0 , // W
-          on: record.on || 0, // On
+          ons: record.ons || 0, // On
           os_oa: record.os_oa || 0, // OS/OA
           ot: record.ot || 0, // OT
           ovt: record.ovt || 0, // OVT
@@ -746,8 +746,8 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId , projectN
       },
       {
         title: t('newAttendancePage.on'),
-        dataIndex: 'on',
-        key: 'on',
+        dataIndex: 'ons',
+        key: 'ons',
         width: 100,
       },
       {
@@ -1170,7 +1170,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId , projectN
               ot1_hours: record.ot1_hours || 0,
               ew_hours: record.ew_hours || 0,
               w: record.w ||0 , // W
-              on: record.on || 0, // On
+              ons: record.ons || 0, // On
               os_oa: record.os_oa || 0, // OS/OA
               ot: record.ot || 0, // OT
               ovt: record.ovt || 0, // OVT

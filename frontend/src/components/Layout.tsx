@@ -32,7 +32,7 @@ const LayoutComponent = () => {
   const loadActiveProjects = useCallback(async () => {
     try {
       // 获取所有项目，筛选出在建项目（is_active=true）
-      const response = await getProjects({ is_active: true });
+      const response = await getProjects({ is_active: true, page_size: 100 });
       console.log('获取到的项目数据:', response);
       
       // 处理不同的API响应结构
