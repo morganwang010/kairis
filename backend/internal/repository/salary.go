@@ -179,7 +179,7 @@ func (r *SalaryRepository) List(offset, limit int, month string, projectID int, 
 
 	// 再查询分页数据
 	if err := query.
-		Select(`s.*, e.employee_name, e.tax_type, e.npwp, e.join_date, e.resign_date,e.id_card, ir.thr, ir.bonus, ir.compensation, ir.acting_alw, ir.salary_prorate, ir.rapel, ir.tax_alw, ir.tax_ded,ir.other_add,ir.other_ded,e.bpjs_health_tambahan_status,e.date_of_birth,e.post_function_alw_month,e.phone_alw_month,e.internet_alw_month,e.incentive_month,e.operational_alw_month,e.housing_alw_month,e.seniority_alw_month,e.transport_alw_month,e.field_alw_month,e.accommodation_alw_month,e.work_day,e.on_day,e.bt_day,e.oa_day,e.travell_day,e.tnt_day,e.st_day,e.tr_day,a.w,a.ons,a.os_oa,a.ot,a.ovt,a.bt,a.t,a.tnt,a.al,a.rot,a.tr,a.st,a.ls,a.q,a.wfh,a.pl,a.l,a.sc,a.sc1,a.co,a.pm,a.na,a.off`).
+		Select(`s.*, e.employee_name, e.tax_type, e.npwp, e.join_date, e.resign_date,e.id_card, e.position,e.email,ir.thr, ir.bonus, ir.compensation, ir.acting_alw, ir.salary_prorate, ir.rapel, ir.tax_alw, ir.tax_ded,ir.other_add,ir.other_ded,e.bpjs_health_tambahan_status,e.date_of_birth,e.post_function_alw_month,e.phone_alw_month,e.internet_alw_month,e.incentive_month,e.operational_alw_month,e.housing_alw_month,e.seniority_alw_month,e.transport_alw_month,e.field_alw_month,e.accommodation_alw_month,e.work_day,e.on_day,e.bt_day,e.oa_day,e.travell_day,e.tnt_day,e.st_day,e.tr_day,a.w,a.ons,a.os_oa,a.ot,a.ovt,a.bt,a.t,a.tnt,a.al,a.rot,a.tr,a.st,a.ls,a.q,a.wfh,a.pl,a.l,a.sc,a.sc1,a.co,a.pm,a.na,a.off`).
 		Joins("LEFT JOIN attendances as a ON s.employee_id = a.employee_id AND s.month = a.month").
 		Joins("LEFT JOIN incidents as ir ON s.employee_id = ir.employee_id AND s.month = ir.month").
 		Order("s.employee_id DESC").
@@ -522,10 +522,13 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 
 		// 5. 插入或更新薪资记录
 		var existingSalary model.Salaries
-		result := r.db.Where("employee_id = ? AND month = ? AND project_id = ? AND is_calculate = 1", record.EmployeeID, month, record.ProjectID).Find(&existingSalary)
+		result := r.db.Where("employee_id = ? AND month = ? AND project_id = ? AND is_calculate = 1", record.EmployeeID, month, projectID).First(&existingSalary)
 
-		if result.Error == nil {
+		if result.Error == nil && existingSalary.ID != 0 {
 			// 更新现有记录
+			existingSalary.EmployeeID = record.EmployeeID
+			existingSalary.Month = month
+			existingSalary.ProjectID = projectID
 			existingSalary.BasicSalary = record.BasicSalary
 			existingSalary.Age = float64(age)
 			existingSalary.TotalFixedAlw = totalFixedAlw
@@ -567,6 +570,8 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 			existingSalary.SalarySlipStatus = "0"
 			existingSalary.TotalDeduction = totalDed
 			existingSalary.FinalStaffReceive = totalAccept
+			existingSalary.IsCalculate = 1
+			existingSalary.DeleteFlag = 0
 
 			if err := r.db.Save(&existingSalary).Error; err != nil {
 				return err

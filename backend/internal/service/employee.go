@@ -175,6 +175,7 @@ func (s *EmployeeService) ImportEmployee(req ImportEmployeeRequest) error {
 			ResignDate:   resignDate,
 			Email:        employee.Email,
 			BasicSalary:  employee.BasicSalary,
+			Position:     employee.Position,
 
 			TaxType:                  employee.TaxType,
 			BPJSHealthTambahanStatus: employee.BPJSHealthTambahanStatus,

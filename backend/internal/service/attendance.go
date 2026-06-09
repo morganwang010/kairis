@@ -79,11 +79,7 @@ func (s *AttendanceService) DeleteAttendanceByIDs(ids []uint) error {
 }
 
 func (s *AttendanceService) ImportAttendance(req ImportAttendanceRequest) error {
-	// slog.Info("Importing attendances", "count", len(req.Attendances))
 	for _, attendance := range req.Attendances {
-		// slog.Info("Importing attendance", "employee_id", attendance.EmployeeID, "project_id", attendance.ProjectID, "month", attendance.Month)
-		// 检查记录是否已存在
-		// slog.Info("Checking for existing attendance", "ot1Hours", attendance.Ot1Hours, "project_id", attendance.ProjectID, "month", attendance.Month)
 		w, _ := strconv.ParseFloat(attendance.W, 64)
 		off, _ := strconv.ParseFloat(attendance.Off, 64)
 		ons, _ := strconv.ParseFloat(attendance.Ons, 64)
@@ -107,52 +103,20 @@ func (s *AttendanceService) ImportAttendance(req ImportAttendanceRequest) error 
 		pm, _ := strconv.ParseFloat(attendance.Pm, 64)
 		na, _ := strconv.ParseFloat(attendance.Na, 64)
 		t, _ := strconv.ParseFloat(attendance.T, 64)
-		slog.Info("ons", "ons", ons, "t", t)
-		attendanceModel := &model.Attendances{
-			EmployeeID: attendance.EmployeeID,
-			ProjectID:  attendance.ProjectID,
-			Month:      attendance.Month,
-			W:          w,
-			Off:        off,
-			Ons:        ons,
-			OsOa:       osOa,
-			Ot:         ot,
-			Ovt:        ovt,
-			Bt:         bt,
-			Tnt:        tnt,
-			Al:         al,
-			Rot:        rot,
-			Tr:         tr,
-			St:         st,
-			Ls:         ls,
-			Q:          q,
-			Wfh:        wfh,
-			Pl:         pl,
-			L:          l,
-			Sc:         sc,
-			Sc1:        sc1,
-			Co:         co,
-			Pm:         pm,
-			Na:         na,
-			T:          t,
-		}
+		
+		// 根据Project_id, employee_id, month三者同时重复即认为重复
 		existingAttendance, err := s.attendanceRepo.GetByEmployeeIDAndMonth(attendance.EmployeeID, attendance.Month, attendance.ProjectID)
-		slog.Info("existingAttendance", "existingAttendance", existingAttendance)
+		
 		if err == nil && len(existingAttendance) > 0 {
 			// 记录存在，执行更新
-			// slog.Info("Updating existing attendance", "employee_id", attendance.EmployeeID, "project_id", attendance.ProjectID, "month", attendance.Month)
-			attendanceModel.ID = existingAttendance[0].ID
-
-			if err := s.attendanceRepo.Update(attendanceModel); err != nil {
-				slog.Error("Failed to update attendance", "error", err, "employee_id", attendance.EmployeeID)
-				return err
-			}
-		} else {
-			// 记录不存在，创建新记录
-			slog.Info("Creating new attendance", "employee_id", attendance.EmployeeID, "project_id", attendance.ProjectID, "month", attendance.Month)
+			slog.Info("Updating existing attendance", "employee_id", attendance.EmployeeID, "project_id", attendance.ProjectID, "month", attendance.Month)
 			attendanceModel := &model.Attendances{
+				ID:         existingAttendance[0].ID,
 				EmployeeID: attendance.EmployeeID,
+				ProjectID:  attendance.ProjectID,
+				Month:      attendance.Month,
 				W:          w,
+				Off:        off,
 				Ons:        ons,
 				OsOa:       osOa,
 				Ot:         ot,
@@ -173,9 +137,40 @@ func (s *AttendanceService) ImportAttendance(req ImportAttendanceRequest) error 
 				Co:         co,
 				Pm:         pm,
 				Na:         na,
+				T:          t,
+			}
+			if err := s.attendanceRepo.Update(attendanceModel); err != nil {
+				slog.Error("Failed to update attendance", "error", err, "employee_id", attendance.EmployeeID)
+				return err
+			}
+		} else {
+			// 记录不存在，创建新记录
+			slog.Info("Creating new attendance", "employee_id", attendance.EmployeeID, "project_id", attendance.ProjectID, "month", attendance.Month)
+			attendanceModel := &model.Attendances{
+				EmployeeID: attendance.EmployeeID,
 				ProjectID:  attendance.ProjectID,
-				Off:        off,
 				Month:      attendance.Month,
+				W:          w,
+				Off:        off,
+				Ons:        ons,
+				OsOa:       osOa,
+				Ot:         ot,
+				Ovt:        ovt,
+				Bt:         bt,
+				Tnt:        tnt,
+				Al:         al,
+				Rot:        rot,
+				Tr:         tr,
+				St:         st,
+				Ls:         ls,
+				Q:          q,
+				Wfh:        wfh,
+				Pl:         pl,
+				L:          l,
+				Sc:         sc,
+				Co:         co,
+				Pm:         pm,
+				Na:         na,
 				T:          t,
 			}
 			if err := s.attendanceRepo.Create(attendanceModel); err != nil {

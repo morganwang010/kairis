@@ -74,7 +74,7 @@ interface ParsedSheet {
 
 
 
-const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', projectName = '所有项目' }) => {
+const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId , projectName  }) => {
   const { t } = useTranslation()
   const [messageApi, msgContextHolder] = message.useMessage()
   const [data, setData] = useState<AttendanceRecord[]>([])
@@ -1063,12 +1063,12 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId = 'all', p
             console.log("editingRecord--now")
             console.log(recordData)
             await updateAttendanceRecord(recordData)
-            setData(data.map(item => (item.id === editingRecord.id ? recordData : item)))
+            loadAttendanceData()
             messageApi.success('更新成功')
           } else {
             // 添加新记录
             await addAttendanceRecord(recordData)
-            setData([...data, recordData])
+            loadAttendanceData()
             messageApi.success('添加成功')
           }
 
