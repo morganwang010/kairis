@@ -476,14 +476,17 @@ CREATE TABLE incidents (
     UNIQUE (employee_id, project_id, month)
 );
 
-CREATE TABLE system_config (
+CREATE TABLE system_configs (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL UNIQUE,
     config TEXT NOT NULL,
     create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
+insert into system_configs (name,config) values ('email_smtp_address','smtp.qiye.aliyun.com');
+insert into system_configs (name,config) values ('email_smtp_port','465');
+insert into system_configs (name,config) values ('email_password','a123@456b');
+insert into system_configs (name,config) values ('email_address','test@gdap-indo.com');
 
 CREATE TABLE IF NOT EXISTS licenses (
     id SERIAL PRIMARY KEY,  -- SERIAL 本身包含 int 类型，无需重复写 int

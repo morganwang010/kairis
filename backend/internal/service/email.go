@@ -6,7 +6,6 @@ import (
 	"io"
 	"kairis/backend/internal/repository"
 	"strconv"
-	"time"
 
 	"github.com/jung-kurt/gofpdf"
 	"gopkg.in/gomail.v2"
@@ -36,130 +35,247 @@ type SendEmailResponse struct {
 	Message string `json:"message"`
 }
 
-// GeneratePDF 生成薪资单PDF（使用 Salaries 数据结构）
+// GeneratePDF 生成薪资单PDF（与前端保持一致格式）
 func (s *EmailService) GeneratePDF(salary *repository.SalaryWithEmployee) ([]byte, error) {
 	pdf := gofpdf.New("P", "mm", "A4", "")
 	pdf.AddPage()
 
-	// 添加标题
+	// 格式化金额（添加千位分隔符）
+	// formatAmount := func(amount float64) string {
+	// 	return fmt.Sprintf("%.0f", amount)
+	// }
+
+	// 带逗号分隔的格式化金额
+	formatAmountWithComma := func(amount float64) string {
+		str := fmt.Sprintf("%.0f", amount)
+		result := ""
+		for i, c := range str {
+			if i > 0 && (len(str)-i)%3 == 0 {
+				result += ","
+			}
+			result += string(c)
+		}
+		return result
+	}
+
+	// 公司信息标题
+	pdf.SetFont("Arial", "B", 14)
+	pdf.CellFormat(0, 8, "Great Wall Drilling Company", "", 1, "C", false, 0, "")
+	pdf.SetFont("Arial", "", 11)
+	pdf.CellFormat(0, 6, "GWDC", "", 1, "C", false, 0, "")
 	pdf.SetFont("Arial", "B", 16)
-	pdf.CellFormat(0, 10, "SLIP GAJI", "", 1, "C", false, 0, "")
+	pdf.CellFormat(0, 10, "PAYROLL SLIP", "", 1, "C", false, 0, "")
 
-	// 格式化金额
-	formatAmount := func(amount float64) string {
-		return strconv.FormatFloat(amount, 'f', 0, 64)
+	// 员工信息表格（两列布局）
+	pdf.SetFont("Arial", "", 9)
+	pdf.Ln(4)
+
+	// 第一行
+	pdf.SetFont("Arial", "B", 9)
+	pdf.CellFormat(60, 6, "Employee_Name:", "", 0, "L", false, 0, "")
+	pdf.SetFont("Arial", "", 9)
+	pdf.CellFormat(40, 6, salary.EmployeeName, "", 0, "L", false, 0, "")
+	pdf.SetFont("Arial", "B", 9)
+	pdf.CellFormat(65, 6, "Project:", "", 0, "L", false, 0, "")
+	pdf.SetFont("Arial", "", 9)
+	pdf.CellFormat(25, 6, salary.ProjectName, "", 1, "L", false, 0, "")
+
+	// 第二行
+	pdf.SetFont("Arial", "B", 9)
+	pdf.CellFormat(60, 6, "Designation:", "", 0, "L", false, 0, "")
+	pdf.SetFont("Arial", "", 9)
+	pdf.CellFormat(40, 6, salary.Position, "", 0, "L", false, 0, "")
+	pdf.SetFont("Arial", "B", 9)
+	pdf.CellFormat(65, 6, "Month:", "", 0, "L", false, 0, "")
+	pdf.SetFont("Arial", "", 9)
+	pdf.CellFormat(25, 6, salary.Month, "", 1, "L", false, 0, "")
+
+	// 分隔线
+	pdf.SetLineWidth(0.5)
+	pdf.Line(15, pdf.GetY(), 195, pdf.GetY())
+	pdf.Ln(4)
+
+	// Fixed Allowance 部分
+	pdf.SetFont("Arial", "B", 11)
+	pdf.CellFormat(80, 6, "Fixed_Alw:", "", 0, "L", false, 0, "")
+	pdf.CellFormat(0, 6, formatAmountWithComma(salary.TotalFixedAlw), "", 1, "R", false, 0, "")
+
+	// 固定津贴数据（两列布局）
+	fixedAlwData := []struct {
+		label string
+		value float64
+	}{
+		{"Basic_Salary", salary.BasicSalary},
+		{"Post_Function", salary.PostFunctionAlwMonth},
+		{"Phone_Alw", salary.PhoneAlwMonth},
+		{"Internet_Alw", salary.InternetAlwMonth},
+		{"Incentive", salary.IncentiveMonth},
+		{"Operational", salary.OperationalAlwMonth},
+		{"Housing_Alw", salary.HousingAlwMonth},
+		{"Seniority", salary.SeniorityAlwMonth},
+		{"Transport_Alw", salary.TransportAlwMonth},
+		{"Field_Alw", salary.FieldAlwMonth},
+		{"Accomodation", salary.AccommodationAlwMonth},
 	}
 
-	// 格式化日期
-	formatDate := func(dateStr string) string {
-		if dateStr == "" {
-			return ""
+	pdf.SetFont("Arial", "", 8)
+	colWidth := 90.0
+	for i, item := range fixedAlwData {
+		if i%2 == 0 {
+			pdf.CellFormat(colWidth-25, 5, item.label, "", 0, "L", false, 0, "")
+			pdf.CellFormat(25, 5, formatAmountWithComma(item.value), "", 0, "R", false, 0, "")
+		} else {
+			pdf.CellFormat(colWidth-25, 5, item.label, "", 0, "L", false, 0, "")
+			pdf.CellFormat(25, 5, formatAmountWithComma(item.value), "", 1, "R", false, 0, "")
 		}
-		// 尝试解析时间格式
-		t, err := time.Parse("2006-01-02", dateStr)
-		if err == nil {
-			return t.Format("02/01/2006")
+	}
+	if len(fixedAlwData)%2 != 0 {
+		pdf.Ln(5)
+	}
+
+	pdf.Ln(3)
+	pdf.Line(15, pdf.GetY(), 195, pdf.GetY())
+	pdf.Ln(4)
+
+	// Non-Fixed Allowance 部分
+	pdf.SetFont("Arial", "B", 11)
+	pdf.CellFormat(80, 6, "Non_Fixed_Alw:", "", 0, "L", false, 0, "")
+	pdf.CellFormat(0, 6, formatAmountWithComma(salary.TotalNonFixedAlw), "", 1, "R", false, 0, "")
+
+	nonFixedAlwData := []struct {
+		label string
+		value float64
+	}{
+		{"THR", salary.Thr},
+		{"Bonus", salary.Bonus},
+		{"Compensation", salary.Compensation},
+		{"Acting_Alw", salary.ActingAlw},
+		{"Salary_Prorate", salary.SalaryProrate},
+		{"Other", salary.OtherNonFixed},
+		{"Work_Prorate", salary.WorkProrate},
+		{"Work_Alw", salary.WorkAlw},
+		{"OSOA_Alw", salary.OsOaAlw},
+		{"OVT_Alw", salary.OvtAlw},
+		{"BT_Alw", salary.BtAlw},
+		{"On_Alw", salary.OnAlw},
+		{"OT_Alw", salary.OtAlw},
+		{"T_Alw", salary.TAlw},
+		{"TNT_Alw", salary.TntAlw},
+		{"AL_Alw", salary.AlAlw},
+		{"ROT_Alw", salary.RotAlw},
+		{"TR_Alw", salary.TrAlw},
+		{"ST_Alw", salary.StAlw},
+		{"LS_Alw", salary.LsAlw},
+	}
+
+	pdf.SetFont("Arial", "", 8)
+	for i, item := range nonFixedAlwData {
+		if i%2 == 0 {
+			pdf.CellFormat(colWidth-25, 5, item.label, "", 0, "L", false, 0, "")
+			pdf.CellFormat(25, 5, formatAmountWithComma(item.value), "", 0, "R", false, 0, "")
+		} else {
+			pdf.CellFormat(colWidth-25, 5, item.label, "", 0, "L", false, 0, "")
+			pdf.CellFormat(25, 5, formatAmountWithComma(item.value), "", 1, "R", false, 0, "")
 		}
-		t, err = time.Parse(time.RFC3339, dateStr)
-		if err == nil {
-			return t.Format("02/01/2006")
+	}
+	if len(nonFixedAlwData)%2 != 0 {
+		pdf.Ln(5)
+	}
+
+	pdf.Ln(3)
+	pdf.Line(15, pdf.GetY(), 195, pdf.GetY())
+	pdf.Ln(4)
+
+	// Salary Deduction 部分
+	totalSalaryDed := salary.QDed + salary.PlDed + salary.LateDed + salary.ScDed + salary.Sc1Ded +
+		salary.CoDed + salary.PmDed + salary.NaDed + salary.SalaryDed
+	pdf.SetFont("Arial", "B", 11)
+	pdf.CellFormat(80, 6, "Salary_Ded:", "", 0, "L", false, 0, "")
+	pdf.CellFormat(0, 6, formatAmountWithComma(totalSalaryDed), "", 1, "R", false, 0, "")
+
+	salaryDedData := []struct {
+		label string
+		value float64
+	}{
+		{"Q_Ded", salary.QDed},
+		{"PL_Ded", salary.PlDed},
+		{"Late_Ded", salary.LateDed},
+		{"SC_Ded", salary.ScDed},
+		{"SC1_Ded", salary.Sc1Ded},
+		{"CO_Ded", salary.CoDed},
+		{"PM_Ded", salary.PmDed},
+		{"NA_Ded", salary.NaDed},
+		{"Other", salary.SalaryDed},
+	}
+
+	pdf.SetFont("Arial", "", 8)
+	for i, item := range salaryDedData {
+		if i%2 == 0 {
+			pdf.CellFormat(colWidth-25, 5, item.label, "", 0, "L", false, 0, "")
+			pdf.CellFormat(25, 5, formatAmountWithComma(item.value), "", 0, "R", false, 0, "")
+		} else {
+			pdf.CellFormat(colWidth-25, 5, item.label, "", 0, "L", false, 0, "")
+			pdf.CellFormat(25, 5, formatAmountWithComma(item.value), "", 1, "R", false, 0, "")
 		}
-		return dateStr
+	}
+	if len(salaryDedData)%2 != 0 {
+		pdf.Ln(5)
 	}
 
-	// 员工信息表格
-	pdf.SetFont("Arial", "", 10)
-	startY := 30.0
+	pdf.Ln(3)
+	pdf.Line(15, pdf.GetY(), 195, pdf.GetY())
+	pdf.Ln(4)
 
-	// 员工信息数据（与前端保持一致）
-	employeeInfo := [][]string{
-		{"DATE", salary.Month, "Employee_ID", salary.EmployeeID},
-		{"Employee_Name", salary.EmployeeName, "NPWP", salary.Npwp},
-		{"IDCard_Number", salary.IdCard, "Location_Name", salary.LocationName},
-		{"Position", salary.Position + "/" + salary.Department, "Join_Date", formatDate(salary.JoinDate)},
+	// Gross Salary 部分
+	pdf.SetFont("Arial", "B", 11)
+	pdf.CellFormat(80, 6, "Gross Salary:", "", 0, "L", false, 0, "")
+	pdf.CellFormat(0, 6, formatAmountWithComma(salary.GrossSalary), "", 1, "R", false, 0, "")
+
+	pdf.Ln(3)
+	pdf.Line(15, pdf.GetY(), 195, pdf.GetY())
+	pdf.Ln(4)
+
+	// BPJS/TAX Deduction 部分
+	totalBpjsTaxDed := salary.BpjsWorkDed + salary.BpjsHealthDed + salary.TaxDed
+	pdf.SetFont("Arial", "B", 11)
+	pdf.CellFormat(80, 6, "BPJS/TAX_Ded:", "", 0, "L", false, 0, "")
+	pdf.CellFormat(0, 6, formatAmountWithComma(totalBpjsTaxDed), "", 1, "R", false, 0, "")
+
+	bpjsTaxData := []struct {
+		label string
+		value float64
+	}{
+		{"BPJS_Work_Ded", salary.BpjsWorkDed},
+		{"BPJS_Health_Ded", salary.BpjsHealthDed + salary.BpjsHealthTambahan},
+		{"Tax_Ded", salary.TaxDed},
 	}
 
-	// 绘制员工信息表格
-	pdf.SetY(startY)
-	for _, row := range employeeInfo {
-		pdf.SetFont("Arial", "B", 9)
-		pdf.CellFormat(40, 8, row[0], "1", 0, "L", false, 0, "")
-		pdf.SetFont("Arial", "", 9)
-		pdf.CellFormat(60, 8, row[1], "1", 0, "L", false, 0, "")
-		pdf.SetFont("Arial", "B", 9)
-		pdf.CellFormat(40, 8, row[2], "1", 0, "L", false, 0, "")
-		pdf.SetFont("Arial", "", 9)
-		pdf.CellFormat(50, 8, row[3], "1", 1, "L", false, 0, "")
+	pdf.SetFont("Arial", "", 8)
+	for _, item := range bpjsTaxData {
+		pdf.CellFormat(50, 5, item.label, "", 0, "L", false, 0, "")
+		pdf.CellFormat(0, 5, formatAmountWithComma(item.value), "", 1, "R", false, 0, "")
 	}
 
-	// 薪资详情表格
 	pdf.Ln(5)
-	pdf.SetFont("Arial", "B", 12)
-	pdf.CellFormat(0, 10, "SALARY DETAILS", "", 1, "L", false, 0, "")
 
-	// 动态生成薪资详情（只显示非0值）
-	type salaryRow struct {
-		label1, value1, label2, value2 string
-	}
-	var salaryDetails []salaryRow
+	// Final Staff Receive 部分（带边框高亮）
+	// pdf.SetLineWidth(0.0)
+	// pdf.Rect(15, pdf.GetY(), 180, 20, "D")
+	pdf.Ln(3)
+	pdf.Line(15, pdf.GetY(), 195, pdf.GetY())
+	pdf.Ln(4)
+	
+	pdf.SetFont("Arial", "B", 13)
+	pdf.SetY(pdf.GetY() + 5)
+	pdf.CellFormat(160, 7, "Final_Staff_Receive:", "", 0, "L", false, 0, "")
 
-	addRow := func(l1 string, v1 float64, l2 string, v2 float64) {
-		if v1 != 0 || v2 != 0 {
-			salaryDetails = append(salaryDetails, salaryRow{l1, formatAmount(v1), l2, formatAmount(v2)})
-		}
-	}
+	pdf.SetFont("Arial", "B", 16)
+	pdf.CellFormat(60, 8, formatAmountWithComma(salary.FinalStaffReceive), "", 1, "L", false, 0, "")
 
-	addRow("Basic_Salary", salary.BasicSalary, "Field_Alw", salary.BasicSalary)
-	// addRow("Housing_Alw", salary.HousingAlw, "Position_Alw", salary.PositionAlw)
-	// addRow("TOTAL_NET_WAGES", salary.TotalNetWages, "Fix_Alw", salary.FixAlw)
-	// addRow("Housing_ALW_Tetap", salary.HousingAlwTetap, "Meal_Alw", salary.MealAlw)
-	// addRow("Pulsa_Alw_Month", salary.PulsaAlwMonth, "Transp_Alw", salary.TranspAlw)
-	// addRow("Jmstk_Alw", salary.JmstkAlw, "Tax_Alw_Salary", salary.TaxAlwSalary)
-	// addRow("Pension_Alw", salary.PensionAlw, "Askes_Bpjs_Alw", salary.AskesBpjsAlw)
-	// addRow("OT1_Wages", salary.Ot1Wages, "EW1_Wages", salary.Ew1Wages)
-	// addRow("EW2_Wages", salary.Ew2Wages, "EW3_Wages", salary.Ew3Wages)
-	// addRow("Pulsa_Alw", salary.PulsaAlw, "Med_Alw", salary.MedAlw)
-	// addRow("Att_Alw", salary.AttAlw, "Leave_Comp", salary.LeavComp)
-	// addRow("Mandah_Alw", salary.MandahAlw, "Religious_Alw", salary.ReligiousAlw)
-	// addRow("Incentive_Alw", salary.IncentiveAlw, "Rapel_Basic_Salary", salary.RapelBasicSalary)
-	// addRow("Performance_Alw", salary.PerformanceAlw, "Rapel_Jmstk_Alw", salary.RapelJmstkAlw)
-	// addRow("Comp_PHK", salary.CompPhk, "Trip_Alw", salary.TripAlw)
-	// addRow("Tax_Alw_PHK", salary.TaxAlwPhk, "Acting", salary.Acting)
-	// addRow("Others", salary.Others, "Correct_Add", salary.CorrectAdd)
-	// addRow("Tax_Ded_PHK", salary.TaxDedPhk, "Incentive_Ded", salary.IncentiveDed)
-	// addRow("Absent_Ded", salary.AbsentDed, "Loan_Ded", salary.LoanDed)
-	// addRow("Absent_Ded2", salary.AbsentDed2, "Correct_Sub", salary.CorrectSub)
-	// if salary.TotalAccept != 0 {
-	// 	salaryDetails = append(salaryDetails, salaryRow{"Total_Accept", formatAmount(salary.TotalAccept), "", ""})
-	// }
-	// addRow("JMSTK_Fee", salary.JmstkFee, "Tax_Ded_Salary", salary.TaxDedSalary)
-	// addRow("Pension_Ded", salary.PensionDed, "Askes_Bpjs_Ded", salary.AskesBpjsDed)
-	// if salary.RoundOffSalary != 0 {
-	// 	salaryDetails = append(salaryDetails, salaryRow{"Round_Off_Salary", formatAmount(salary.RoundOffSalary), "", ""})
-	// 	salaryDetails = append(salaryDetails, salaryRow{"TOT TRANSFER", formatAmount(salary.RoundOffSalary), "", ""})
-	// }
-
-	// 绘制薪资详情表格
-	currentY := pdf.GetY() + 5
-	for _, row := range salaryDetails {
-		// 检查是否需要换页
-		if currentY > 260 {
-			pdf.AddPage()
-			currentY = 20
-		}
-		pdf.SetY(currentY)
-
-		pdf.SetFont("Arial", "B", 7)
-		pdf.CellFormat(40, 6, row.label1, "1", 0, "L", false, 0, "")
-		pdf.SetFont("Arial", "", 7)
-		pdf.CellFormat(60, 6, row.value1, "1", 0, "R", false, 0, "")
-		pdf.SetFont("Arial", "B", 7)
-		pdf.CellFormat(40, 6, row.label2, "1", 0, "L", false, 0, "")
-		pdf.SetFont("Arial", "", 7)
-		pdf.CellFormat(50, 6, row.value2, "1", 1, "R", false, 0, "")
-
-		currentY = pdf.GetY()
-	}
+	// 添加备注
+	pdf.Ln(8)
+	pdf.SetFont("Arial", "", 9)
+	// pdf.CellFormat(0, 5, "This slip is computer generated, no signature required.", "", 1, "C", false, 0, "")
 
 	// 输出到字节数组
 	var buf bytes.Buffer

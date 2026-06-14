@@ -7,18 +7,15 @@ import {  EditOutlined, DeleteOutlined } from '@ant-design/icons'
 
 const SettingsPage = () => {
   const [messageApi, messageContextHolder] = message.useMessage();
-  const [modal, contextHolder] = Modal.useModal()
+  const [editModal, editModalContextHolder] = Modal.useModal();
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('system');
   const [systemForm] = Form.useForm();
   const [salaryForm] = Form.useForm();
   // 系统配置列表
   const [systemConfigs, setSystemConfigs] = useState<any[]>([]);
-  // 编辑模态框状态
-  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   // 添加模态框状态
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
-  const [currentConfig, setCurrentConfig] = useState<any>(null);
   // 编辑表单实例
   const [editForm] = Form.useForm();
   // 添加表单实例
@@ -118,68 +115,79 @@ const SettingsPage = () => {
 
   // 编辑系统配置
   const handleEditConfig = (record: any) => {
-    setCurrentConfig(record);
-    setIsEditModalVisible(true);
+    console.log('handleEditConfig called with record:', record);
+    // 在打开对话框前重置表单并设置新的初始值
+    editForm.resetFields();
+    editForm.setFieldsValue(record);
+    
+    editModal.info({
+      title: t('settingsPage.editSystemConfig'),
+      content: (
+        <Form
+          form={editForm}
+          layout="vertical"
+        >
+          <Form.Item
+            name="name"
+            label={t('settingsPage.configName')}
+            rules={[{ required: true, message: t('settingsPage.enterConfigName') }]}
+          >
+            <Input placeholder={t('settingsPage.enterConfigName')} />
+          </Form.Item>
+          <Form.Item
+            name="config"
+            label={t('settingsPage.configValue')}
+            rules={[{ required: true, message: t('settingsPage.enterConfigValue') }]}
+          >
+            <Input placeholder={t('settingsPage.enterConfigValue')} />
+          </Form.Item>
+        </Form>
+      ),
+      onOk: async () => {
+        try {
+          if (!record) return;
+          const values = await editForm.validateFields();
+          console.log('编辑配置:', values);
+          await updateSystemConfig(record.id, values.name, values.config);
+          messageApi.success(t('settingsPage.updateSuccess'));
+          setSystemConfigs(prevConfigs =>
+            prevConfigs.map(config =>
+              config.id === record.id ? { ...config, ...values } : config
+            )
+          );
+        } catch (error: any) {
+          messageApi.error(t('settingsPage.configUpdateFailed') + ': ' + (error.message || t('common.unknownError')));
+        }
+      },
+      okText: t('common.save'),
+      cancelText: t('common.cancel'),
+      width: 500,
+    });
   };
-
-  // 关闭编辑模态框
-  const handleCancelEdit = () => {
-    setIsEditModalVisible(false);
-    setCurrentConfig(null);
-  };
-
-  // 提交编辑配置
-  const handleEditSubmit = async () => {
-    try {
-      if (!currentConfig) return;
-      const values = await editForm.validateFields();
-      console.log('编辑配置:', values);
-      // 调用更新系统配置API
-      await updateSystemConfig(currentConfig.id, values.name, values.config);
-      messageApi.success('配置更新成功');
-      setIsEditModalVisible(false);
-      setCurrentConfig(null);
-      // 更新本地状态
-      setSystemConfigs(prevConfigs =>
-        prevConfigs.map(config =>
-          config.id === currentConfig.id ? { ...config, ...values } : config
-        )
-      );
-    } catch (error: any) {
-        messageApi.error(t('settingsPage.configUpdateFailed') + ': ' + (error.message || t('common.unknownError')));
-    }
-  };
-
-  // 监听编辑模态框显示，设置表单值
-  useEffect(() => {
-    if (isEditModalVisible && currentConfig) {
-      editForm.setFieldsValue(currentConfig);
-    }
-  }, [isEditModalVisible, currentConfig]);
 
   // 删除系统配置
   const handleDeleteConfig = async (record: any) => {
 
-    modal.confirm({
-      title: '确认删除',
-      content: `确定要删除 ${record.name} 配置吗？`,
-      okText: '确定',
+    Modal.confirm({
+      title: t('common.confirm'),
+      content: `${t('settingsPage.confirmDelete')} ${record.name} ${t('settingsPage.config')}？`,
+      okText: t('common.confirm'),
       okType: 'danger',
       onOk: async () => {
         try {
           if (!record) return;
           await deleteSystemConfig(record.id);
-          messageApi.success(`删除 ${record.name} 配置成功`);
+          messageApi.success(t('settingsPage.deleteSuccess'));
           // 更新本地状态
           setSystemConfigs(prevConfigs =>
             prevConfigs.filter(config => config.id !== record.id)
           );
         } catch (error: any) {
-          messageApi.error('配置删除失败: ' + (error.message || t('common.unknownError')));
+          messageApi.error(t('settingsPage.deleteFailed') + ': ' + (error.message || t('common.unknownError')));
         }
       },
       onCancel: () => {
-        messageApi.info('删除操作已取消');
+        messageApi.info(t('common.canceled'));
       }
     });
   };
@@ -209,8 +217,8 @@ const SettingsPage = () => {
 
   return (
     <div>
-       {contextHolder} 
        {messageContextHolder}
+       {editModalContextHolder}
       <Card>
         <Tabs activeKey={activeTab} onChange={setActiveTab}>
 
@@ -312,54 +320,21 @@ const SettingsPage = () => {
                 { 
                   title: t('common.action'), 
                   key: 'action', 
-                  render: (_text, record) => (
-                    <Space size="middle">
-                      <Button type="primary" size="small" icon={<EditOutlined />}  onClick={() => handleEditConfig(record)}>{t('common.edit')}</Button>
-                      <Button type="primary" size="small" icon={<DeleteOutlined />} onClick={() => handleDeleteConfig(record)} danger>{t('common.delete')}</Button>
-
-                    </Space>
-                  )
+                  render: (_text, record) => {
+                console.log('Rendering action column with record:', record);
+                return (
+                  <Space size="middle">
+                    <Button type="primary" size="small" icon={<EditOutlined />}  onClick={() => handleEditConfig(record)}>{t('common.edit')}</Button>
+                    <Button type="primary" size="small" icon={<DeleteOutlined />} onClick={() => handleDeleteConfig(record)} danger>{t('common.delete')}</Button>
+                  </Space>
+                );
+              }
                 }
               ]}
               rowKey="id"
               pagination={false}
               style={{ marginBottom: '20px' }}
             />
-
-            {/* 编辑模态框 */}
-            <Modal
-              title={t('settingsPage.editSystemConfig')}
-              visible={isEditModalVisible}
-              onCancel={handleCancelEdit}
-              footer={[
-                <Button key="back" onClick={handleCancelEdit}>
-                  {t('common.cancel')}
-                </Button>,
-                <Button key="submit" type="primary" onClick={handleEditSubmit}>
-                  {t('common.save')}
-                </Button>,
-              ]}
-            >
-              <Form
-                form={editForm}
-                layout="vertical"
-              >
-                <Form.Item
-                  name="name"
-                  label={t('settingsPage.configName')}
-                  rules={[{ required: true, message: t('settingsPage.enterConfigName') }]}
-                >
-                  <Input placeholder={t('settingsPage.enterConfigName')} />
-                </Form.Item>
-                <Form.Item
-                  name="config"
-                  label={t('settingsPage.configValue')}
-                  rules={[{ required: true, message: t('settingsPage.enterConfigValue') }]}
-                >
-                  <Input placeholder={t('settingsPage.enterConfigValue')} />
-                </Form.Item>
-              </Form>
-            </Modal>
 
             {/* 添加配置模态框 */}
             <Modal

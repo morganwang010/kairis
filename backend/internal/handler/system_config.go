@@ -76,11 +76,21 @@ func (h *SystemConfigHandler) List(c *gin.Context) {
 }
 
 func (h *SystemConfigHandler) Update(c *gin.Context) {
+	idStr := c.Param("id")
+	id, err := strconv.ParseUint(idStr, 10, 32)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": "Invalid ID"})
+		return
+	}
+
 	var systemConfig model.SystemConfig
 	if err := c.ShouldBindJSON(&systemConfig); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": err.Error()})
 		return
 	}
+
+	// 设置 ID 用于更新
+	systemConfig.ID = uint(id)
 
 	if err := h.systemConfigService.Update(&systemConfig); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})

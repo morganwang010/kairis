@@ -838,16 +838,19 @@ export const generateAndDownloadPDF = (records: any | any[], projectName?: strin
   recordList.forEach((record, index) => {
     const doc = new jsPDF('p', 'mm', 'a4');
     
-    // 添加标题
+    // 添加公司信息标题
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Great Wall Drilling Company', 105, 15, { align: 'center' });
+    
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    doc.text('GWDC', 105, 22, { align: 'center' });
+    
+    // 添加 PAYROLL SLIP 标题
     doc.setFontSize(16);
     doc.setFont('helvetica', 'bold');
-    doc.text('SLIP GAJI', 105, 20, { align: 'center' });
-    
-    // 添加员工信息
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    
-    const startY = 30;
+    doc.text('PAYROLL SLIP', 105, 35, { align: 'center' });
     
     // 格式化金额为数字格式
     const formatAmount = (amount: number): string => {
@@ -857,21 +860,21 @@ export const generateAndDownloadPDF = (records: any | any[], projectName?: strin
       }).format(amount || 0);
     };
     
-    // 定义员工信息数据（四列格式）
+    // 员工信息表格
     const employeeInfo: any[] = [
-      ['DATE', record.month || '', 'Employee_ID', record.employee_id || ''],
-      ['Employee_Name', record.employee_name || '', 'NPWP',  record.npwp || ''],
-      ['IDCard_Number', record.id_card || '', 'Location_Name', record.location || ''],
-      ['Position',record.position || record.department || '', 'Join_Date', record.joinDate || record.join_date || ''],
+      ['Employee_Name', record.employee_name || '', 'Project', record.project_name || '-'],
+      ['Designation', record.position || record.department || '', 'Month', record.period || record.month || ''],
     ];
+    
+    let startY = 45;
     
     (doc as any).autoTable({
       startY: startY,
       body: employeeInfo,
-      theme: 'plain',
+      theme: 'grid',
       styles: {
         fontSize: 9,
-        cellPadding: 2
+        cellPadding: 3
       },
       columnStyles: {
         0: {
@@ -891,62 +894,196 @@ export const generateAndDownloadPDF = (records: any | any[], projectName?: strin
       }
     });
     
-    // 定义薪资详情数据（四列格式）
-    const salaryDetails: any[] = [
-      ['Basic_Salary', formatAmount(record.basic_salary), 'Field_Alw', formatAmount(record.field_alw)  ],
-      ['Housing_Alw', formatAmount(record.housing_alw), 'Position_Alw', formatAmount(record.position_alw)],
-      ['TOTAL_NET_WAGES', formatAmount(record.total_net_wages), 'BPJS ALLOWANCE', formatAmount(record.bpjs_alw)],
-      ['Housing_ALW/TJ_Tidak_Tetap', formatAmount(record.housing_alw_tidak_tetap), 'Meal_Alw', formatAmount(record.meal_alw)],
-      ['Pulsa_Alw_Month', formatAmount(record.pulsa_alw_month), 'Transp_Alw', formatAmount(record.transp_alw)],
-      ['Jmstk_Alw', formatAmount(record.jmstk_alw), 'Tax_Alw_Salary', formatAmount(record.tax_alw_salary)],
-      ['Pension_Alw', formatAmount(record.pension_alw), 'Askes_Bpjs_Alw', formatAmount(record.askes_bpjs_alw)],
-      [ 'OT1_Wages', formatAmount(record.ot1),'EW1_Wages', formatAmount(record.ew1)],
-      [ 'OT2_Wages', formatAmount(record.ot2), 'EW2_Wages', formatAmount(record.ew2)],
-      [ 'OT3_Wages', formatAmount(record.ot3),'EW3_Wages', formatAmount(record.ew3)],
-      ['Pulsa_Alw', formatAmount( record.pulsa_alw), 'Med_Alw', formatAmount(record.med_alw)],
-      ['Att_Alw', formatAmount(record.att_alw), 'Leave_Comp', formatAmount(record.leave_comp), ],
-      ['Mandah_Alw', formatAmount(record.mandah_alw),  'Religious_Alw', formatAmount(record.religious_alw)],
-      ['Incentive_Alw', formatAmount(record.incentive_alw), 'Rapel_Basic_Salary', formatAmount(record.rapel_basic_salary)],
-      ['Performance_Alw', formatAmount(record.performance_alw), 'Rapel_Jmstk_Alw', formatAmount(record.rapel_jmstk_alw)],
-      ['Comp_PHK', formatAmount(record.comp_phk),'Trip_Alw', formatAmount(record.trip_alw) ],
-      [ 'Tax_Alw_PHK', formatAmount(record.tax_alw_phk),'Acting', formatAmount(record.acting)],
-      ['Others', formatAmount(record.others), 'Correct_Add', formatAmount(record.correct_add)],        
-      ['Tax_Ded_PHK', formatAmount(record.tax_ded_phk), 'Incentive_Ded', formatAmount(record.incentive_ded)],     
-      ['Absent_Ded', formatAmount(record.absent_ded),  'Load_Ded', formatAmount(record.load_ded)],
-      ['Absent_Ded2', formatAmount(record.absent_ded2), 'Correct_Sub', formatAmount(record.correct_sub)],
-      ['Total_Accept',  { content: formatAmount(record.total_accept ), colSpan: 3, styles: { halign: 'center', valign: 'middle' } }],
-      ['JMSTK_Fee', formatAmount(record.jmstk_fee), 'Tax_Ded_Salary', formatAmount(record.tax_ded_salary )],
-      ['Pension_Ded', formatAmount(record.pension_ded || record.astekDeduction), 'Askes_Bpjs_Ded', formatAmount(record.askes_bpjs_ded || record.bpjsDeduction)],
-      ['Round_Off_Salary', { content: formatAmount(record.round_off_salary), colSpan: 3, styles: { halign: 'center', valign: 'middle' } }],
-      ['TOT TRANSFER', { content: formatAmount(record.round_off_salary), colSpan: 3, styles: { halign: 'center', valign: 'middle' } }],
-
+    // Fixed Allowance 部分
+    startY = doc.lastAutoTable.finalY + 10;
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Fixed_Alw:', 15, startY);
+    doc.text(formatAmount(record.total_fixed_alw), 185, startY, { align: 'right' });
+    
+    const fixedAlwData: any[] = [
+      ['Basic_Salary', formatAmount(record.basic_salary)],
+      ['Post_Function', formatAmount(record.post_function_alw_month ?? 0)],
+      ['Phone_Alw', formatAmount(record.phone_alw_month ?? 0)],
+      ['Internet_Alw', formatAmount(record.internet_alw_month ?? 0)],
+      ['Incentive', formatAmount(record.incentive_month ?? 0)],
+      ['Operational', formatAmount(record.operational_alw_month ?? 0)],
+      ['Housing_Alw', formatAmount(record.housing_alw_month ?? 0)],
+      ['Seniority', formatAmount(record.seniority_alw_month ?? 0)],
+      ['Transport_Alw', formatAmount(record.transport_alw_month ?? 0)],
+      ['Field_Alw', formatAmount(record.field_alw_month ?? 0)],
+      ['Accomodation', formatAmount(record.accommodation_alw_month ?? 0)],
     ];
     
     (doc as any).autoTable({
-      startY: doc.lastAutoTable.finalY + 10,
-      body: salaryDetails,
-      theme: 'grid',
+      startY: startY + 8,
+      body: fixedAlwData,
+      theme: 'plain',
       styles: {
-        fontSize: 7,
+        fontSize: 8,
         cellPadding: 2
       },
       columnStyles: {
         0: {
           halign: 'left',
-          fontStyle: 'bold'
+          width: 70
         },
         1: {
-          halign: 'right'
-        },
-        2: {
-          halign: 'left',
-          fontStyle: 'bold'
-        },
-        3: {
-          halign: 'right'
+          halign: 'right',
+          width: 50
         }
       }
     });
+    
+    // Non-Fixed Allowance 部分
+    startY = doc.lastAutoTable.finalY + 10;
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Non_Fixed_Alw:', 15, startY);
+    doc.text(formatAmount(record.total_non_fixed_alw), 185, startY, { align: 'right' });
+    
+    const nonFixedAlwData: any[] = [
+      ['THR', formatAmount(record.thr)],
+      ['Bonus', formatAmount(record.bonus)],
+      ['Compensation', formatAmount(record.compensation)],
+      ['Acting_Alw', formatAmount(record.acting_alw)],
+      ['Salary_Prorate', formatAmount(record.salary_prorate)],
+      ['Other', formatAmount(record.other_non_fixed)],
+      ['Work_Prorate', formatAmount(record.work_prorate)],
+      ['Work_Alw', formatAmount(record.work_alw)],
+      ['OSOA_Alw', formatAmount(record.osoa_alw)],
+      ['OVT_Alw', formatAmount(record.ovt_alw)],
+      ['BT_Alw', formatAmount(record.bt_alw)],
+      ['On_Alw', formatAmount(record.on_alw)],
+      ['OT_Alw', formatAmount(record.ot_alw)],
+      ['T_Alw', formatAmount(record.t_alw)],
+      ['TNT_Alw', formatAmount(record.tnt_alw)],
+      ['AL_Alw', formatAmount(record.al_alw)],
+      ['ROT_Alw', formatAmount(record.rot_alw)],
+      ['TR_Alw', formatAmount(record.tr_alw)],
+      ['ST_Alw', formatAmount(record.st_alw)],
+      ['LS_Alw', formatAmount(record.ls_alw)],
+    ];
+    
+    (doc as any).autoTable({
+      startY: startY + 8,
+      body: nonFixedAlwData,
+      theme: 'plain',
+      styles: {
+        fontSize: 8,
+        cellPadding: 2
+      },
+      columnStyles: {
+        0: {
+          halign: 'left',
+          width: 70
+        },
+        1: {
+          halign: 'right',
+          width: 50
+        }
+      }
+    });
+    
+    // Salary Deduction 部分
+    startY = doc.lastAutoTable.finalY + 10;
+    const totalSalaryDed = record.q_ded + record.pl_ded + record.late_ded + record.sc_ded + record.sc1_ded + record.co_ded + record.pm_ded + record.na_ded + record.salary_ded;
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Salary_Ded:', 15, startY);
+    doc.text(formatAmount(totalSalaryDed), 185, startY, { align: 'right' });
+    
+    const salaryDedData: any[] = [
+      ['Q_Ded', formatAmount(record.q_ded)],
+      ['PL_Ded', formatAmount(record.pl_ded)],
+      ['Late_Ded', formatAmount(record.late_ded)],
+      ['SC_Ded', formatAmount(record.sc_ded)],
+      ['SC1_Ded', formatAmount(record.sc1_ded)],
+      ['CO_Ded', formatAmount(record.co_ded)],
+      ['PM_Ded', formatAmount(record.pm_ded)],
+      ['NA_Ded', formatAmount(record.na_ded)],
+      ['Other', formatAmount(record.salary_ded)],
+    ];
+    
+    (doc as any).autoTable({
+      startY: startY + 8,
+      body: salaryDedData,
+      theme: 'plain',
+      styles: {
+        fontSize: 8,
+        cellPadding: 2
+      },
+      columnStyles: {
+        0: {
+          halign: 'left',
+          width: 70
+        },
+        1: {
+          halign: 'right',
+          width: 50
+        }
+      }
+    });
+    
+    // Gross Salary 部分
+    startY = doc.lastAutoTable.finalY + 10;
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Gross Salary:', 15, startY);
+    doc.text(formatAmount(record.gross_salary), 185, startY, { align: 'right' });
+    
+    // BPJS/TAX Deduction 部分
+    startY = startY + 10;
+    const totalBpjsTaxDed = record.bpjs_work_ded + record.bpjs_health_ded + record.tax_ded;
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text('BPJS/TAX_Ded:', 15, startY);
+    doc.text(formatAmount(totalBpjsTaxDed), 185, startY, { align: 'right' });
+    
+    const bpjsTaxData: any[] = [
+      ['BPJS_Work_Ded', formatAmount(record.bpjs_work_ded)],
+      ['BPJS_Health_Ded', formatAmount(record.bpjs_health_ded + (record.bpjs_health_tambahan || 0))],
+      ['Tax_Ded', formatAmount(record.tax_ded)],
+    ];
+    
+    (doc as any).autoTable({
+      startY: startY + 8,
+      body: bpjsTaxData,
+      theme: 'plain',
+      styles: {
+        fontSize: 8,
+        cellPadding: 2
+      },
+      columnStyles: {
+        0: {
+          halign: 'left',
+          width: 70
+        },
+        1: {
+          halign: 'right',
+          width: 50
+        }
+      }
+    });
+    
+    // Final Staff Receive 部分
+    startY = doc.lastAutoTable.finalY + 15;
+    doc.setDrawColor(0);
+    doc.setLineWidth(2);
+    doc.rect(15, startY - 5, 170, 25);
+    
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Final_Staff_Receive:', 105, startY + 8, { align: 'center' });
+    
+    doc.setFontSize(16);
+    doc.text(formatAmount(record.final_staff_receive), 105, startY + 18, { align: 'center' });
+    
+    // 添加备注
+    startY = startY + 40;
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text('This slip is computer generated, no signature required.', 105, startY, { align: 'center' });
     
     // 生成文件名
     let pdfFileName =  `${record.employee_name || 'unknown'}_${record.month || 'unknown'}_${index + 1}.pdf`;
