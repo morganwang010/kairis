@@ -160,6 +160,7 @@ const LayoutComponent = () => {
                   // defaultSelectedKeys={['dashboard']}
                   // defaultOpenKeys={['system']}
                   style={{ height: '100%', borderRight: 0 }}
+                  className="scrollable-submenu"
                   items={[
                     {
                       key: 'dashboard',
@@ -283,3 +284,37 @@ const LayoutComponent = () => {
 }
 
 export default LayoutComponent
+
+// 子菜单滚动样式（通过全局CSS注入）
+const style = document.createElement('style')
+style.textContent = `
+  /* 仅针对 salary 菜单下的子菜单（内联展开模式） */
+  .ant-menu-dark.ant-menu-inline .ant-menu-submenu-title ~ .ant-menu-sub {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  /* 仅针对 salary 菜单下的子菜单（弹出模式） */
+  .ant-menu-dark .ant-menu-submenu-popup .ant-menu-sub {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  /* 滚动条样式 - 与深色背景协调 */
+  .ant-menu-dark .ant-menu-sub .ant-menu::-webkit-scrollbar,
+  .ant-menu-dark .ant-menu-submenu-popup .ant-menu::-webkit-scrollbar {
+    width: 4px;
+  }
+  .ant-menu-dark .ant-menu-sub .ant-menu::-webkit-scrollbar-thumb,
+  .ant-menu-dark .ant-menu-submenu-popup .ant-menu::-webkit-scrollbar-thumb {
+    background-color: rgba(200, 200, 200, 0.4);
+    border-radius: 2px;
+  }
+  .ant-menu-dark .ant-menu-sub .ant-menu::-webkit-scrollbar-track,
+  .ant-menu-dark .ant-menu-submenu-popup .ant-menu::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+  .ant-menu-dark .ant-menu-sub .ant-menu::-webkit-scrollbar-thumb:hover,
+  .ant-menu-dark .ant-menu-submenu-popup .ant-menu::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.35);
+  }
+`
+document.head.appendChild(style)
