@@ -303,7 +303,7 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId , projectN
         return {
         employee_id: trimmedRecord['Employee_Id'],
         project_id: projectId,
-        project_name: trimmedRecord['Project_Name'] || projectName,
+        project_name: trimmedRecord['Project_Name'] || '',
         month: trimmedRecord['Month'] || new Date().toISOString().slice(0, 7),
         work: trimmedRecord['In'] || "0",
         off: trimmedRecord['OFF'] || "0",
@@ -337,6 +337,10 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId , projectN
       if (records.length === 0) {
         console.log('没有有效记录可导入')
         messageApi.error(t('attendanceUploadPage.noValidRecords'))
+        return
+      }
+      if (records.some(record => record.project_name != projectName)) {
+        messageApi.error(t('newAttendancePage.projectNameNotMatch'))
         return
       }
       console.log('批量导入o数据:', records)

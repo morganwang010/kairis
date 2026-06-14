@@ -459,6 +459,7 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all', projectN
         return {
           employee_id: trimmedRecord['employee_id'] || trimmedRecord['Employee_Id'],
           project_id: projectId === 'all' ? 0 : (projectId),
+          project_name: trimmedRecord['Project_Name'] || '',
           month: trimmedRecord['month'] || trimmedRecord['Month'] || new Date().toISOString().slice(0, 7),
           thr: trimmedRecord['thr'] || trimmedRecord['Thr']||trimmedRecord['THR'],
           bonus: trimmedRecord['bonus'] || trimmedRecord['Bonus'],
@@ -475,6 +476,10 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all', projectN
       
       if (records.length === 0) {
         messageApi.error(t('incidentUploadPage.noValidRecords'))
+        return
+      }
+      if (records.some(record => record.project_name != projectName)) {
+        messageApi.error(t('newAttendancePage.projectNameNotMatch'))
         return
       }
       console.log('incident records:', records)
