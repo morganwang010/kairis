@@ -163,44 +163,87 @@ type Salaries struct {
 	IsCalculate        int       `gorm:"column:is_calculate;default:1" json:"is_calculate"`
 	DeleteFlag         int       `gorm:"column:delete_flag;default:0" json:"delete_flag"`
 	Age                float64   `gorm:"column:age;default:0" json:"age"`
-	TotalFixedAlw      float64   `gorm:"column:total_fixed_alw;default:0" json:"total_fixed_alw"`
-	WorkAlw            float64   `gorm:"column:work_alw;default:0" json:"work_alw"`
-	OnAlw              float64   `gorm:"column:on_alw;default:0" json:"on_alw"`
-	OsOaAlw            float64   `gorm:"column:osoa_alw;default:0" json:"osoa_alw"`
-	OtAlw              float64   `gorm:"column:ot_alw;default:0" json:"ot_alw"`
-	OvtAlw             float64   `gorm:"column:ovt_alw;default:0" json:"ovt_alw"`
-	BtAlw              float64   `gorm:"column:bt_alw;default:0" json:"bt_alw"`
-	TAlw               float64   `gorm:"column:t_alw;default:0" json:"t_alw"`
-	TntAlw             float64   `gorm:"column:tnt_alw;default:0" json:"tnt_alw"`
-	AlAlw              float64   `gorm:"column:al_alw;default:0" json:"al_alw"`
-	RotAlw             float64   `gorm:"column:rot_alw;default:0" json:"rot_alw"`
-	TrAlw              float64   `gorm:"column:tr_alw;default:0" json:"tr_alw"`
-	StAlw              float64   `gorm:"column:st_alw;default:0" json:"st_alw"`
-	LsAlw              float64   `gorm:"column:ls_alw;default:0" json:"ls_alw"`
-	TotalNonFixedAlw   float64   `gorm:"column:total_non_fixed_alw;default:0" json:"total_non_fixed_alw"`
-	QDed               float64   `gorm:"column:q_ded;default:0" json:"q_ded"`
-	PlDed              float64   `gorm:"column:pl_ded;default:0" json:"pl_ded"`
-	LateDed            float64   `gorm:"column:late_ded;default:0" json:"late_ded"`
-	ScDed              float64   `gorm:"column:sc_ded;default:0" json:"sc_ded"`
-	Sc1Ded             float64   `gorm:"column:sc1_ded;default:0" json:"sc1_ded"`
-	CoDed              float64   `gorm:"column:co_ded;default:0" json:"co_ded"`
-	PmDed              float64   `gorm:"column:pm_ded;default:0" json:"pm_ded"`
-	NaDed              float64   `gorm:"column:na_ded;default:0" json:"na_ded"`
-	SalaryDed          float64   `gorm:"column:salary_ded;default:0" json:"salary_ded"`
-	JkkAlw             float64   `gorm:"column:jkk_alw;default:0" json:"jkk_alw"`
-	JkmAlw             float64   `gorm:"column:jkm_alw;default:0" json:"jkm_alw"`
-	JhtAlw             float64   `gorm:"column:jht_alw;default:0" json:"jht_alw"`
-	JpAlw              float64   `gorm:"column:jp_alw;default:0" json:"jp_alw"`
-	BpjsManpowerAlw    float64   `gorm:"column:bpjs_manpower_alw;default:0" json:"bpjs_manpower_alw"`
-	BpjsHealthAlw      float64   `gorm:"column:bpjs_health_alw;default:0" json:"bpjs_health_alw"`
-	GrossSalary        float64   `gorm:"column:gross_salary;default:0" json:"gross_salary"`
-	JhtDed             float64   `gorm:"column:jht_ded;default:0" json:"jht_ded"`
-	JpDed              float64   `gorm:"column:jp_ded;default:0" json:"jp_ded"`
-	BpjsWorkDed        float64   `gorm:"column:bpjs_work_ded;default:0" json:"bpjs_work_ded"`
-	BpjsHealthDed      float64   `gorm:"column:bpjs_health_ded;default:0" json:"bpjs_health_ded"`
-	BpjsHealthTambahan float64   `gorm:"column:bpjs_health_tambahan;default:0" json:"bpjs_health_tambahan"`
-	TotalDeduction     float64   `gorm:"column:total_deduction;default:0" json:"total_deduction"`
-	FinalStaffReceive  float64   `gorm:"column:final_staff_receive;default:0" json:"final_staff_receive"`
+	
+	// Fixed Allowance - 固定津贴
+	PostFunctionAlw float64 `gorm:"column:post_function_alw;default:0" json:"post_function_alw"`
+	PhoneAlw        float64 `gorm:"column:phone_alw;default:0" json:"phone_alw"`
+	InternetAlw     float64 `gorm:"column:internet_alw;default:0" json:"internet_alw"`
+	Incentive       float64 `gorm:"column:incentive;default:0" json:"incentive"`
+	OperationalAlw  float64 `gorm:"column:operational_alw;default:0" json:"operational_alw"`
+	HousingAlw      float64 `gorm:"column:housing_alw;default:0" json:"housing_alw"`
+	SeniorityAlw    float64 `gorm:"column:seniority_alw;default:0" json:"seniority_alw"`
+	TransportAlw    float64 `gorm:"column:transport_alw;default:0" json:"transport_alw"`
+	FieldAlw        float64 `gorm:"column:field_alw;default:0" json:"field_alw"`
+	AccommodationAlw float64 `gorm:"column:accommodation_alw;default:0" json:"accommodation_alw"`
+	TotalFixedAlw   float64 `gorm:"column:total_fixed_alw;default:0" json:"total_fixed_alw"`
+	
+	// Non-Fixed Allowance - 非固定津贴
+	THR             float64 `gorm:"column:thr;default:0" json:"thr"`
+	Bonus           float64 `gorm:"column:bonus;default:0" json:"bonus"`
+	Compensation    float64 `gorm:"column:compensation;default:0" json:"compensation"`
+	ActingAlw       float64 `gorm:"column:acting_alw;default:0" json:"acting_alw"`
+	SalaryProrate   float64 `gorm:"column:salary_prorate;default:0" json:"salary_prorate"`
+	OtherNonFixed   float64 `gorm:"column:other_non_fixed;default:0" json:"other_non_fixed"`
+	WorkProrate     float64 `gorm:"column:work_prorate;default:0" json:"work_prorate"`
+	WorkAlw         float64 `gorm:"column:work_alw;default:0" json:"work_alw"`
+	OsOaAlw         float64 `gorm:"column:osoa_alw;default:0" json:"osoa_alw"`
+	OvtAlw          float64 `gorm:"column:ovt_alw;default:0" json:"ovt_alw"`
+	BtAlw           float64 `gorm:"column:bt_alw;default:0" json:"bt_alw"`
+	TAlw            float64 `gorm:"column:t_alw;default:0" json:"t_alw"`
+	TntAlw          float64 `gorm:"column:tnt_alw;default:0" json:"tnt_alw"`
+	AlAlw           float64 `gorm:"column:al_alw;default:0" json:"al_alw"`
+	RotAlw          float64 `gorm:"column:rot_alw;default:0" json:"rot_alw"`
+	TrAlw           float64 `gorm:"column:tr_alw;default:0" json:"tr_alw"`
+	StAlw           float64 `gorm:"column:st_alw;default:0" json:"st_alw"`
+	LsAlw           float64 `gorm:"column:ls_alw;default:0" json:"ls_alw"`
+	OnAlw           float64 `gorm:"column:on_alw;default:0" json:"on_alw"`
+	OtAlw           float64 `gorm:"column:ot_alw;default:0" json:"ot_alw"`
+	TotalNonFixedAlw float64 `gorm:"column:total_non_fixed_alw;default:0" json:"total_non_fixed_alw"`
+	
+	// Salary Deduction - 薪资扣除
+	QDed     float64 `gorm:"column:q_ded;default:0" json:"q_ded"`
+	PlDed    float64 `gorm:"column:pl_ded;default:0" json:"pl_ded"`
+	LateDed  float64 `gorm:"column:late_ded;default:0" json:"late_ded"`
+	ScDed    float64 `gorm:"column:sc_ded;default:0" json:"sc_ded"`
+	Sc1Ded   float64 `gorm:"column:sc1_ded;default:0" json:"sc1_ded"`
+	CoDed    float64 `gorm:"column:co_ded;default:0" json:"co_ded"`
+	PmDed    float64 `gorm:"column:pm_ded;default:0" json:"pm_ded"`
+	NaDed    float64 `gorm:"column:na_ded;default:0" json:"na_ded"`
+	SalaryDed float64 `gorm:"column:salary_ded;default:0" json:"salary_ded"`
+	
+	// BPJS Allowances
+	JkkAlw           float64 `gorm:"column:jkk_alw;default:0" json:"jkk_alw"`
+	JkmAlw           float64 `gorm:"column:jkm_alw;default:0" json:"jkm_alw"`
+	JhtAlw           float64 `gorm:"column:jht_alw;default:0" json:"jht_alw"`
+	JpAlw            float64 `gorm:"column:jp_alw;default:0" json:"jp_alw"`
+	BpjsManpowerAlw  float64 `gorm:"column:bpjs_manpower_alw;default:0" json:"bpjs_manpower_alw"`
+	BpjsHealthAlw    float64 `gorm:"column:bpjs_health_alw;default:0" json:"bpjs_health_alw"`
+	
+	// Gross Salary - 总薪资
+	GrossSalary float64 `gorm:"column:gross_salary;default:0" json:"gross_salary"`
+	
+	// BPJS/TAX Deduction - BPJS/税费扣除
+	JhtDed             float64 `gorm:"column:jht_ded;default:0" json:"jht_ded"`
+	JpDed              float64 `gorm:"column:jp_ded;default:0" json:"jp_ded"`
+	BpjsWorkDed        float64 `gorm:"column:bpjs_work_ded;default:0" json:"bpjs_work_ded"`
+	BpjsHealthDed      float64 `gorm:"column:bpjs_health_ded;default:0" json:"bpjs_health_ded"`
+	BpjsHealthTambahan float64 `gorm:"column:bpjs_health_tambahan;default:0" json:"bpjs_health_tambahan"`
+	TaxDed             float64 `gorm:"column:tax_ded;default:0" json:"tax_ded"`
+	TotalBpjsTaxDed    float64 `gorm:"column:total_bpjs_tax_ded;default:0" json:"total_bpjs_tax_ded"`
+	
+	// Final - 最终
+	TotalDeduction    float64 `gorm:"column:total_deduction;default:0" json:"total_deduction"`
+	FinalStaffReceive float64 `gorm:"column:final_staff_receive;default:0" json:"final_staff_receive"`
+	
+	// Additional fields for display
+	ProjectName   string `gorm:"-" json:"project_name"`
+	EmployeeName  string `gorm:"-" json:"employee_name"`
+	Position      string `gorm:"-" json:"position"`
+	Department    string `gorm:"-" json:"department"`
+	NPWP          string `gorm:"-" json:"npwp"`
+	Location      string `gorm:"-" json:"location"`
+	JoinDate      string `gorm:"-" json:"join_date"`
+	IDCard        string `gorm:"-" json:"id_card"`
 }
 
 // Employee 对应 employees 数据表的 GORM 模型

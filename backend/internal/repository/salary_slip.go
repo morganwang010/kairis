@@ -8,20 +8,27 @@ func (r *SalaryRepository) ListSalarySlips(offset, limit int, month string, proj
 	var salarySlips []model.Salaries
 	var total int64
 
-	query := r.db.Model(&model.Salaries{}).Where("delete_flag = 0 and month =? and project_id = ?", month, projectID)
-
-	// if month != "" {
-	// 	query = query.Where("month = ?", month)
-	// }
-	// if projectID > 0 {
-	// 	query = query.Where("project_id = ?", projectID)
-	// }
+	query := r.db.Model(&model.Salaries{}).
+		Select(`
+			salaries.*,
+			employees.employee_name,
+			employees.position,
+			employees.department,
+			employees.npwp,
+			employees.location,
+			employees.join_date,
+			employees.id_card,
+			projects.project_name
+		`).
+		Joins("LEFT JOIN employees ON salaries.employee_id = employees.employee_id").
+		Joins("LEFT JOIN projects ON salaries.project_id = projects.id").
+		Where("salaries.delete_flag = 0 AND salaries.month = ? AND salaries.project_id = ?", month, projectID)
 
 	if err := query.Count(&total).Error; err != nil {
 		return nil, 0, err
 	}
 
-	if err := query.Order("employee_id DESC").Offset(offset).Limit(limit).Find(&salarySlips).Error; err != nil {
+	if err := query.Order("salaries.employee_id DESC").Offset(offset).Limit(limit).Scan(&salarySlips).Error; err != nil {
 		return nil, 0, err
 	}
 
@@ -34,7 +41,22 @@ func (r *SalaryRepository) UpdateSalarySlip(salarySlip *model.Salaries) error {
 
 func (r *SalaryRepository) GetByEmployeeIDAndMonth(employeeID, month string, projectID int) (*model.Salaries, error) {
 	var salarySlip model.Salaries
-	err := r.db.Where("employee_id = ? AND month = ? AND project_id = ? AND delete_flag = 0", employeeID, month, projectID).First(&salarySlip).Error
+	err := r.db.Model(&model.Salaries{}).
+		Select(`
+			salaries.*,
+			employees.employee_name,
+			employees.position,
+			employees.department,
+			employees.npwp,
+			employees.location,
+			employees.join_date,
+			employees.id_card,
+			projects.project_name
+		`).
+		Joins("LEFT JOIN employees ON salaries.employee_id = employees.employee_id").
+		Joins("LEFT JOIN projects ON salaries.project_id = projects.id").
+		Where("salaries.employee_id = ? AND salaries.month = ? AND salaries.project_id = ? AND salaries.delete_flag = 0", employeeID, month, projectID).
+		First(&salarySlip).Error
 	if err != nil {
 		return nil, err
 	}
