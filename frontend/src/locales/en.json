@@ -397,7 +397,11 @@
   "totalDeduction": "Total_Deduction",
   "finalStaffReceive": "Final_Staff_Receive",
   "totalBpjsHealthDeduction": "Total_BPJS_Health_Ded",
-  "taxDed": "Tax_Ded"
+  "taxDed": "Tax_Ded",
+  "os": "OS",
+  "oa": "OA",
+  "osAlw": "OS_Alw",
+  "oaAlw": "OA_Alw"
   },
   "homePage": {
     "dashboard": "Dashboard",
@@ -735,7 +739,8 @@
     "accommodationAlwMonth": "Accommodation_Alw/Month", 
     "workDay": "Work/Day",
     "onDay": "On/Day",
-    "btDay": "BT/Day",    
+    "btDay": "BT/Day",  
+    "osDay": "OS/Day",
     "oaDay": "OA/Day",
     "travellDay": "Travel/Day",
     "tntDay": "TNT/Day",
@@ -910,7 +915,9 @@
     "pm": "PM",
     "na": "NA",
     "co": "CO",
-    "projectNameNotMatch": "Project name not match"
+    "projectNameNotMatch": "Project name not match",
+    "os": "OS",
+    "oa": "OA"
   },
   "salaryUploadPage": {
     "title": "Salary Import",

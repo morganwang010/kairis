@@ -103,7 +103,8 @@ type ImportSalaryItem struct {
 	TotalFixedAlw      float64 `json:"total_fixed_alw"`
 	WorkAlw            float64 `json:"work_alw"`
 	OnAlw              float64 `json:"on_alw"`
-	OsOaAlw            float64 `json:"osoa_alw"`
+	OSAlw              float64 `json:"os_alw"`
+	OaAlw              float64 `json:"oa_alw"`
 	OtAlw              float64 `json:"ot_alw"`
 	OvtAlw             float64 `json:"ovt_alw"`
 	BtAlw              float64 `json:"bt_alw"`
@@ -156,7 +157,8 @@ func (s *SalaryService) ImportSalary(req ImportSalaryRequest) error {
 			TotalFixedAlw:      salary.TotalFixedAlw,
 			WorkAlw:            salary.WorkAlw,
 			OnAlw:              salary.OnAlw,
-			OsOaAlw:            salary.OsOaAlw,
+			OSAlw:              salary.OSAlw,
+			OaAlw:              salary.OaAlw,
 			OtAlw:              salary.OtAlw,
 			OvtAlw:             salary.OvtAlw,
 			BtAlw:              salary.BtAlw,

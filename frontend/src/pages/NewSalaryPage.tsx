@@ -914,9 +914,15 @@ const loadData = async () => {
         width: 100,
       },
       {
-        title: t('newAttendancePage.osOa'),
-        dataIndex: 'os_oa',
-        key: 'os_oa',
+        title: t('newAttendancePage.os'),
+        dataIndex: 'os',
+        key: 'os',
+        width: 100,
+      },
+            {
+        title: t('newAttendancePage.oa'),
+        dataIndex: 'oa',
+        key: 'oa',
         width: 100,
       },
       {
@@ -1075,9 +1081,15 @@ const loadData = async () => {
   render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
 },
 {
-  title: t('newSalaryPage.osoaAllowance'),
-  dataIndex: 'osoa_alw',
-  key: 'osoa_alw',
+  title: t('newSalaryPage.osAlw'),
+  dataIndex: 'os_alw',
+  key: 'os_alw',
+  render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
+},
+{
+  title: t('newSalaryPage.oaAlw'),
+  dataIndex: 'oa_alw',
+  key: 'oa_alw',
   render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} />
 },
 {

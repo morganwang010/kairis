@@ -125,6 +125,8 @@ type Attendances struct {
 
 	W    float64 `gorm:"column:w;default:0" json:"w"`
 	Ons  float64 `gorm:"column:ons;default:0" json:"ons"`
+	Os   float64 `gorm:"column:os;default:0" json:"os"`
+	Oa   float64 `gorm:"column:oa;default:0" json:"oa"`
 	OsOa float64 `gorm:"column:os_oa;default:0" json:"os_oa"`
 	Ot   float64 `gorm:"column:ot;default:0" json:"ot"`
 	Ovt  float64 `gorm:"column:ovt;default:0" json:"ovt"`
@@ -164,17 +166,6 @@ type Salaries struct {
 	DeleteFlag       int       `gorm:"column:delete_flag;default:0" json:"delete_flag"`
 	Age              float64   `gorm:"column:age;default:0" json:"age"`
 
-	// Fixed Allowance - 固定津贴
-	// PostFunctionAlw float64 `gorm:"column:post_function_alw;default:0" json:"post_function_alw"`
-	// PhoneAlw         float64 `gorm:"column:phone_alw;default:0" json:"phone_alw"`
-	// InternetAlw      float64 `gorm:"column:internet_alw;default:0" json:"internet_alw"`
-	// Incentive        float64 `gorm:"column:incentive;default:0" json:"incentive"`
-	// OperationalAlw   float64 `gorm:"column:operational_alw;default:0" json:"operational_alw"`
-	// HousingAlw       float64 `gorm:"column:housing_alw;default:0" json:"housing_alw"`
-	// SeniorityAlw     float64 `gorm:"column:seniority_alw;default:0" json:"seniority_alw"`
-	// TransportAlw     float64 `gorm:"column:transport_alw;default:0" json:"transport_alw"`
-	// FieldAlw         float64 `gorm:"column:field_alw;default:0" json:"field_alw"`
-	// AccommodationAlw float64 `gorm:"column:accommodation_alw;default:0" json:"accommodation_alw"`
 	TotalFixedAlw float64 `gorm:"column:total_fixed_alw;default:0" json:"total_fixed_alw"`
 
 	// Non-Fixed Allowance - 非固定津贴
@@ -186,7 +177,8 @@ type Salaries struct {
 	// OtherNonFixed    float64 `gorm:"column:other_non_fixed;default:0" json:"other_non_fixed"`
 	// WorkProrate      float64 `gorm:"column:work_prorate;default:0" json:"work_prorate"`
 	WorkAlw          float64 `gorm:"column:work_alw;default:0" json:"work_alw"`
-	OsOaAlw          float64 `gorm:"column:osoa_alw;default:0" json:"osoa_alw"`
+	OSAlw            float64 `gorm:"column:os_alw;default:0" json:"os_alw"`
+	OaAlw            float64 `gorm:"column:oa_alw;default:0" json:"oa_alw"`
 	OvtAlw           float64 `gorm:"column:ovt_alw;default:0" json:"ovt_alw"`
 	BtAlw            float64 `gorm:"column:bt_alw;default:0" json:"bt_alw"`
 	TAlw             float64 `gorm:"column:t_alw;default:0" json:"t_alw"`
@@ -382,6 +374,7 @@ type Employee struct {
 	WorkDay                  float64   `gorm:"column:work_day;default:0" json:"work_day"`                                  // INTEGER default 0
 	OnDay                    float64   `gorm:"column:on_day;default:0" json:"on_day"`                                      // INTEGER default 0
 	BTDay                    float64   `gorm:"column:bt_day;default:0" json:"bt_day"`                                      // INTEGER default 0
+	OSDay                    float64   `gorm:"column:os_day;default:0" json:"os_day"`                                      // INTEGER default 0
 	OADay                    float64   `gorm:"column:oa_day;default:0" json:"oa_day"`                                      // INTEGER default 0
 	TravellDay               float64   `gorm:"column:travell_day;default:0" json:"travell_day"`                            // INTEGER default 0
 	TnTDay                   float64   `gorm:"column:tnt_day;default:0" json:"tnt_day"`                                    // INTEGER default 0

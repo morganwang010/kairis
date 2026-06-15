@@ -128,7 +128,8 @@ interface SalarySlipRecord {
   tr_day?: number;
   w?: number;
   ons?: number;
-  os_oa?: number;
+  os?: number;
+  oa?: number;
   ot?: number;
   ovt?: number;
   bt?: number;
@@ -328,7 +329,8 @@ const SalarySlipPage: React.FC<SalarySlipPageProps> = ({  projectId = 'all',  pr
       tr_day: item.tr_day,
       w: item.w,
       ons: item.ons,
-      os_oa: item.os_oa,
+      os: item.os,
+      oa: item.oa,
       ot: item.ot,
       ovt: item.ovt,
       bt: item.bt,

@@ -136,37 +136,6 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId ,projectName}) => {
     })
   }
 
-  // 加载部门数据
-  // const loadDepartments = async () => {
-  //   try {
-  //     setLoading(true)
-  //     const deptData = await getDepartments()
-  //     // 确保id为字符串类型
-  //     setDepartments(deptData.map((item: { id: number; name: string }) => ({ id: item.id.toString(), name: item.name })))
-  //   } catch (error) {
-  //     console.error(t('employeePage.loadDepartmentsError'), error)
-  //     messageApi.error(t('employeePage.loadDepartmentsError'))
-  //   } finally {
-  //     setLoading(false)
-  //   }
-  // }
-
-  // // 加载职级数据
-  // const loadRanks = async () => {
-  //   try {
-  //     setLoading(true)
-  //     // const rankData = await getRanks()
-  //     // setRanks(rankData)
-  //   } catch (error) {
-  //     console.error(t('employeePage.loadRanksError'), error)
-  //     messageApi.error(t('employeePage.loadRanksError'))
-  //     // 提供默认职级数据作为备选
-
-  //   } finally {
-  //     setLoading(false)
-  //   }
-  // }
-
   // 加载员工数据
   const loadEmployees = async (filters?: any) => {
     setEditingEmployee(null)
@@ -496,6 +465,10 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId ,projectName}) => {
           item[key] = item[key].toString();
         });
       });
+      if (importData.some(record => (record.project_name || '').trim() !== (projectName || '').trim())) {
+        messageApi.error(t('newAttendancePage.projectNameNotMatch'))
+        return
+      }
       try {
         await importEmployeeRecords(importData);
         messageApi.success(t('employeePage.importAllSuccess', { count: importData.length }));
@@ -674,7 +647,9 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId ,projectName}) => {
     { title: t('employeePage.accommodationAlwMonth'), dataIndex: 'accommodation_alw_month', key: 'accommodation_alw_month', width: 150, render: (text: number | string | null | undefined) => <ScientificNumberDisplay value={text} /> },
     { title: t('employeePage.workDay'), dataIndex: 'work_day', key: 'work_day', width: 100 },
     { title: t('employeePage.onDay'), dataIndex: 'on_day', key: 'on_day', width: 100 },
+    
     { title: t('employeePage.btDay'), dataIndex: 'bt_day', key: 'bt_day', width: 100 },
+    { title: t('employeePage.osDay'), dataIndex: 'os_day', key: 'os_day', width: 100 },
     { title: t('employeePage.oaDay'), dataIndex: 'oa_day', key: 'oa_day', width: 100 },
     { title: t('employeePage.travellDay'), dataIndex: 'travell_day', key: 'travell_day', width: 100 },
     { title: t('employeePage.tntDay'), dataIndex: 'tnt_day', key: 'tnt_day', width: 100 },

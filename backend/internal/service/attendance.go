@@ -17,6 +17,8 @@ type ImportAttendanceItem struct {
 	Month      string `json:"month"`
 	W          string `json:"w"`
 	Ons        string `json:"ons"`
+	Os         string `json:"os"`
+	Oa         string `json:"oa"`
 	OsOa       string `json:"os_oa"`
 	Ot         string `json:"ot"`
 	Ovt        string `json:"ovt"`
@@ -83,6 +85,8 @@ func (s *AttendanceService) ImportAttendance(req ImportAttendanceRequest) error 
 		w, _ := strconv.ParseFloat(attendance.W, 64)
 		off, _ := strconv.ParseFloat(attendance.Off, 64)
 		ons, _ := strconv.ParseFloat(attendance.Ons, 64)
+		os, _ := strconv.ParseFloat(attendance.Os, 64)
+		oa, _ := strconv.ParseFloat(attendance.Oa, 64)
 		osOa, _ := strconv.ParseFloat(attendance.OsOa, 64)
 		ot, _ := strconv.ParseFloat(attendance.Ot, 64)
 		ovt, _ := strconv.ParseFloat(attendance.Ovt, 64)
@@ -103,10 +107,10 @@ func (s *AttendanceService) ImportAttendance(req ImportAttendanceRequest) error 
 		pm, _ := strconv.ParseFloat(attendance.Pm, 64)
 		na, _ := strconv.ParseFloat(attendance.Na, 64)
 		t, _ := strconv.ParseFloat(attendance.T, 64)
-		
+
 		// 根据Project_id, employee_id, month三者同时重复即认为重复
 		existingAttendance, err := s.attendanceRepo.GetByEmployeeIDAndMonth(attendance.EmployeeID, attendance.Month, attendance.ProjectID)
-		
+
 		if err == nil && len(existingAttendance) > 0 {
 			// 记录存在，执行更新
 			slog.Info("Updating existing attendance", "employee_id", attendance.EmployeeID, "project_id", attendance.ProjectID, "month", attendance.Month)
@@ -118,6 +122,8 @@ func (s *AttendanceService) ImportAttendance(req ImportAttendanceRequest) error 
 				W:          w,
 				Off:        off,
 				Ons:        ons,
+				Os:         os,
+				Oa:         oa,
 				OsOa:       osOa,
 				Ot:         ot,
 				Ovt:        ovt,
@@ -153,6 +159,8 @@ func (s *AttendanceService) ImportAttendance(req ImportAttendanceRequest) error 
 				W:          w,
 				Off:        off,
 				Ons:        ons,
+				Os:         os,
+				Oa:         oa,
 				OsOa:       osOa,
 				Ot:         ot,
 				Ovt:        ovt,

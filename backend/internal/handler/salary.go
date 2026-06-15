@@ -220,7 +220,8 @@ func (h *SalaryHandler) Import(c *gin.Context) {
 			TotalFixedAlw      float64 `json:"total_fixed_alw"`
 			WorkAlw            float64 `json:"work_alw"`
 			OnAlw              float64 `json:"on_alw"`
-			OsOaAlw            float64 `json:"os_oa_alw"`
+			OSAlw              float64 `json:"os_alw"`
+			OaAlw              float64 `json:"oa_alw"`
 			OtAlw              float64 `json:"ot_alw"`
 			OvtAlw             float64 `json:"ovt_alw"`
 			BtAlw              float64 `json:"bt_alw"`
@@ -326,17 +327,14 @@ func (h *SalaryHandler) Import(c *gin.Context) {
 			AbsentDed:          item.AbsentDed,
 			AbsentDed2:         item.AbsentDed2,
 			NetAccept:          item.NetAccept,
-			RoundOffSalary:     item.RoundOffSalary,
-			TotalNetWages:      item.TotalNetWages,
-			SalarySlipStatus:   item.SalarySlipStatus,
-			PulsaAlwMonth:      item.PulsaAlwMonth,
 			IsCalculate:        item.IsCalculate,
 			DeleteFlag:         item.DeleteFlag,
 			Age:                item.Age,
 			TotalFixedAlw:      item.TotalFixedAlw,
 			WorkAlw:            item.WorkAlw,
 			OnAlw:              item.OnAlw,
-			OsOaAlw:            item.OsOaAlw,
+			OSAlw:              item.OSAlw,
+			OaAlw:              item.OaAlw,
 			OtAlw:              item.OtAlw,
 			OvtAlw:             item.OvtAlw,
 			BtAlw:              item.BtAlw,

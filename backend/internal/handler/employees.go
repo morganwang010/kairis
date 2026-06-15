@@ -63,6 +63,7 @@ func (h *EmployeeHandler) Create(c *gin.Context) {
 		AccommodationAlwMonth    float64 `json:"accommodation_alw_month"`
 		WorkDay                  float64 `json:"work_day"`
 		OnDay                    float64 `json:"on_day"`
+		OSDay                    float64 `json:"os_day"`
 		BTDay                    float64 `json:"bt_day"`
 		OADay                    float64 `json:"oa_day"`
 		TravellDay               float64 `json:"travell_day"`
@@ -118,6 +119,7 @@ func (h *EmployeeHandler) Create(c *gin.Context) {
 		AccommodationAlwMonth:    req.AccommodationAlwMonth,
 		WorkDay:                  req.WorkDay,
 		OnDay:                    req.OnDay,
+		OSDay:                    req.OSDay,
 		BTDay:                    req.BTDay,
 		OADay:                    req.OADay,
 		TravellDay:               req.TravellDay,
@@ -304,6 +306,7 @@ func (h *EmployeeHandler) Update(c *gin.Context) {
 		AccommodationAlwMonth    float64 `json:"accommodation_alw_month"`
 		WorkDay                  float64 `json:"work_day"`
 		OnDay                    float64 `json:"on_day"`
+		OSDay                    float64 `json:"os_day"`
 		BTDay                    float64 `json:"bt_day"`
 		OADay                    float64 `json:"oa_day"`
 		TravellDay               float64 `json:"travell_day"`
@@ -360,6 +363,7 @@ func (h *EmployeeHandler) Update(c *gin.Context) {
 		AccommodationAlwMonth:    req.AccommodationAlwMonth,
 		WorkDay:                  req.WorkDay,
 		OnDay:                    req.OnDay,
+		OSDay:                    req.OSDay,
 		BTDay:                    req.BTDay,
 		OADay:                    req.OADay,
 		TravellDay:               req.TravellDay,
@@ -428,6 +432,7 @@ func (h *EmployeeHandler) Import(c *gin.Context) {
 			FieldAlwMonth            string `json:"field_alw/month"`
 			AccommodationAlwMonth    string `json:"accommodation_alw/month"`
 			WorkDay                  string `json:"work/day"`
+			OSDay                    string `json:"os/day"`
 			OnDay                    string `json:"on/day"`
 			BTDay                    string `json:"bt/day"`
 			OADay                    string `json:"oa/day"`
@@ -527,6 +532,10 @@ func (h *EmployeeHandler) Import(c *gin.Context) {
 		if !ok {
 			return
 		}
+		osDay, ok := StringToFloat64(c, item.OSDay, "os/day")
+		if !ok {
+			return
+		}
 		oADay, ok := StringToFloat64(c, item.OADay, "oa/day")
 		if !ok {
 			return
@@ -588,6 +597,7 @@ func (h *EmployeeHandler) Import(c *gin.Context) {
 			WorkDay:                  workDay,
 			OnDay:                    onDay,
 			BTDay:                    btDay,
+			OSDay:                    osDay,
 			OADay:                    oADay,
 			TravellDay:               travellDay,
 			TnTDay:                   tnTDay,

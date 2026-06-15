@@ -106,6 +106,7 @@ type ImportEmployeeItem struct {
 	WorkDay                  float64 `json:"work_day"`
 	OnDay                    float64 `json:"on_day"`
 	BTDay                    float64 `json:"bt_day"`
+	OSDay                    float64 `json:"os_day"`
 	OADay                    float64 `json:"oa_day"`
 	TravellDay               float64 `json:"travell_day"`
 	TnTDay                   float64 `json:"tnt_day"`
@@ -193,6 +194,7 @@ func (s *EmployeeService) ImportEmployee(req ImportEmployeeRequest) error {
 			WorkDay:                  employee.WorkDay,
 			OnDay:                    employee.OnDay,
 			BTDay:                    employee.BTDay,
+			OSDay:                    employee.OSDay,
 			OADay:                    employee.OADay,
 			TravellDay:               employee.TravellDay,
 			TnTDay:                   employee.TnTDay,

@@ -43,7 +43,8 @@ type AttendanceWithEmployee struct {
 	WorkDay                  float64 `gorm:"column:work_day;default:0" json:"work_day"`                                  // INTEGER default 0
 	OnDay                    float64 `gorm:"column:on_day;default:0" json:"on_day"`                                      // INTEGER default 0
 	BTDay                    float64 `gorm:"column:bt_day;default:0" json:"bt_day"`                                      // INTEGER default 0
-	OADay                    float64 `gorm:"column:oa_day;default:0" json:"oa_day"`                                      // INTEGER default 0
+	OSDay                    float64 `gorm:"column:os_day;default:0" json:"os_day"`                                      // INTEGER default 0
+	OADay                    float64 `gorm:"column:os_day;default:0" json:"os_day"`                                      // INTEGER default 0
 	TravellDay               float64 `gorm:"column:travell_day;default:0" json:"travell_day"`                            // INTEGER default 0
 	TnTDay                   float64 `gorm:"column:tnt_day;default:0" json:"tnt_day"`                                    // INTEGER default 0
 	STDay                    float64 `gorm:"column:st_day;default:0" json:"st_day"`                                      // INTEGER default 0
@@ -91,7 +92,8 @@ type AttendanceWithEmployeeAndIncident struct {
 	TRDay              float64   `gorm:"column:tr_day;default:0" json:"tr_day"`
 	WorkDay            float64   `gorm:"column:work_day;default:0" json:"work_day"`
 	OnDay              float64   `gorm:"column:on_day;default:0" json:"on_day"`
-	OsOaAlw            float64   `gorm:"column:osoa_alw;default:0.00" json:"osoa_alw"`
+	OsAlw              float64   `gorm:"column:os_alw;default:0.00" json:"os_alw"`
+	OaAlw              float64   `gorm:"column:oa_alw;default:0.00" json:"oa_alw"`
 	TotalFixedAlw      float64   `gorm:"column:total_fixed_alw;default:0.00" json:"total_fixed_alw"`
 	WorkAlw            float64   `gorm:"column:work_alw;default:0.00" json:"work_alw"`
 	OTAlw              float64   `gorm:"column:ot_alw;default:0.00" json:"ot_alw"`
@@ -179,7 +181,7 @@ func (r *SalaryRepository) List(offset, limit int, month string, projectID int, 
 
 	// 再查询分页数据
 	if err := query.
-		Select(`s.*, e.employee_name, e.tax_type, e.npwp, e.join_date, e.resign_date,e.id_card, e.position,e.email,ir.thr, ir.bonus, ir.compensation, ir.acting_alw, ir.salary_prorate, ir.rapel, ir.tax_alw, ir.tax_ded,ir.other_add,ir.other_ded,e.bpjs_health_tambahan_status,e.date_of_birth,e.post_function_alw_month,e.phone_alw_month,e.internet_alw_month,e.incentive_month,e.operational_alw_month,e.housing_alw_month,e.seniority_alw_month,e.transport_alw_month,e.field_alw_month,e.accommodation_alw_month,e.work_day,e.on_day,e.bt_day,e.oa_day,e.travell_day,e.tnt_day,e.st_day,e.tr_day,a.w,a.ons,a.os_oa,a.ot,a.ovt,a.bt,a.t,a.tnt,a.al,a.rot,a.tr,a.st,a.ls,a.q,a.wfh,a.pl,a.l,a.sc,a.sc1,a.co,a.pm,a.na,a.off`).
+		Select(`s.*, e.employee_name, e.tax_type, e.npwp, e.join_date, e.resign_date,e.id_card, e.position,e.email,ir.thr, ir.bonus, ir.compensation, ir.acting_alw, ir.salary_prorate, ir.rapel, ir.tax_alw, ir.tax_ded,ir.other_add,ir.other_ded,e.bpjs_health_tambahan_status,e.date_of_birth,e.post_function_alw_month,e.phone_alw_month,e.internet_alw_month,e.incentive_month,e.operational_alw_month,e.housing_alw_month,e.seniority_alw_month,e.transport_alw_month,e.field_alw_month,e.accommodation_alw_month,e.work_day,e.on_day,e.bt_day,e.oa_day,e.os_day,e.travell_day,e.tnt_day,e.st_day,e.tr_day,a.w,a.ons,a.os,a.oa,a.ot,a.ovt,a.bt,a.t,a.tnt,a.al,a.rot,a.tr,a.st,a.ls,a.q,a.wfh,a.pl,a.l,a.sc,a.sc1,a.co,a.pm,a.na,a.off`).
 		Joins("LEFT JOIN attendances as a ON s.employee_id = a.employee_id AND s.month = a.month").
 		Joins("LEFT JOIN incidents as ir ON s.employee_id = ir.employee_id AND s.month = ir.month").
 		Order("s.employee_id DESC").
@@ -266,7 +268,7 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 
 	var attendanceRecords []AttendanceWithEmployeeAndIncident
 	if err := r.db.Table("attendances as a").
-		Select(`a.*, e.employee_name, e.tax_type, e.npwp, e.join_date, e.id_card, ir.thr, ir.bonus, ir.compensation, ir.acting_alw, ir.salary_prorate, ir.rapel, ir.tax_alw, ir.tax_ded,ir.other_add,ir.other_ded,e.basic_salary,e.bpjs_health_tambahan_status,e.date_of_birth,e.post_function_alw_month,e.phone_alw_month,e.internet_alw_month,e.incentive_month,e.operational_alw_month,e.housing_alw_month,e.seniority_alw_month,e.transport_alw_month,e.field_alw_month,e.accommodation_alw_month,e.work_day,e.on_day,e.bt_day,e.oa_day,e.travell_day,e.tnt_day,e.st_day,e.tr_day`).
+		Select(`a.*, e.employee_name, e.tax_type, e.npwp, e.join_date, e.id_card, ir.thr, ir.bonus, ir.compensation, ir.acting_alw, ir.salary_prorate, ir.rapel, ir.tax_alw, ir.tax_ded,ir.other_add,ir.other_ded,e.basic_salary,e.bpjs_health_tambahan_status,e.date_of_birth,e.post_function_alw_month,e.phone_alw_month,e.internet_alw_month,e.incentive_month,e.operational_alw_month,e.housing_alw_month,e.seniority_alw_month,e.transport_alw_month,e.field_alw_month,e.accommodation_alw_month,e.work_day,e.on_day,e.bt_day,e.oa_day,e.os_day,e.travell_day,e.tnt_day,e.st_day,e.tr_day`).
 		Joins("LEFT JOIN employees as e ON a.employee_id = e.employee_id").
 		Joins("LEFT JOIN incidents as ir ON a.employee_id = ir.employee_id AND a.month = ir.month").
 		Where("a.month = ? AND a.project_id = ?", month, projectID).
@@ -294,8 +296,9 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 		slog.Info("workDays:", "workDays", workDays)
 		slog.Info("onDays:", "onDays", onDays)
 		slog.Info("ons:", "ons", record.Ons)
-		// OS/OA_Alw = OS/OA/Day * On/day
-		osOaAlw := record.OsOa * (onDays + record.OADay)
+		OSAlw := record.OSDay * record.Os
+		_ = OSAlw // 避免未使用变量错误
+		OaAlw := record.Oa * (onDays + record.OADay)
 
 		// OT_Alw = OT * (Basic_Salary * 2) / (30 * 8)
 
@@ -352,7 +355,7 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 		naDed := totalFixedAlw * record.Na / 22
 
 		// Total_Non_Fixed_Alw = Work_Alw + On_Alw + OS/OA_Alw + OT_Alw + OVT_Alw + BT_Alw + T_Alw + TNT_Alw + AL_Alw + ROT_Alw + TR_Alw + ST_Alw + LS_Alw + THR + Bonus + Compensation + Acting_Allowance + Salary_Prorate + Other_Add
-		totalNonFixedAlw := workAlw + onAlw + osOaAlw + otAlw + ovtAlw + btAlw + tAlw + tntAlw + alAlw + rotAlw + trAlw + stAlw + lsAlw + record.Thr + record.Bonus + record.Compensation + record.ActingAllowance + record.SalaryProrate + record.OtherAdd
+		totalNonFixedAlw := workAlw + onAlw + OaAlw + OSAlw + otAlw + ovtAlw + btAlw + tAlw + tntAlw + alAlw + rotAlw + trAlw + stAlw + lsAlw + record.Thr + record.Bonus + record.Compensation + record.ActingAllowance + record.SalaryProrate + record.OtherAdd
 
 		// Salary_Ded = Q_Ded + PL_Ded + SC_Ded + SC1_Ded + CO_Ded + PM_Ded + NA_Ded + Other_Ded
 		salaryDed := qDed + plDed + lateDed + scDed + sc1Ded + coDed + pmDed + naDed + record.OtherDed
@@ -534,7 +537,9 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 			existingSalary.TotalFixedAlw = totalFixedAlw
 			existingSalary.WorkAlw = workAlw
 			existingSalary.OnAlw = onAlw
-			existingSalary.OsOaAlw = osOaAlw
+			// existingSalary.OSDay = osDay
+			existingSalary.OSAlw = OSAlw
+			existingSalary.OaAlw = OaAlw
 			existingSalary.OtAlw = otAlw
 			existingSalary.OvtAlw = ovtAlw
 			existingSalary.BtAlw = btAlw
@@ -587,7 +592,8 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 				TotalFixedAlw:      totalFixedAlw,
 				WorkAlw:            workAlw,
 				OnAlw:              onAlw,
-				OsOaAlw:            osOaAlw,
+				OSAlw:              OSAlw,
+				OaAlw:              OaAlw,
 				OtAlw:              otAlw,
 				OvtAlw:             ovtAlw,
 				BtAlw:              btAlw,

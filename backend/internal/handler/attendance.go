@@ -22,37 +22,6 @@ func NewAttendanceHandler(attendanceService *service.AttendanceService) *Attenda
 
 type CreateAttendanceRequest struct {
 	EmployeeID string  `json:"employee_id" binding:"required"`
-	Day1       string  `json:"day1"`
-	Day2       string  `json:"day2"`
-	Day3       string  `json:"day3"`
-	Day4       string  `json:"day4"`
-	Day5       string  `json:"day5"`
-	Day6       string  `json:"day6"`
-	Day7       string  `json:"day7"`
-	Day8       string  `json:"day8"`
-	Day9       string  `json:"day9"`
-	Day10      string  `json:"day10"`
-	Day11      string  `json:"day11"`
-	Day12      string  `json:"day12"`
-	Day13      string  `json:"day13"`
-	Day14      string  `json:"day14"`
-	Day15      string  `json:"day15"`
-	Day16      string  `json:"day16"`
-	Day17      string  `json:"day17"`
-	Day18      string  `json:"day18"`
-	Day19      string  `json:"day19"`
-	Day20      string  `json:"day20"`
-	Day21      string  `json:"day21"`
-	Day22      string  `json:"day22"`
-	Day23      string  `json:"day23"`
-	Day24      string  `json:"day24"`
-	Day25      string  `json:"day25"`
-	Day26      string  `json:"day26"`
-	Day27      string  `json:"day27"`
-	Day28      string  `json:"day28"`
-	Day29      string  `json:"day29"`
-	Day30      string  `json:"day30"`
-	Day31      string  `json:"day31"`
 	Work       int     `json:"work"`
 	ProjectID  int     `json:"project_id"`
 	Permission int     `json:"permission"`
@@ -74,37 +43,6 @@ type CreateAttendanceRequest struct {
 }
 
 type UpdateAttendanceRequest struct {
-	Day1       string  `json:"day1"`
-	Day2       string  `json:"day2"`
-	Day3       string  `json:"day3"`
-	Day4       string  `json:"day4"`
-	Day5       string  `json:"day5"`
-	Day6       string  `json:"day6"`
-	Day7       string  `json:"day7"`
-	Day8       string  `json:"day8"`
-	Day9       string  `json:"day9"`
-	Day10      string  `json:"day10"`
-	Day11      string  `json:"day11"`
-	Day12      string  `json:"day12"`
-	Day13      string  `json:"day13"`
-	Day14      string  `json:"day14"`
-	Day15      string  `json:"day15"`
-	Day16      string  `json:"day16"`
-	Day17      string  `json:"day17"`
-	Day18      string  `json:"day18"`
-	Day19      string  `json:"day19"`
-	Day20      string  `json:"day20"`
-	Day21      string  `json:"day21"`
-	Day22      string  `json:"day22"`
-	Day23      string  `json:"day23"`
-	Day24      string  `json:"day24"`
-	Day25      string  `json:"day25"`
-	Day26      string  `json:"day26"`
-	Day27      string  `json:"day27"`
-	Day28      string  `json:"day28"`
-	Day29      string  `json:"day29"`
-	Day30      string  `json:"day30"`
-	Day31      string  `json:"day31"`
 	Work       int     `json:"work"`
 	Permission int     `json:"permission"`
 	Off        int     `json:"off"`
@@ -123,7 +61,9 @@ type UpdateAttendanceRequest struct {
 	Unpresent  float64 `json:"unpresent"`
 	TotalDays  int     `json:"total_days"`
 	W          float64 `json:"w"`
-	On         float64 `json:"on"`
+	On         float64 `json:"ons"`
+	Os         float64 `json:"os"`
+	Oa         float64 `json:"oa"`
 	OsOa       float64 `json:"os_oa"`
 	Ot         float64 `json:"ot"`
 	Ovt        float64 `json:"ovt"`
@@ -317,6 +257,8 @@ func (h *AttendanceHandler) Import(c *gin.Context) {
 			Month      string `json:"month"`
 			W          string `json:"w"`
 			Ons        string `json:"ons"`
+			Os         string `json:"os"`
+			Oa         string `json:"oa"`
 			OsOa       string `json:"os_oa"`
 			Ot         string `json:"ot"`
 			Ovt        string `json:"ovt"`
@@ -358,132 +300,6 @@ func (h *AttendanceHandler) Import(c *gin.Context) {
 		if !ok {
 			return
 		}
-		// slog.Info("projectID", "projectID", item.ProjectID)
-		// 转换整数类型字段
-		// work, ok := StringToInt(c, item.Work, "work"P
-		// if !ok {
-		// 	return
-		// }
-
-		// permission, ok := StringToInt(c, item.Permission, "permission")
-		// if !ok {
-		// 	return
-		// }
-
-		// off, ok := StringToInt(c, item.Off, "off")
-		// if !ok {
-		// 	return
-		// }
-
-		// absent, ok := StringToInt(c, item.Absent, "absent")
-		// if !ok {
-		// 	return
-		// }
-
-		// sick, ok := StringToInt(c, item.Sick, "sick")
-		// if !ok {
-		// 	return
-		// }
-
-		// standby, ok := StringToInt(c, item.Standby, "standby")
-		// if !ok {
-		// 	return
-		// }
-
-		// // totalDays, ok := StringToInt(c, item.TotalDays, "total_days")
-		// // if !ok {
-		// // 	return
-		// // }
-
-		// // 转换浮点数类型字段
-		// w, ok := StringToFloat64(c, item.W, "w")
-		// if !ok {
-		// 	return
-		// }
-		// onDay, ok := StringToFloat64(c, item.On, "on")
-		// if !ok {
-		// 	return
-		// }
-		// osOa, ok := StringToFloat64(c, item.OsOa, "os_oa")
-		// if !ok {
-		// 	return
-		// }
-		// ot, ok := StringToFloat64(c, item.Ot, "ot")
-		// if !ok {
-		// 	return
-		// }
-		// ovt, ok := StringToFloat64(c, item.Ovt, "ovt")
-		// if !ok {
-		// 	return
-		// }
-		// bt, ok := StringToFloat64(c, item.Bt, "bt")
-		// if !ok {
-		// 	return
-		// }
-		// t, ok := StringToFloat64(c, item.T, "t")
-		// if !ok {
-		// 	return
-		// }
-		// tnt, ok := StringToFloat64(c, item.Tnt, "tnt")
-		// if !ok {
-		// 	return
-		// }
-		// al, ok := StringToFloat64(c, item.Al, "al")
-		// if !ok {
-		// 	return
-		// }
-		// rot, ok := StringToFloat64(c, item.Rot, "rot")
-		// if !ok {
-		// 	return
-		// }
-		// tr, ok := StringToFloat64(c, item.Tr, "tr")
-		// if !ok {
-		// 	return
-		// }
-		// st, ok := StringToFloat64(c, item.St, "st")
-		// if !ok {
-		// 	return
-		// }
-		// ls, ok := StringToFloat64(c, item.Ls, "ls")
-		// if !ok {
-		// 	return
-		// }
-		// q, ok := StringToFloat64(c, item.Q, "q")
-		// if !ok {
-		// 	return
-		// }
-		// wfh, ok := StringToFloat64(c, item.Wfh, "wfh")
-		// if !ok {
-		// 	return
-		// }
-		// pl, ok := StringToFloat64(c, item.Pl, "pl")
-		// if !ok {
-		// 	return
-		// }
-		// l, ok := StringToFloat64(c, item.L, "l")
-		// if !ok {
-		// 	return
-		// }
-		// sc, ok := StringToFloat64(c, item.Sc, "sc")
-		// if !ok {
-		// 	return
-		// }
-		// sc1, ok := StringToFloat64(c, item.Sc1, "sc1")
-		// if !ok {
-		// 	return
-		// }
-		// co, ok := StringToFloat64(c, item.Co, "co")
-		// if !ok {
-		// 	return
-		// }
-		// pm, ok := StringToFloat64(c, item.Pm, "pm")
-		// if !ok {
-		// 	return
-		// }
-		// na, ok := StringToFloat64(c, item.Na, "na")
-		// if !ok {
-		// 	return
-		// }
 		slog.Info("ons", "ons", item.Ons, "os_oa", item.OsOa, "t", item.T)
 		importReq.Attendances[i] = service.ImportAttendanceItem{
 			EmployeeID: item.EmployeeID,
@@ -492,6 +308,8 @@ func (h *AttendanceHandler) Import(c *gin.Context) {
 			Off:        item.Off,
 			W:          item.W,
 			Ons:        item.Ons,
+			Os:         item.Os,
+			Oa:         item.Oa,
 			OsOa:       item.OsOa,
 			Ot:         item.Ot,
 			Ovt:        item.Ovt,

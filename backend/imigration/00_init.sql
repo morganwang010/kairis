@@ -176,6 +176,7 @@ CREATE TABLE IF NOT EXISTS employees (
     work_day NUMERIC DEFAULT 0.00,
     on_day NUMERIC DEFAULT 0.00,
     bt_day NUMERIC DEFAULT 0.00,
+    os_day NUMERIC DEFAULT 0.00,
     oa_day NUMERIC DEFAULT 0.00,
     travell_day NUMERIC DEFAULT 0.00,
     tnt_day NUMERIC DEFAULT 0.00,
@@ -329,12 +330,6 @@ CREATE TABLE attendances (
     standby INTEGER DEFAULT 0,
     ew NUMERIC DEFAULT 0,
     month TEXT NOT NULL,
-    ot1 NUMERIC DEFAULT 0,
-    ew1 NUMERIC DEFAULT 0,
-    ew2 NUMERIC DEFAULT 0,
-    ew3 NUMERIC DEFAULT 0,
-    ot2 NUMERIC DEFAULT 0,
-    ot3 NUMERIC DEFAULT 0,
     leave_replc NUMERIC DEFAULT 0,
     unpresent NUMERIC DEFAULT 0,
     total_days INTEGER DEFAULT 0,
@@ -342,6 +337,8 @@ CREATE TABLE attendances (
     ew_hours NUMERIC DEFAULT 0,
     w NUMERIC DEFAULT 0,
     ons NUMERIC DEFAULT 0,
+    os NUMERIC DEFAULT 0,
+    oa NUMERIC DEFAULT 0,
     os_oa NUMERIC DEFAULT 0,
     ot NUMERIC DEFAULT 0,
     ovt NUMERIC DEFAULT 0,
@@ -651,3 +648,12 @@ INSERT INTO tax_free_bases (grade, free_tax_base) VALUES
 ('K/1', 63000000),
 ('K/2', 67500000),
 ('K/3', 72000000);
+
+
+alter table employees add column os_day numeric default 0.00;
+alter table attendances add column os numeric default 0.00;
+alter table attendances add column oa numeric default 0.00;
+
+alter table salaries add column os_alw numeric default 0.00;
+alter table salaries add column oa_alw numeric default 0.00;
+

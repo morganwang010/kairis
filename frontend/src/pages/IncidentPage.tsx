@@ -478,7 +478,7 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all', projectN
         messageApi.error(t('incidentUploadPage.noValidRecords'))
         return
       }
-      if (records.some(record => record.project_name != projectName)) {
+      if (records.some(record => (record.project_name || '').trim() !== (projectName || '').trim())) {
         messageApi.error(t('newAttendancePage.projectNameNotMatch'))
         return
       }

@@ -30,17 +30,14 @@ interface AttendanceRecord {
   absent: number
   unpresent: number
   extrawork: number
-  ot1: number
-  ew1: number
-  ew2: number
-  ew3: number
 
   days: Record<number, string> // day number to status (W, O, etc.)
   ot1_hours: number
   ew_hours: number
   w: number // W
   ons: number // On
-  os_oa: number // OS/OA
+  os: number // OS
+  oa: number // OA
   ot: number // OT
   ovt: number // OVT
   bt: number // BT
@@ -309,7 +306,8 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId , projectN
         off: trimmedRecord['OFF'] || "0",
         w: trimmedRecord['W'] || "0",
         ons: trimmedRecord['ON'] || "0",
-        os_oa: trimmedRecord['OS/OA'] || "0",
+        os: trimmedRecord['OS'] || "0",
+        oa: trimmedRecord['OA'] || "0",
         ot: trimmedRecord['OT'] || "0",
         ovt: trimmedRecord['OVT'] || "0",
         bt: trimmedRecord['BT'] || "0",
@@ -339,7 +337,9 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId , projectN
         messageApi.error(t('attendanceUploadPage.noValidRecords'))
         return
       }
-      if (records.some(record => record.project_name != projectName)) {
+      if (records.some(record => (record.project_name || '').trim() !== (projectName || '').trim())) {
+        console.log('导入的项目名称:', records.map(record => record.project_name))
+        console.log('当前项目名称:', projectName)
         messageApi.error(t('newAttendancePage.projectNameNotMatch'))
         return
       }
@@ -641,10 +641,6 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId , projectN
           ew: record.ew,
           standby: record.standby,
           extrawork: record.extrawork || 0,
-          ot1: record.ot1 || 0,
-          ew1: record.ew1 || 0,
-          ew2: record.ew2 || 0,
-          ew3: record.ew3 || 0,
           month: record.month,
           days: record.days || {} ,// 确保days字段存在
           permission: record.permission || 0,
@@ -652,7 +648,8 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId , projectN
           ew_hours: record.ew_hours || 0,
           w: record.w ||0 , // W
           ons: record.ons || 0, // On
-          os_oa: record.os_oa || 0, // OS/OA
+          os: record.os || 0, // OS
+          oa: record.oa || 0, // OA
           ot: record.ot || 0, // OT
           ovt: record.ovt || 0, // OVT
           bt: record.bt || 0, // BT
@@ -755,9 +752,15 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId , projectN
         width: 100,
       },
       {
-        title: t('newAttendancePage.osOa'),
-        dataIndex: 'os_oa',
-        key: 'os_oa',
+        title: t('newAttendancePage.os'),
+        dataIndex: 'os',
+        key: 'os',
+        width: 100,
+      },
+      {
+        title: t('newAttendancePage.oa'),
+        dataIndex: 'oa',
+        key: 'oa',
         width: 100,
       },
       {
@@ -1180,7 +1183,8 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId , projectN
               ew_hours: record.ew_hours || 0,
               w: record.w ||0 , // W
               ons: record.ons || 0, // On
-              os_oa: record.os_oa || 0, // OS/OA
+              os: record.os || 0, // OS
+              oa: record.oa || 0, // OA
               ot: record.ot || 0, // OT
               ovt: record.ovt || 0, // OVT
               bt: record.bt || 0, // BT
