@@ -752,7 +752,13 @@ const IncidentPage: React.FC<IncidentPageProps> = ({ projectId = 'all', projectN
       cols.forEach(column => {
         if ('dataIndex' in column && column.title && column.dataIndex) {
           // 使用列标题作为键，确保导出的Excel有正确的列名
-          row[column.title as string] = record[column.dataIndex as keyof IncidentRecord];
+            if (column.dataIndex === 'project_name') {
+            // project_name 列使用外部变量 projectName
+            row[column.title as string] = projectName || '-';
+          } else {
+            row[column.title as string] = record[column.dataIndex as keyof IncidentRecord];
+          }
+          
         }
       });
       return row;
