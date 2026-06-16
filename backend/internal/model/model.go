@@ -275,7 +275,8 @@ type SalarySlip struct {
 	OtherNonFixed    float64 `gorm:"column:other_non_fixed;default:0" json:"other_non_fixed"`
 	WorkProrate      float64 `gorm:"column:work_prorate;default:0" json:"work_prorate"`
 	WorkAlw          float64 `gorm:"column:work_alw;default:0" json:"work_alw"`
-	OsOaAlw          float64 `gorm:"column:osoa_alw;default:0" json:"osoa_alw"`
+	OsAlw            float64 `gorm:"column:os_alw;default:0" json:"os_alw"`
+	OaAlw            float64 `gorm:"column:oa_alw;default:0" json:"oa_alw"`
 	OvtAlw           float64 `gorm:"column:ovt_alw;default:0" json:"ovt_alw"`
 	BtAlw            float64 `gorm:"column:bt_alw;default:0" json:"bt_alw"`
 	TAlw             float64 `gorm:"column:t_alw;default:0" json:"t_alw"`

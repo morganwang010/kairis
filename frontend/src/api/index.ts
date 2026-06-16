@@ -834,259 +834,218 @@ export const generateAndDownloadPDF = (records: any | any[], projectName?: strin
   // 确保records是一个数组
   const recordList = Array.isArray(records) ? records : [records];
   
+  // 格式化金额为数字格式
+  const formatAmount = (amount: number): string => {
+    return new Intl.NumberFormat('id-ID', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(amount || 0);
+  };
+  
   // 为每条记录生成PDF
   recordList.forEach((record, index) => {
     const doc = new jsPDF('p', 'mm', 'a4');
+    const pageWidth = 210;
+    const leftMargin = 15;
+    const rightMargin = 15;
+    const contentWidth = pageWidth - leftMargin - rightMargin;
+    const colWidth = (contentWidth - 10) / 2; // 两列布局，减去gap
+    
+    let y = 15;
     
     // 添加公司信息标题
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
-    doc.text('Great Wall Drilling Company', 105, 15, { align: 'center' });
+    doc.text('Great Wall Drilling Company', pageWidth / 2, y, { align: 'center' });
     
+    y += 6;
     doc.setFontSize(12);
     doc.setFont('helvetica', 'normal');
-    doc.text('GWDC', 105, 22, { align: 'center' });
+    doc.text('GWDC', pageWidth / 2, y, { align: 'center' });
     
-    // 添加 PAYROLL SLIP 标题
+    y += 8;
     doc.setFontSize(16);
     doc.setFont('helvetica', 'bold');
-    doc.text('PAYROLL SLIP', 105, 35, { align: 'center' });
+    doc.text('PAYROLL SLIP', pageWidth / 2, y, { align: 'center' });
     
-    // 格式化金额为数字格式
-    const formatAmount = (amount: number): string => {
-      return new Intl.NumberFormat('id-ID', {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0
-      }).format(amount || 0);
+    y += 10;
+    
+    // 员工信息框
+    doc.setDrawColor(0);
+    doc.setLineWidth(0.5);
+    doc.rect(leftMargin, y, contentWidth, 18);
+    
+    y += 5;
+    // 第一行
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Employee_Name:', leftMargin + 2, y);
+    doc.setFont('helvetica', 'normal');
+    doc.text((record.employee_name || '').substring(0, 25), leftMargin + 30, y);
+    
+    doc.setFont('helvetica', 'bold');
+    doc.text('Project:', leftMargin + colWidth + 15, y);
+    doc.setFont('helvetica', 'normal');
+    doc.text((record.project_name || '-').substring(0, 25), leftMargin + colWidth + 35, y);
+    
+    y += 6;
+    // 第二行
+    doc.setFont('helvetica', 'bold');
+    doc.text('Designation:', leftMargin + 2, y);
+    doc.setFont('helvetica', 'normal');
+    doc.text((record.position || record.department || '').substring(0, 25), leftMargin + 30, y);
+    
+    doc.setFont('helvetica', 'bold');
+    doc.text('Month:', leftMargin + colWidth + 15, y);
+    doc.setFont('helvetica', 'normal');
+    doc.text((record.period || record.month || '').substring(0, 25), leftMargin + colWidth + 35, y);
+    
+    y += 12;
+    
+    // 辅助函数：绘制两列布局 section
+    const drawSection = (title: string, totalAmount: number, items: [string, number][], startY: number) => {
+      let currentY = startY;
+      
+      // 标题行（带边框）
+      doc.setDrawColor(0);
+      doc.setLineWidth(0.5);
+      doc.line(leftMargin, currentY, leftMargin + contentWidth, currentY); // top border
+      currentY += 4;
+      
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'bold');
+      doc.text(title, leftMargin + 2, currentY);
+      doc.text(formatAmount(totalAmount), pageWidth - rightMargin - 2, currentY, { align: 'right' });
+      currentY += 4;
+      
+      doc.line(leftMargin, currentY, leftMargin + contentWidth, currentY); // bottom border
+      currentY += 4;
+      
+      // 两列布局的项目
+      const filteredItems = items.filter(([_, value]) => value !== 0 && value !== undefined && value !== null);
+      
+      // 绘制两列
+      for (let i = 0; i < filteredItems.length; i++) {
+        const [label, value] = filteredItems[i];
+        const col = i % 2;
+        const row = Math.floor(i / 2);
+        const itemX = col === 0 ? leftMargin + 2 : leftMargin + colWidth + 15;
+        const itemY = currentY + row * 5;
+        
+        doc.setFontSize(8);
+        doc.setFont('helvetica', 'normal');
+        doc.text(label, itemX, itemY);
+        doc.text(formatAmount(value), itemX + 55, itemY, { align: 'right' });
+      }
+      
+      // 计算占用的高度
+      const numRows = Math.ceil(filteredItems.length / 2);
+      const itemsHeight = numRows > 0 ? numRows * 5 + 2 : 2;
+      
+      return startY + 12 + itemsHeight;
     };
     
-    // 员工信息表格
-    const employeeInfo: any[] = [
-      ['Employee_Name', record.employee_name || '', 'Project', record.project_name || '-'],
-      ['Designation', record.position || record.department || '', 'Month', record.period || record.month || ''],
-    ];
-    
-    let startY = 45;
-    
-    (doc as any).autoTable({
-      startY: startY,
-      body: employeeInfo,
-      theme: 'grid',
-      styles: {
-        fontSize: 9,
-        cellPadding: 3
-      },
-      columnStyles: {
-        0: {
-          halign: 'left',
-          fontStyle: 'bold'
-        },
-        1: {
-          halign: 'left'
-        },
-        2: {
-          halign: 'left',
-          fontStyle: 'bold'
-        },
-        3: {
-          halign: 'left'
-        }
-      }
-    });
-    
     // Fixed Allowance 部分
-    startY = doc.lastAutoTable.finalY + 10;
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Fixed_Alw:', 15, startY);
-    doc.text(formatAmount(record.total_fixed_alw), 185, startY, { align: 'right' });
-    
-    const fixedAlwData: any[] = [
-      ['Basic_Salary', formatAmount(record.basic_salary)],
-      ['Post_Function', formatAmount(record.post_function_alw_month ?? 0)],
-      ['Phone_Alw', formatAmount(record.phone_alw_month ?? 0)],
-      ['Internet_Alw', formatAmount(record.internet_alw_month ?? 0)],
-      ['Incentive', formatAmount(record.incentive_month ?? 0)],
-      ['Operational', formatAmount(record.operational_alw_month ?? 0)],
-      ['Housing_Alw', formatAmount(record.housing_alw_month ?? 0)],
-      ['Seniority', formatAmount(record.seniority_alw_month ?? 0)],
-      ['Transport_Alw', formatAmount(record.transport_alw_month ?? 0)],
-      ['Field_Alw', formatAmount(record.field_alw_month ?? 0)],
-      ['Accomodation', formatAmount(record.accommodation_alw_month ?? 0)],
+    const fixedAlwItems: [string, number][] = [
+      ['Basic_Salary', record.basic_salary],
+      ['Post_Function', record.post_function_alw_month ?? 0],
+      ['Phone_Alw', record.phone_alw_month ?? 0],
+      ['Internet_Alw', record.internet_alw_month ?? 0],
+      ['Incentive', record.incentive_month ?? 0],
+      ['Operational', record.operational_alw_month ?? 0],
+      ['Housing_Alw', record.housing_alw_month ?? 0],
+      ['Seniority', record.seniority_alw_month ?? 0],
+      ['Transport_Alw', record.transport_alw_month ?? 0],
+      ['Field_Alw', record.field_alw_month ?? 0],
+      ['Accomodation', record.accommodation_alw_month ?? 0],
     ];
-    
-    (doc as any).autoTable({
-      startY: startY + 8,
-      body: fixedAlwData,
-      theme: 'plain',
-      styles: {
-        fontSize: 8,
-        cellPadding: 2
-      },
-      columnStyles: {
-        0: {
-          halign: 'left',
-          width: 70
-        },
-        1: {
-          halign: 'right',
-          width: 50
-        }
-      }
-    });
+    y = drawSection('Fixed_Alw:', record.total_fixed_alw || 0, fixedAlwItems, y);
+    y += 5;
     
     // Non-Fixed Allowance 部分
-    startY = doc.lastAutoTable.finalY + 10;
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Non_Fixed_Alw:', 15, startY);
-    doc.text(formatAmount(record.total_non_fixed_alw), 185, startY, { align: 'right' });
-    
-    const nonFixedAlwData: any[] = [
-      ['THR', formatAmount(record.thr)],
-      ['Bonus', formatAmount(record.bonus)],
-      ['Compensation', formatAmount(record.compensation)],
-      ['Acting_Alw', formatAmount(record.acting_alw)],
-      ['Salary_Prorate', formatAmount(record.salary_prorate)],
-      ['Other', formatAmount(record.other_non_fixed)],
-      ['Work_Prorate', formatAmount(record.work_prorate)],
-      ['Work_Alw', formatAmount(record.work_alw)],
-      ['OSOA_Alw', formatAmount(record.osoa_alw)],
-      ['OVT_Alw', formatAmount(record.ovt_alw)],
-      ['BT_Alw', formatAmount(record.bt_alw)],
-      ['On_Alw', formatAmount(record.on_alw)],
-      ['OT_Alw', formatAmount(record.ot_alw)],
-      ['T_Alw', formatAmount(record.t_alw)],
-      ['TNT_Alw', formatAmount(record.tnt_alw)],
-      ['AL_Alw', formatAmount(record.al_alw)],
-      ['ROT_Alw', formatAmount(record.rot_alw)],
-      ['TR_Alw', formatAmount(record.tr_alw)],
-      ['ST_Alw', formatAmount(record.st_alw)],
-      ['LS_Alw', formatAmount(record.ls_alw)],
+    const nonFixedAlwItems: [string, number][] = [
+      ['THR', record.thr],
+      ['Bonus', record.bonus],
+      ['Compensation', record.compensation],
+      ['Acting_Alw', record.acting_alw],
+      ['Salary_Prorate', record.salary_prorate],
+      ['Other', record.other_non_fixed],
+      ['Work_Prorate', record.work_prorate],
+      ['Work_Alw', record.work_alw],
+      ['OSOA_Alw', record.osoa_alw],
+      ['OVT_Alw', record.ovt_alw],
+      ['BT_Alw', record.bt_alw],
+      ['On_Alw', record.on_alw],
+      ['OT_Alw', record.ot_alw],
+      ['T_Alw', record.t_alw],
+      ['TNT_Alw', record.tnt_alw],
+      ['AL_Alw', record.al_alw],
+      ['ROT_Alw', record.rot_alw],
+      ['TR_Alw', record.tr_alw],
+      ['ST_Alw', record.st_alw],
+      ['LS_Alw', record.ls_alw],
     ];
-    
-    (doc as any).autoTable({
-      startY: startY + 8,
-      body: nonFixedAlwData,
-      theme: 'plain',
-      styles: {
-        fontSize: 8,
-        cellPadding: 2
-      },
-      columnStyles: {
-        0: {
-          halign: 'left',
-          width: 70
-        },
-        1: {
-          halign: 'right',
-          width: 50
-        }
-      }
-    });
+    y = drawSection('Non_Fixed_Alw:', record.total_non_fixed_alw || 0, nonFixedAlwItems, y);
+    y += 5;
     
     // Salary Deduction 部分
-    startY = doc.lastAutoTable.finalY + 10;
     const totalSalaryDed = record.q_ded + record.pl_ded + record.late_ded + record.sc_ded + record.sc1_ded + record.co_ded + record.pm_ded + record.na_ded + record.salary_ded;
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Salary_Ded:', 15, startY);
-    doc.text(formatAmount(totalSalaryDed), 185, startY, { align: 'right' });
-    
-    const salaryDedData: any[] = [
-      ['Q_Ded', formatAmount(record.q_ded)],
-      ['PL_Ded', formatAmount(record.pl_ded)],
-      ['Late_Ded', formatAmount(record.late_ded)],
-      ['SC_Ded', formatAmount(record.sc_ded)],
-      ['SC1_Ded', formatAmount(record.sc1_ded)],
-      ['CO_Ded', formatAmount(record.co_ded)],
-      ['PM_Ded', formatAmount(record.pm_ded)],
-      ['NA_Ded', formatAmount(record.na_ded)],
-      ['Other', formatAmount(record.salary_ded)],
+    const salaryDedItems: [string, number][] = [
+      ['Q_Ded', record.q_ded],
+      ['PL_Ded', record.pl_ded],
+      ['Late_Ded', record.late_ded],
+      ['SC_Ded', record.sc_ded],
+      ['SC1_Ded', record.sc1_ded],
+      ['CO_Ded', record.co_ded],
+      ['PM_Ded', record.pm_ded],
+      ['NA_Ded', record.na_ded],
+      ['Other', record.salary_ded],
     ];
+    y = drawSection('Salary_Ded:', totalSalaryDed, salaryDedItems, y);
+    y += 5;
     
-    (doc as any).autoTable({
-      startY: startY + 8,
-      body: salaryDedData,
-      theme: 'plain',
-      styles: {
-        fontSize: 8,
-        cellPadding: 2
-      },
-      columnStyles: {
-        0: {
-          halign: 'left',
-          width: 70
-        },
-        1: {
-          halign: 'right',
-          width: 50
-        }
-      }
-    });
-    
-    // Gross Salary 部分
-    startY = doc.lastAutoTable.finalY + 10;
+    // Gross Salary
+    doc.setDrawColor(0);
+    doc.setLineWidth(0.5);
+    doc.line(leftMargin, y, leftMargin + contentWidth, y);
+    y += 4;
     doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
-    doc.text('Gross Salary:', 15, startY);
-    doc.text(formatAmount(record.gross_salary), 185, startY, { align: 'right' });
+    doc.text('Gross Salary:', leftMargin + 2, y);
+    doc.text(formatAmount(record.gross_salary), pageWidth - rightMargin - 2, y, { align: 'right' });
+    y += 4;
+    doc.line(leftMargin, y, leftMargin + contentWidth, y);
+    y += 8;
     
     // BPJS/TAX Deduction 部分
-    startY = startY + 10;
     const totalBpjsTaxDed = record.bpjs_work_ded + record.bpjs_health_ded + record.tax_ded;
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'bold');
-    doc.text('BPJS/TAX_Ded:', 15, startY);
-    doc.text(formatAmount(totalBpjsTaxDed), 185, startY, { align: 'right' });
-    
-    const bpjsTaxData: any[] = [
-      ['BPJS_Work_Ded', formatAmount(record.bpjs_work_ded)],
-      ['BPJS_Health_Ded', formatAmount(record.bpjs_health_ded + (record.bpjs_health_tambahan || 0))],
-      ['Tax_Ded', formatAmount(record.tax_ded)],
+    const bpjsTaxItems: [string, number][] = [
+      ['BPJS_Work_Ded', record.bpjs_work_ded],
+      ['BPJS_Health_Ded', record.bpjs_health_ded + (record.bpjs_health_tambahan || 0)],
+      ['Tax_Ded', record.tax_ded],
     ];
-    
-    (doc as any).autoTable({
-      startY: startY + 8,
-      body: bpjsTaxData,
-      theme: 'plain',
-      styles: {
-        fontSize: 8,
-        cellPadding: 2
-      },
-      columnStyles: {
-        0: {
-          halign: 'left',
-          width: 70
-        },
-        1: {
-          halign: 'right',
-          width: 50
-        }
-      }
-    });
+    y = drawSection('BPJS/TAX_Ded:', totalBpjsTaxDed, bpjsTaxItems, y);
+    y += 8;
     
     // Final Staff Receive 部分
-    startY = doc.lastAutoTable.finalY + 15;
-    doc.setDrawColor(0);
-    doc.setLineWidth(2);
-    doc.rect(15, startY - 5, 170, 25);
-    
+    doc.setLineWidth(0.5);
+    doc.line(leftMargin, y, leftMargin + contentWidth, y);
+    y += 8;
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
-    doc.text('Final_Staff_Receive:', 105, startY + 8, { align: 'center' });
+    doc.text('Final_Staff_Receive:',leftMargin + 2, y, { align: 'left' });
+    y += 1;
+    doc.setFontSize(14);
+    doc.text(formatAmount(record.final_staff_receive), pageWidth - rightMargin - 2, y, { align: 'right' });
+    y += 15;
     
-    doc.setFontSize(16);
-    doc.text(formatAmount(record.final_staff_receive), 105, startY + 18, { align: 'center' });
-    
-    // 添加备注
-    startY = startY + 40;
-    doc.setFontSize(10);
+    // 备注
+    doc.setFontSize(9);
     doc.setFont('helvetica', 'normal');
-    doc.text('This slip is computer generated, no signature required.', 105, startY, { align: 'center' });
+    doc.text('This slip is computer generated, no signature required.', pageWidth / 2, y, { align: 'center' });
     
     // 生成文件名
-    let pdfFileName =  `${record.employee_name || 'unknown'}_${record.month || 'unknown'}_${index + 1}.pdf`;
+    let pdfFileName = `${record.employee_name || 'unknown'}_${record.month || 'unknown'}_${index + 1}.pdf`;
     
     // 如果有项目名称，添加到文件名前缀
     if (projectName) {

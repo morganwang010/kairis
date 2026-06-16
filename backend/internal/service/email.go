@@ -120,7 +120,16 @@ func (s *EmailService) GeneratePDF(salary *repository.SalaryWithEmployee) ([]byt
 
 	pdf.SetFont("Arial", "", 8)
 	colWidth := 90.0
-	for i, item := range fixedAlwData {
+	fixedAlwFiltered := []struct {
+		label string
+		value float64
+	}{}
+	for _, item := range fixedAlwData {
+		if item.value != 0 {
+			fixedAlwFiltered = append(fixedAlwFiltered, item)
+		}
+	}
+	for i, item := range fixedAlwFiltered {
 		if i%2 == 0 {
 			pdf.CellFormat(colWidth-25, 5, item.label, "", 0, "L", false, 0, "")
 			pdf.CellFormat(25, 5, formatAmountWithComma(item.value), "", 0, "R", false, 0, "")
@@ -129,7 +138,7 @@ func (s *EmailService) GeneratePDF(salary *repository.SalaryWithEmployee) ([]byt
 			pdf.CellFormat(25, 5, formatAmountWithComma(item.value), "", 1, "R", false, 0, "")
 		}
 	}
-	if len(fixedAlwData)%2 != 0 {
+	if len(fixedAlwFiltered)%2 != 0 {
 		pdf.Ln(5)
 	}
 
@@ -154,7 +163,8 @@ func (s *EmailService) GeneratePDF(salary *repository.SalaryWithEmployee) ([]byt
 		{"Other", salary.OtherNonFixed},
 		{"Work_Prorate", salary.WorkProrate},
 		{"Work_Alw", salary.WorkAlw},
-		{"OSOA_Alw", salary.OsOaAlw},
+		{"OS_Alw", salary.OsAlw},
+		{"OA_Alw", salary.OaAlw},
 		{"OVT_Alw", salary.OvtAlw},
 		{"BT_Alw", salary.BtAlw},
 		{"On_Alw", salary.OnAlw},
@@ -169,7 +179,16 @@ func (s *EmailService) GeneratePDF(salary *repository.SalaryWithEmployee) ([]byt
 	}
 
 	pdf.SetFont("Arial", "", 8)
-	for i, item := range nonFixedAlwData {
+	nonFixedAlwFiltered := []struct {
+		label string
+		value float64
+	}{}
+	for _, item := range nonFixedAlwData {
+		if item.value != 0 {
+			nonFixedAlwFiltered = append(nonFixedAlwFiltered, item)
+		}
+	}
+	for i, item := range nonFixedAlwFiltered {
 		if i%2 == 0 {
 			pdf.CellFormat(colWidth-25, 5, item.label, "", 0, "L", false, 0, "")
 			pdf.CellFormat(25, 5, formatAmountWithComma(item.value), "", 0, "R", false, 0, "")
@@ -178,7 +197,7 @@ func (s *EmailService) GeneratePDF(salary *repository.SalaryWithEmployee) ([]byt
 			pdf.CellFormat(25, 5, formatAmountWithComma(item.value), "", 1, "R", false, 0, "")
 		}
 	}
-	if len(nonFixedAlwData)%2 != 0 {
+	if len(nonFixedAlwFiltered)%2 != 0 {
 		pdf.Ln(5)
 	}
 
@@ -209,7 +228,16 @@ func (s *EmailService) GeneratePDF(salary *repository.SalaryWithEmployee) ([]byt
 	}
 
 	pdf.SetFont("Arial", "", 8)
-	for i, item := range salaryDedData {
+	salaryDedFiltered := []struct {
+		label string
+		value float64
+	}{}
+	for _, item := range salaryDedData {
+		if item.value != 0 {
+			salaryDedFiltered = append(salaryDedFiltered, item)
+		}
+	}
+	for i, item := range salaryDedFiltered {
 		if i%2 == 0 {
 			pdf.CellFormat(colWidth-25, 5, item.label, "", 0, "L", false, 0, "")
 			pdf.CellFormat(25, 5, formatAmountWithComma(item.value), "", 0, "R", false, 0, "")
@@ -218,7 +246,7 @@ func (s *EmailService) GeneratePDF(salary *repository.SalaryWithEmployee) ([]byt
 			pdf.CellFormat(25, 5, formatAmountWithComma(item.value), "", 1, "R", false, 0, "")
 		}
 	}
-	if len(salaryDedData)%2 != 0 {
+	if len(salaryDedFiltered)%2 != 0 {
 		pdf.Ln(5)
 	}
 
@@ -251,7 +279,16 @@ func (s *EmailService) GeneratePDF(salary *repository.SalaryWithEmployee) ([]byt
 	}
 
 	pdf.SetFont("Arial", "", 8)
+	bpjsTaxFiltered := []struct {
+		label string
+		value float64
+	}{}
 	for _, item := range bpjsTaxData {
+		if item.value != 0 {
+			bpjsTaxFiltered = append(bpjsTaxFiltered, item)
+		}
+	}
+	for _, item := range bpjsTaxFiltered {
 		pdf.CellFormat(50, 5, item.label, "", 0, "L", false, 0, "")
 		pdf.CellFormat(0, 5, formatAmountWithComma(item.value), "", 1, "R", false, 0, "")
 	}
@@ -264,7 +301,7 @@ func (s *EmailService) GeneratePDF(salary *repository.SalaryWithEmployee) ([]byt
 	pdf.Ln(3)
 	pdf.Line(15, pdf.GetY(), 195, pdf.GetY())
 	pdf.Ln(4)
-	
+
 	pdf.SetFont("Arial", "B", 13)
 	pdf.SetY(pdf.GetY() + 5)
 	pdf.CellFormat(160, 7, "Final_Staff_Receive:", "", 0, "L", false, 0, "")
