@@ -465,7 +465,8 @@ const EmployeePage: FC<EmployeePageProps> = ({ projectId ,projectName}) => {
           item[key] = item[key].toString();
         });
       });
-      if (importData.some(record => (record.project_name || '').trim() !== (projectName || '').trim())) {
+      console.log('导入数据格式如下待匹配projectName:',  projectName);
+      if (importData.some(record => (record.Project_Name || '').trim() !== (projectName || '').trim())) {
         messageApi.error(t('newAttendancePage.projectNameNotMatch'))
         return
       }
