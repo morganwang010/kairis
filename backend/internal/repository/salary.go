@@ -182,8 +182,8 @@ func (r *SalaryRepository) List(offset, limit int, month string, projectID int, 
 	// 再查询分页数据
 	if err := query.
 		Select(`s.*, e.employee_name, e.tax_type, e.npwp, e.join_date, e.resign_date,e.id_card, e.position,e.email,ir.thr, ir.bonus, ir.compensation, ir.acting_alw, ir.salary_prorate, ir.rapel, ir.tax_alw, ir.tax_ded,ir.other_add,ir.other_ded,e.bpjs_health_tambahan_status,e.date_of_birth,e.post_function_alw_month,e.phone_alw_month,e.internet_alw_month,e.incentive_month,e.operational_alw_month,e.housing_alw_month,e.seniority_alw_month,e.transport_alw_month,e.field_alw_month,e.accommodation_alw_month,e.work_day,e.on_day,e.bt_day,e.oa_day,e.os_day,e.travell_day,e.tnt_day,e.st_day,e.tr_day,a.w,a.ons,a.os,a.oa,a.ot,a.ovt,a.bt,a.t,a.tnt,a.al,a.rot,a.tr,a.st,a.ls,a.q,a.wfh,a.pl,a.l,a.sc,a.sc1,a.co,a.pm,a.na,a.off`).
-		Joins("LEFT JOIN attendances as a ON s.employee_id = a.employee_id AND s.month = a.month").
-		Joins("LEFT JOIN incidents as ir ON s.employee_id = ir.employee_id AND s.month = ir.month").
+		Joins("LEFT JOIN attendances as a ON s.employee_id = a.employee_id AND s.month = a.month AND s.project_id = a.project_id").
+		Joins("LEFT JOIN incidents as ir ON s.employee_id = ir.employee_id AND s.month = ir.month AND s.project_id = ir.project_id").
 		Order("s.employee_id DESC").
 		Offset(offset).
 		Limit(limit).
