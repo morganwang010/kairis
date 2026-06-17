@@ -104,9 +104,16 @@ const LayoutComponent = () => {
   const handleMenuClick = useCallback(({ key }: { key: string }) => {
     // 对于子菜单，直接使用key作为路径
     if (key.startsWith('/')) {
-      navigate(key, { replace: false });
+      // 查找对应的项目名称
+      const project = activeProjects.find(p => `/app/salary/${p.id}` === key);
+      const projectName = project ? project.name : '';
+      
+      navigate(key, { 
+        replace: false,
+        state: { projectName }
+      });
     }
-  }, [navigate])
+  }, [navigate, activeProjects])
 
   // 处理登出
   const handleLogout = async () => {

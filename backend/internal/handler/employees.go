@@ -243,7 +243,6 @@ func (h *EmployeeHandler) List(c *gin.Context) {
 		return
 	} else {
 		// 如果所有参数都为空，查询所有员工
-		// slog.Info("9999999999Get employee by project_id", "project_id", projectID)
 		employees, total, err := h.employeeService.List(offset, pageSize, uint(projectID))
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})

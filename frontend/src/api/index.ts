@@ -213,6 +213,7 @@ export const getProjects = async (params?: {
   page_size?: number;
 }) => {
   try {
+    console.log('获取项目列表参数:', params);
     const response = await apiClient.get('/projects', { params });
     return response.data;
   } catch (error) {

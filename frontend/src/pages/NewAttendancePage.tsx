@@ -887,29 +887,29 @@ const NewAttendancePage: React.FC<AttendancePageProps> = ({ projectId , projectN
 
     
     // 添加合计列
-    columns.push({
-      title: t('newAttendancePage.total'),
-      key: 'total',
-      width: 80,
-      render: (record: AttendanceRecord) => {
-        // 计算所有状态的天数总和
-        let total = 0;
-        total = record.leave_replc + record.work + record.off + record.sick + record.standby  + record.absent + record.permission;
-        // for (let i = 1; i <= 31; i++) {
-        //   if (record.days[i]) {
-        //     total++;
-        //   }
-        // }
-        return (
-          <span style={{
-            fontWeight: 'bold',
-            color: '#1890ff'
-          }}>
-            {total}
-          </span>
-        );
-      },
-    })
+    // columns.push({
+    //   title: t('newAttendancePage.total'),
+    //   key: 'total',
+    //   width: 80,
+    //   render: (record: AttendanceRecord) => {
+    //     // 计算所有状态的天数总和
+    //     let total = 0;
+    //     total = record.leave_replc + record.work + record.off + record.sick + record.standby  + record.absent + record.permission;
+    //     // for (let i = 1; i <= 31; i++) {
+    //     //   if (record.days[i]) {
+    //     //     total++;
+    //     //   }
+    //     // }
+    //     return (
+    //       <span style={{
+    //         fontWeight: 'bold',
+    //         color: '#1890ff'
+    //       }}>
+    //         {total}
+    //       </span>
+    //     );
+    //   },
+    // })
 
     // 添加操作列---暂时隐藏
     // columns.push({
