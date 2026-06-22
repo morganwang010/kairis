@@ -44,7 +44,7 @@ type AttendanceWithEmployee struct {
 	OnDay                    float64 `gorm:"column:on_day;default:0" json:"on_day"`                                      // INTEGER default 0
 	BTDay                    float64 `gorm:"column:bt_day;default:0" json:"bt_day"`                                      // INTEGER default 0
 	OSDay                    float64 `gorm:"column:os_day;default:0" json:"os_day"`                                      // INTEGER default 0
-	OADay                    float64 `gorm:"column:os_day;default:0" json:"os_day"`                                      // INTEGER default 0
+	OADay                    float64 `gorm:"column:oa_day;default:0" json:"oa_day"`                                      // INTEGER default 0
 	TravellDay               float64 `gorm:"column:travell_day;default:0" json:"travell_day"`                            // INTEGER default 0
 	TnTDay                   float64 `gorm:"column:tnt_day;default:0" json:"tnt_day"`                                    // INTEGER default 0
 	STDay                    float64 `gorm:"column:st_day;default:0" json:"st_day"`                                      // INTEGER default 0
@@ -303,10 +303,10 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 		// OT_Alw = OT * (Basic_Salary * 2) / (30 * 8)
 
 		slog.Info("OT is:", "OT", record.Ot)
-		otAlw := record.Ot * (basicSalary * 2) / (30 * 8)
+		otAlw := math.Round(record.Ot * (basicSalary * 2) / (30 * 8))
 
 		// OVT_Alw = OVT * basic_salary * 29 / OVT / 173
-		ovtAlw := record.Ovt * basicSalary * 29 / 173
+		ovtAlw := math.Round(record.Ovt * basicSalary * 29 / 173)
 
 		// BT_Alw = BT * (BT/Day + On/day + Work/day)
 		btAlw := record.Bt * (record.BTDay + onDays + workDays)
@@ -321,7 +321,7 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 		alAlw := record.Al * workDays
 
 		// ROT_Alw = Basic_Salary * 7.5 * ROT / 173
-		rotAlw := basicSalary * 7.5 * record.Rot / 173
+		rotAlw := math.Round(basicSalary * 7.5 * record.Rot / 173)
 
 		// TR_Alw (境外培训) = TR * TR/day
 		trAlw := record.Tr * record.TRDay
@@ -330,29 +330,29 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 		stAlw := record.St * record.STDay
 
 		// LS_Alw = LS * basic_salary * 24 / 173
-		lsAlw := record.Ls * basicSalary * 24 / 173
+		lsAlw := math.Round(record.Ls * basicSalary * 24 / 173)
 		lateDed := max((record.L-3)*record.TravellDay, 0)
 
 		// Q_Ded = Total_Fixed_Alw * Q / 30
-		qDed := totalFixedAlw * record.Q / 30
+		qDed := math.Round(totalFixedAlw * record.Q / 30)
 
 		// PL_Ded (事假) = Total_Fixed_Alw * PL / 30
-		plDed := totalFixedAlw * record.Pl / 30
+		plDed := math.Round(totalFixedAlw * record.Pl / 30)
 
 		// SC_Ded (病假) = Total_Fixed_Alw * SC / 30
-		scDed := totalFixedAlw * record.Sc / 30
+		scDed := math.Round(totalFixedAlw * record.Sc / 30)
 
 		// SC1_Ded (病假无证明) = Total_Fixed_Alw * SC1 / 22
-		sc1Ded := totalFixedAlw * record.Sc1 / 22
+		sc1Ded := math.Round(totalFixedAlw * record.Sc1 / 22)
 
 		// CO_Ded = Total_Fixed_Alw * CO / 30
-		coDed := totalFixedAlw * record.Co / 30
+		coDed := math.Round(totalFixedAlw * record.Co / 30)
 
 		// PM_Ded = Total_Fixed_Alw * PM / 30
-		pmDed := totalFixedAlw * record.Pm / 30
+		pmDed := math.Round(totalFixedAlw * record.Pm / 30)
 
 		// NA_Ded = Total_Fixed_Alw * NA / 22
-		naDed := totalFixedAlw * record.Na / 22
+		naDed := math.Round(totalFixedAlw * record.Na / 22)
 
 		// Total_Non_Fixed_Alw = Work_Alw + On_Alw + OS/OA_Alw + OT_Alw + OVT_Alw + BT_Alw + T_Alw + TNT_Alw + AL_Alw + ROT_Alw + TR_Alw + ST_Alw + LS_Alw + THR + Bonus + Compensation + Acting_Allowance + Salary_Prorate + Other_Add
 		totalNonFixedAlw := workAlw + onAlw + OaAlw + OSAlw + otAlw + ovtAlw + btAlw + tAlw + tntAlw + alAlw + rotAlw + trAlw + stAlw + lsAlw + record.Thr + record.Bonus + record.Compensation + record.ActingAllowance + record.SalaryProrate + record.OtherAdd
@@ -361,13 +361,13 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 		salaryDed := qDed + plDed + lateDed + scDed + sc1Ded + coDed + pmDed + naDed + record.OtherDed
 
 		// JKK_Alw = Basic_Salary/Month * 1.74%
-		jkkAlw := basicSalary * 0.0174
+		jkkAlw := math.Round(basicSalary * 0.0174)
 
 		// JKM_Alw = Basic_Salary/Month * 0.3%
-		jkmAlw := basicSalary * 0.003
+		jkmAlw := math.Round(basicSalary * 0.003)
 
 		// JHT_Alw = Basic_Salary/Month * 3.7%
-		jhtAlw := basicSalary * 0.037
+		jhtAlw := math.Round(basicSalary * 0.037)
 
 		// JP_Alw - 根据年龄计算
 		// 当年年龄大于等于58时, JP_Alw=0, JP_Ded=0
@@ -380,7 +380,7 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 		age := r.calculateAge(record.DateOfBirth)
 
 		if age < 58 {
-			jpAlw = min((basicSalary+rapel), 11086300) * 0.02
+			jpAlw = math.Round(min((basicSalary+rapel), 11086300) * 0.02)
 
 		} else {
 			jpAlw = 0.0
@@ -399,7 +399,7 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 			healthAlw = basicSalary
 		}
 
-		bpjsHealthAlw := healthAlw * 0.04
+		bpjsHealthAlw := math.Round(healthAlw * 0.04)
 		// Gross_Salary = Total_Fixed_Alw + Total_Non_Fixed_Alw + Tax_Alw - Salary_Ded
 		taxAlw := record.TaxAlw
 		grossSalary := totalFixedAlw + totalNonFixedAlw + taxAlw - salaryDed
@@ -412,12 +412,16 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 		}
 
 		// JHT_Ded = Basic_Salary/Month * 2%
-		jhtDed := basicSalary * 0.02
+		jhtDed := math.Round(basicSalary * 0.02)
 
 		// JP_Ded = (Basic_Salary/Month + Rapel) * 1% (年龄<58时)
+		jpDedTotal := basicSalary + rapel
+		if jpDedTotal > 11086300 {
+			jpDedTotal = 11086300
+		}
 		jpDed := 0.0
 		if age < 58 {
-			jpDed = (basicSalary + rapel) * 0.01
+			jpDed = math.Round((jpDedTotal) * 0.01)
 		} else {
 			jpDed = 0.0
 		}
@@ -505,7 +509,12 @@ func (r *SalaryRepository) Calculate(month string, projectID int) error {
 
 		// 计算总接受额
 		totalAccept := grossSalary - totalDed
-
+		lastTwoDigits1 := int(totalAccept) % 100
+		if lastTwoDigits1 >= 50 {
+			totalAccept = math.Ceil(totalAccept/100) * 100
+		} else {
+			totalAccept = math.Floor(totalAccept/100) * 100
+		}
 		// 计算各项扣除
 		// jmstkFee := bpjsWorkDed
 		// pensionDed := 0.0

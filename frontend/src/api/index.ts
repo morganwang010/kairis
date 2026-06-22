@@ -1019,7 +1019,7 @@ export const generateAndDownloadPDF = (records: any | any[], projectName?: strin
     y += 8;
     
     // BPJS/TAX Deduction 部分
-    const totalBpjsTaxDed = record.bpjs_work_ded + record.bpjs_health_ded + record.tax_ded;
+    const totalBpjsTaxDed = record.bpjs_work_ded + record.bpjs_health_ded + (record.bpjs_health_tambahan ) + record.tax_ded;
     const bpjsTaxItems: [string, number][] = [
       ['BPJS_Work_Ded', record.bpjs_work_ded],
       ['BPJS_Health_Ded', record.bpjs_health_ded + (record.bpjs_health_tambahan || 0)],

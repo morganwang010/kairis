@@ -290,6 +290,8 @@ CREATE TABLE IF NOT EXISTS salaries (
     total_bpjs_health_ded NUMERIC DEFAULT 0,
     total_deduction NUMERIC DEFAULT 0,
     final_staff_receive NUMERIC DEFAULT 0,
+    os_alw NUMERIC DEFAULT 0,
+    oa_alw NUMERIC DEFAULT 0,
   UNIQUE (project_id, employee_id, month)
 );
 
@@ -389,7 +391,7 @@ CREATE TABLE salary_coefficients (
   is_delete INTEGER DEFAULT 0
 );
 
-INSERT INTO salary_coefficient (
+INSERT INTO salary_coefficients (
   c_jmstk_alw,    -- 公积金补贴系数
   c_pension_alw,  -- 养老金补贴系数
   c_askes_alw,    -- 社保补贴系数

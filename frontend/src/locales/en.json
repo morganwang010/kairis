@@ -394,7 +394,7 @@
   "bpjsWorkDeduction": "BPJS_Work_Ded",
   "bpjsHealthDeduction": "BPJS_Health_Ded",
   "bpjsHealthTambahan": "BPJS_Health_Tambahan",
-  "totalDeduction": "Total_Deduction",
+  "totalDeduction": "BPJS/TAX_Ded",
   "finalStaffReceive": "Final_Staff_Receive",
   "totalBpjsHealthDeduction": "Total_BPJS_Health_Ded",
   "taxDed": "Tax_Ded",
