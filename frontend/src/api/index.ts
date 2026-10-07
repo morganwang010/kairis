@@ -432,6 +432,95 @@ export const deleteAllAttendanceRecord = async (projectId: string, month: string
     throw error;
   }
 };
+
+// 航班记录相关API
+export const getFlightRecords = async (params?: {
+  project_id?: string;
+  month?: string;
+  page?: number;
+  pageSize?: number;
+  employee_id?: string;
+  employee_name?: string;
+}) => {
+  try {
+    const response = await apiClient.get('/flights', { params });
+    return response;
+  } catch (error) {
+    console.error('获取航班记录失败:', error);
+    throw error;
+  }
+};
+
+export const addFlightRecord = async (record: any) => {
+  try {
+    const response = await apiClient.post('/flights', record);
+    return response.data;
+  } catch (error) {
+    console.error('添加航班记录失败:', error);
+    throw error;
+  }
+};
+
+export const updateFlightRecord = async (record: any) => {
+  try {
+    const response = await apiClient.put(`/flights/${record.id}`, record);
+    return response.data;
+  } catch (error) {
+    console.error('更新航班记录失败:', error);
+    throw error;
+  }
+};
+
+export const deleteFlightRecordByIds = async (ids: number[]) => {
+  try {
+    const result = await apiClient.delete('/flights/batch', { data: { ids } } as any);
+    return result;
+  } catch (error) {
+    console.error('批量删除航班记录失败:', error);
+    throw error;
+  }
+};
+
+export const importFlightRecords = async (flights: any[]) => {
+  try {
+    const response = await apiClient.post('/flights/import', { flights });
+    return response;
+  } catch (error) {
+    console.error('批量导入航班记录失败:', error);
+    throw error;
+  }
+};
+
+export const calculateFlight = async (id: number) => {
+  try {
+    const response = await apiClient.post(`/flights/${id}/calculate`);
+    return response.data;
+  } catch (error) {
+    console.error('计算航班信息失败:', error);
+    throw error;
+  }
+};
+
+export const calculateFlightBatch = async (params: { employee_id: string; month: string; project_id?: number }) => {
+  try {
+    const response = await apiClient.post('/flights/calculate-batch', params);
+    return response.data;
+  } catch (error) {
+    console.error('批量计算航班信息失败:', error);
+    throw error;
+  }
+};
+
+export const calculateTripClosure = async (params: { employee_id: string; month: string }) => {
+  try {
+    const response = await apiClient.post('/flights/calculate-trip-closure', params);
+    return response.data;
+  } catch (error) {
+    console.error('计算行程闭环失败:', error);
+    throw error;
+  }
+};
+
 // 偶发事件相关API
 // 获取偶发事件记录
 export const getIncidentRecords = async (projectId: string, month: string,pageSize:number,currentPage:number,employeeID?: string,employeeName?: string) => {

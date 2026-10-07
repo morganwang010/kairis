@@ -203,6 +203,12 @@ const LayoutComponent = () => {
                       icon: <AppstoreOutlined />,
                       onClick: () => navigate('/app/settings'),
                     },
+                    {
+                      key: 'flight',
+                      label: t('common.flight'),
+                      icon: <AppstoreOutlined />,
+                      onClick: () => navigate('/app/flight'),
+                    },
                     // {
                     //   key: 'license',
                     //   label: t('common.license'),

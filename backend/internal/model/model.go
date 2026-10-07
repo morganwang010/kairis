@@ -431,6 +431,59 @@ type SystemConfig struct {
 	UpdateTime time.Time `gorm:"column:update_time;default:CURRENT_TIMESTAMP" json:"update_time"`
 }
 
+// Flight 航班记录表
+type Flights struct {
+	ID                       uint      `gorm:"column:id;primaryKey;autoIncrement" json:"id"`
+	EmployeeID               string    `gorm:"column:employee_id;not null" json:"employee_id"`
+	ProjectID                int       `gorm:"column:project_id;default:0" json:"project_id"`
+	Month                    string    `gorm:"column:month;not null" json:"month"`
+	FlightNum                string    `gorm:"column:flight_num" json:"flight_num"`
+	DepartDestination        string    `gorm:"column:depart_destination" json:"depart_destination"`
+	JakartaChina             string    `gorm:"column:jakarta_china" json:"jakarta_china"`
+	ChinaJakarta             string    `gorm:"column:china_jakarta" json:"china_jakarta"`
+	JakartaSite              string    `gorm:"column:jakarta_site" json:"jakarta_site"`
+	SiteJakarta              string    `gorm:"column:site_jakarta" json:"site_jakarta"`
+	ReturnDestination        string    `gorm:"column:return_destination" json:"return_destination"`
+	ReturnJakarta            string    `gorm:"column:return_jakarta" json:"return_jakarta"`
+	ReturnChinaJakarta       string    `gorm:"column:return_china_jakarta" json:"return_china_jakarta"`
+	ReturnJakartaSite        string    `gorm:"column:return_jakarta_site" json:"return_jakarta_site"`
+	ReturnSiteJakarta        string    `gorm:"column:return_site_jakarta" json:"return_site_jakarta"`
+	Category                 int       `gorm:"column:category;default:1" json:"category"` // 1=OnSite, 2=OffSite
+	WorkDays                 float64   `gorm:"column:work_days;default:0" json:"work_days"`
+	OvertimeDays             float64   `gorm:"column:overtime_days;default:0" json:"overtime_days"`
+	LeaveDays                float64   `gorm:"column:leave_days;default:0" json:"leave_days"`
+	CalculatedAt             time.Time `gorm:"column:calculated_at" json:"calculated_at"`
+	CalendarDays             float64   `gorm:"column:calendar_days;default:0" json:"calendar_days"`
+	IndonesiaStartDate       string    `gorm:"column:indonesia_start_date" json:"indonesia_start_date"`
+	IndonesiaEndDate         string    `gorm:"column:indonesia_end_date" json:"indonesia_end_date"`
+	OffSiteAttendanceDays    float64   `gorm:"column:off_site_attendance_days;default:0" json:"off_site_attendance_days"`
+	OnSiteAttendanceDays     float64   `gorm:"column:on_site_attendance_days;default:0" json:"on_site_attendance_days"`
+	FrontlineBaseDays        float64   `gorm:"column:frontline_base_days;default:0" json:"frontline_base_days"`
+	ChinaHolidayOvertimeDays float64   `gorm:"column:china_holiday_overtime_days;default:0" json:"china_holiday_overtime_days"`
+	OverseasAttendanceDays   float64   `gorm:"column:overseas_attendance_days;default:0" json:"overseas_attendance_days"`
+	SafetyAllowanceDays      float64   `gorm:"column:safety_allowance_days;default:0" json:"safety_allowance_days"`
+	SeaAge                   float64   `gorm:"column:sea_age;default:0" json:"sea_age"`
+	OverdueWorkDays          float64   `gorm:"column:overdue_work_days;default:0" json:"overdue_work_days"`
+}
+
+type FlightRaw struct {
+	ID          uint       `gorm:"column:id;primaryKey;autoIncrement" json:"id"`
+	EmployeeID  uint64     `gorm:"column:employee_id;not null" json:"employee_id"`
+	FlightNo    string     `gorm:"column:flight_no;size:64;not null" json:"flight_no"`
+	FlightType  string     `gorm:"column:flight_type;size:16;not null" json:"flight_type"`
+	DepartTime  *time.Time `gorm:"column:depart_time" json:"depart_time"`
+	ArriveTime  *time.Time `gorm:"column:arrive_time" json:"arrive_time"`
+	FlightInfo  string     `gorm:"column:flight_info;type:text" json:"flight_info"`
+	TripStatus  string     `gorm:"column:trip_status;type:text" json:"trip_status"`
+	ImportMonth string     `gorm:"column:import_month;size:7" json:"import_month"`
+	CreateTime  time.Time  `gorm:"column:create_time;default:CURRENT_TIMESTAMP" json:"create_time"`
+	UpdateTime  time.Time  `gorm:"column:update_time;default:CURRENT_TIMESTAMP" json:"update_time"`
+}
+
+func (FlightRaw) TableName() string {
+	return "flight_raws"
+}
+
 type SalarySlips struct {
 	ID             uint      `gorm:"column:id;primaryKey;autoIncrement" json:"id"`
 	Month          string    `gorm:"column:month;not null" json:"month"`

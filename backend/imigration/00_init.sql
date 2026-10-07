@@ -77,14 +77,14 @@ CREATE INDEX IF NOT EXISTS idx_menus_deleted_at ON menus(deleted_at);
 
 -- 用户-角色关联表
 CREATE TABLE IF NOT EXISTS user_roles (
-    user_id UUID NOT NULL,
+    employee_id UUID NOT NULL,
     role_id UUID NOT NULL,
-    PRIMARY KEY (user_id, role_id),
-    CONSTRAINT fk_user_roles_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    PRIMARY KEY (employee_id, role_id),
+    CONSTRAINT fk_user_roles_user FOREIGN KEY (employee_id) REFERENCES users(id) ON DELETE CASCADE,
     CONSTRAINT fk_user_roles_role FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
 );
 
-CREATE INDEX IF NOT EXISTS idx_user_roles_user_id ON user_roles(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_roles_employee_id ON user_roles(employee_id);
 CREATE INDEX IF NOT EXISTS idx_user_roles_role_id ON user_roles(role_id);
 
 -- 角色-权限关联表
@@ -659,3 +659,113 @@ alter table attendances add column oa numeric default 0.00;
 alter table salaries add column os_alw numeric default 0.00;
 alter table salaries add column oa_alw numeric default 0.00;
 
+create table if not exists flights (
+id SERIAL PRIMARY KEY,
+employee_id text not null,
+project_id integer default 0,
+month text not null,
+flight_num text,
+depart_destination text,
+jakarta_china text,
+china_jakarta text,
+jakarta_site text,
+site_jakarta text,
+return_destination text,
+return_jakarta text,
+return_china_jakarta text,
+return_jakarta_site text,
+return_site_jakarta text,
+work_days numeric default 0,
+overtime_days numeric default 0,
+leave_days numeric default 0,
+calculated_at timestamp default now(),
+calendar_days numeric default 0,
+indonesia_start_date text,
+indonesia_end_date text,
+off_site_attendance_days numeric default 0,
+on_site_attendance_days numeric default 0,
+frontline_base_days numeric default 0,
+china_holiday_overtime_days numeric default 0,
+overseas_attendance_days numeric default 0,
+safety_allowance_days numeric default 0,
+sea_age numeric default 0,
+overdue_work_days numeric default 0,
+category numeric default 1 -- // 1: OnSite,现场人员, 2: OffSite，非现场人员
+);
+
+-- 为已存在的flight表补充缺失列（幂等执行）
+alter table flights add column if not exists project_id integer default 0;
+alter table flights add column if not exists month text not null default '';
+alter table flights add column if not exists return_destination text;
+alter table flights add column if not exists return_jakarta text;
+alter table flights add column if not exists return_china_jakarta text;
+alter table flights add column if not exists return_jakarta_site text;
+alter table flights add column if not exists return_site_jakarta text;
+alter table flights add column if not exists work_days numeric default 0;
+alter table flights add column if not exists overtime_days numeric default 0;
+alter table flights add column if not exists leave_days numeric default 0;
+alter table flights add column if not exists calculated_at timestamp;
+alter table flights add column if not exists calendar_days numeric default 0;
+alter table flights add column if not exists indonesia_start_date text;
+alter table flights add column if not exists indonesia_end_date text;
+alter table flights add column if not exists off_site_attendance_days numeric default 0;
+alter table flights add column if not exists on_site_attendance_days numeric default 0;
+alter table flights add column if not exists frontline_base_days numeric default 0;
+alter table flights add column if not exists china_holiday_overtime_days numeric default 0;
+alter table flights add column if not exists overseas_attendance_days numeric default 0;
+alter table flights add column if not exists safety_allowance_days numeric default 0;
+alter table flights add column if not exists sea_age numeric default 0;
+alter table flights add column if not exists overdue_work_days numeric default 0;
+
+-- 创建索引以提高查询性能
+CREATE INDEX IF NOT EXISTS idx_flight_employee_month_project ON flights(employee_id, month, project_id);
+CREATE INDEX IF NOT EXISTS idx_flight_month_project ON flights(month, project_id);
+
+CREATE TABLE flight_raws (
+    id BIGSERIAL PRIMARY KEY,
+    employee_id BIGINT NOT NULL,
+    flight_no VARCHAR(64) NOT NULL,
+    flight_type VARCHAR(16) NOT NULL,
+    flight_info text,
+    trip_status text,
+    depart_time TIMESTAMP WITH TIME ZONE ,
+    arrive_time TIMESTAMP WITH TIME ZONE ,
+    import_month VARCHAR(7) ,
+    create_time TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    update_time TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 约束：flight_type 只能是去程、回程
+ALTER TABLE flight_raws ADD CONSTRAINT ck_flight_type CHECK (flight_type IN ('go', 'return'));
+
+-- 索引
+CREATE INDEX idx_flight_raws_emp_import ON flight_raws(employee_id, import_month);
+CREATE INDEX idx_flight_raws_depart_time ON flight_raws(depart_time);
+
+-- 约束，限定flight_type只能是指定值
+ALTER TABLE flight_raws ADD CONSTRAINT ck_flight_type CHECK (flight_type IN ('go', 'return'));
+
+-- PG 没有表内comment，单独添加注释
+COMMENT ON TABLE flight_raws IS '航班原始明细表，每月导入原始航班数据，仅做数据接入，不做业务计算';
+COMMENT ON COLUMN flight_raws.id IS '主键';
+COMMENT ON COLUMN flight_raws.employee_id IS '人员ID';
+COMMENT ON COLUMN flight_raws.flight_no IS '航班号';
+COMMENT ON COLUMN flight_raws.flight_type IS '去程 / 回程';
+COMMENT ON COLUMN flight_raws.depart_time IS '航班起飞时间（精确到时分秒）';
+COMMENT ON COLUMN flight_raws.arrive_time IS '航班到达时间';
+COMMENT ON COLUMN flight_raws.import_month IS '导入月份（如 2026‑08）';
+COMMENT ON COLUMN flight_raws.create_time IS '记录创建时间';
+COMMENT ON COLUMN flight_raws.update_time IS '记录更新时间';
+
+-- 更新时间触发器（可选，update_time自动刷新）
+CREATE OR REPLACE FUNCTION update_modified_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.update_time = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_flight_raws_update
+BEFORE UPDATE ON flight_raws
+FOR EACH ROW EXECUTE FUNCTION update_modified_column();

@@ -165,7 +165,8 @@
     "user": "用户",
     "role": "角色",
     "permission": "权限",
-    "menu": "菜单"
+    "menu": "菜单",
+    "flight": "航班"
   },
   "importManagementPage": {
     "title": "导入管理",

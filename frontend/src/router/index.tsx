@@ -13,6 +13,7 @@ import ImportManagementPage from '../pages/ImportManagementPage'
 import AboutPage from '../pages/AboutPage'
 import LicensePage from '../pages/LicensePage'
 import LoginPage from '../pages/LoginPage'
+import FlightPage from '../pages/FlightPage'
 import AuthProvider from '../components/AuthProvider'
 // import LicenseProvider from '../components/LicenseProvider'
 
@@ -90,6 +91,9 @@ const router = createBrowserRouter([
       { path: 'salary-slips/:projectId', element: <SalarySlipPage /> },
       { path: 'about', element: <AboutPage /> },
       { path: 'license', element: <LicensePage /> },
+      { path: 'flight', element: <FlightPage /> },
+      { path: 'flight/:projectId', element: <FlightPage /> },
+
     ],
   },
   {

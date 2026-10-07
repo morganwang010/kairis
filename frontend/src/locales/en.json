@@ -179,7 +179,8 @@
     "user": "User",
     "role": "Role",
     "permission": "Permission",
-    "menu": "Menu"
+    "menu": "Menu",
+    "flight": "Flight"
 
 
 
@@ -1037,5 +1038,10 @@
     "activationInstruction4": "4. Test license: TEST-LICENSE-2026 (valid for 7 days)",
     "licenseStatusActive": "License is active",
     "licenseStatusInvalid": "License is invalid"
+  },
+  "flightPage": {
+    "title": "Flight Management",
+    "import": "Import Flight",
+    "export": "Export Flight"
   }
 }

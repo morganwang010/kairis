@@ -43,6 +43,8 @@ func main() {
 	systemConfigRepo := repository.NewSystemConfigRepository(db)
 	salarySlipRepo := repository.NewSalaryRepository(db)
 	emailRepo := repository.NewEmailRepository(db)
+	flightRepo := repository.NewFlightRepository(db)
+	flightRawRepo := repository.NewFlightRawRepository(db)
 
 	userService := service.NewUserService(userRepo, roleRepo)
 	roleService := service.NewRoleService(roleRepo, permissionRepo)
@@ -60,6 +62,7 @@ func main() {
 	systemConfigService := service.NewSystemConfigService(systemConfigRepo)
 	salarySlipService := service.NewSalarySlipService(salarySlipRepo)
 	emailService := service.NewEmailService(emailRepo)
+	flightService := service.NewFlightService(flightRepo, flightRawRepo)
 
 	userHandler := handler.NewUserHandler(userService)
 	roleHandler := handler.NewRoleHandler(roleService)
@@ -78,6 +81,7 @@ func main() {
 	systemConfigHandler := handler.NewSystemConfigHandler(systemConfigService)
 	salarySlipHandler := handler.NewSalarySlipHandler(salarySlipService)
 	emailHandler := handler.NewEmailHandler(emailService)
+	flightHandler := handler.NewFlightHandler(flightService)
 
 	api := r.Group("/api")
 	{
@@ -158,6 +162,21 @@ func main() {
 			attendances.DELETE("/:id", attendanceHandler.Delete)
 			attendances.DELETE("/batch", attendanceHandler.DeleteByIDs)
 			attendances.POST("/import", attendanceHandler.Import)
+		}
+
+		flights := api.Group("/flights")
+		flights.Use(middleware.Auth())
+		{
+			flights.GET("", flightHandler.List)
+			flights.GET("/:id", flightHandler.Get)
+			flights.POST("", flightHandler.Create)
+			flights.PUT("/:id", flightHandler.Update)
+			flights.DELETE("/:id", flightHandler.Delete)
+			flights.DELETE("/batch", flightHandler.DeleteByIDs)
+			flights.POST("/import", flightHandler.Import)
+			flights.POST("/calculate-batch", flightHandler.CalculateBatch)
+			flights.POST("/:id/calculate", flightHandler.Calculate)
+			flights.POST("/calculate-trip-closure", flightHandler.CalculateTripClosure)
 		}
 
 		incidents := api.Group("/incidents")

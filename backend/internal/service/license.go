@@ -135,7 +135,7 @@ func VerifyLicense(licenseKey string) (*model.License, error) {
 
 	// 3. 转换为字符串
 	decodedStr := string(decoded)
-	slog.Info("11111Activating license for company %s", decodedStr)
+	slog.Info("Activating license", "company", decodedStr)
 
 	// 4. 分离数据和签名（按 | 分割）
 	parts := strings.Split(decodedStr, "|")
