@@ -5,27 +5,42 @@ import store from '../stores';
 
 const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8083/api';
 
+// 定义后端统一返回结构（根据你后端实际字段调整）
+interface BackendWrap<T = any> {
+  code: number;
+  data: T;
+  message: string;
+}
+
 class Request {
-  private instance: AxiosInstance;
+  // 👉 重写instance类型：axios实例经过响应拦截器后，get/post直接返回BackendWrap
+  private instance: Omit<AxiosInstance, 'get' | 'post' | 'put' | 'delete' | 'patch'> & {
+    get: <T>(url: string, config?: AxiosRequestConfig) => Promise<BackendWrap<T>>;
+    post: <T>(url: string, data?: unknown, config?: AxiosRequestConfig) => Promise<BackendWrap<T>>;
+    put: <T>(url: string, data?: unknown, config?: AxiosRequestConfig) => Promise<BackendWrap<T>>;
+    delete: <T>(url: string, config?: AxiosRequestConfig) => Promise<BackendWrap<T>>;
+    patch: <T>(url: string, data?: unknown, config?: AxiosRequestConfig) => Promise<BackendWrap<T>>;
+  };
 
   constructor(config: AxiosRequestConfig) {
-    this.instance = axios.create(config);
-    this.setupInterceptors();
+    // 创建原生axios实例，再类型断言
+    const rawInstance = axios.create(config);
+    this.instance = rawInstance as typeof this.instance;
+    this.setupInterceptors(rawInstance);
   }
 
-  private setupInterceptors() {
-    // 请求拦截器 - ✅ 从 Redux 获取 Token（内存中，未加密）
-    this.instance.interceptors.request.use(
+  // 拦截器接收原生实例，避免类型干扰
+  private setupInterceptors(rawInstance: AxiosInstance) {
+    // 请求拦截器
+    rawInstance.interceptors.request.use(
       (config: InternalAxiosRequestConfig) => {
-        // 🔴 重要：直接从 Redux store 获取内存中的 token（未加密）
         const state = store.getState();
-        const token = state.user?.token;  // 使用可选链防止访问不存在的属性
+        const token = state.user?.token;
         console.log('拦截器从 Redux 获取 token:', token ? '已获取' : '未获取');
-        
+
         if (token && config.headers) {
           config.headers.Authorization = `Bearer ${token}`;
         } else if (!token) {
-          // 如果 Redux 中没有 token，尝试从 sessionStorage 解密获取（用于页面刷新后的首次请求）
           try {
             const encryptedToken = sessionStorage.getItem('token');
             if (encryptedToken) {
@@ -46,10 +61,10 @@ class Request {
       }
     );
 
-    // 响应拦截器 - 正确处理响应格式
-    this.instance.interceptors.response.use(
+    // 响应拦截器
+    rawInstance.interceptors.response.use(
       (response: AxiosResponse) => {
-        return response.data;
+        return response.data; // 这里返回后端包装对象 BackendWrap
       },
       (error) => {
         if (error.response) {
@@ -81,24 +96,25 @@ class Request {
     );
   }
 
+  // ✅ 对外方法：返回 T，自动提取 backendWrap.data
   public get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
-    return this.instance.get(url, config);
+    return this.instance.get<T>(url, config).then(res => res.data);
   }
 
   public post<T = any>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
-    return this.instance.post(url, data, config);
+    return this.instance.post<T>(url, data, config).then(res => res.data);
   }
 
   public put<T = any>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
-    return this.instance.put(url, data, config);
+    return this.instance.put<T>(url, data, config).then(res => res.data);
   }
 
   public delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
-    return this.instance.delete(url, config);
+    return this.instance.delete<T>(url, config).then(res => res.data);
   }
 
   public patch<T = any>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
-    return this.instance.patch(url, data, config);
+    return this.instance.patch<T>(url, data, config).then(res => res.data);
   }
 }
 
