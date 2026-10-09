@@ -26,7 +26,7 @@ func LoadConfig() (*Config, error) {
 
 	return &Config{
 		Port:      getEnv("PORT", "8080"),
-		DBHost:    getEnv("DB_HOST", "100.70.92.52"),
+		DBHost:    getEnv("DB_HOST", "100.81.137.7"),
 		DBPort:    getEnv("DB_PORT", "5432"),
 		DBUser:    getEnv("DB_USER", "postgres"),
 		DBPass:    getEnv("DB_PASS", "postgres"),
